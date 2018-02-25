@@ -1,19 +1,21 @@
 import { database } from '../fire'
 
-export function fetchChips(){
+export function watchChips(){
   return dispatch => {
     database.ref('chips').on('value', snapshot => {
       dispatch({
-        type: 'SET_BET',
+        type: 'SET_CHIPS',
         payload: snapshot.val()
       })
     })
   }
 }
 
-export function addToBet(payload){
+export function addToBet(value){
   return (_, getState) => {
-    let chips = getState().chips
-    database.ref('chips').set(chips + payload)
+    let { bet, total } = getState().chips
+
+    database.ref('chips/bet').set(bet + value)
+    database.ref('chips/total').set(total - value)
   }
 }

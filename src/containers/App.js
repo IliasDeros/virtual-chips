@@ -1,32 +1,21 @@
 import React, { Component } from 'react'
+import Table from './Table'
 import { connect } from 'react-redux'
-import Bet from '../components/Bet'
-import { addToBet, fetchChips } from '../actions/chips-action'
 
 class App extends Component {
-  componentDidMount(){
-    this.props.fetchChips()
-  }
-
   render() {
     return (
-      <div className="container">
-        <Bet bet={this.props.chips} />
-        <button onClick={() => this.props.addToBet(10)}>Add 10</button>
-      </div>
+      <Table />
     );
   }
 }
 
-function mapStateToProps({ chips }){
-  return { chips }
+function mapStateToProps(){
+  return { }
 }
 
-function mapDispatchToProps(dispatch){
-  return {
-    addToBet: payload => dispatch(addToBet(payload)),
-    fetchChips: () => dispatch(fetchChips())
-  }
+function mapDispatchToProps(){
+  return { }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
