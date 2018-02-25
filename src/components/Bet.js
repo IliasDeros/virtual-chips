@@ -3,7 +3,7 @@ import React from 'react'
 export default props => {
   return (
     <div>
-      <span>{props.value}</span>
+      <span>{props.bet}</span>
     </div>
   )
 }

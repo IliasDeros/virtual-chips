@@ -1,13 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Number from '../components/Number'
-import { addToBet } from '../actions/chips-action'
+import Bet from '../components/Bet'
+import { addToBet, fetchChips } from '../actions/chips-action'
 
 class App extends Component {
+  componentDidMount(){
+    this.props.fetchChips()
+  }
+
   render() {
     return (
       <div className="container">
-        <Number value={this.props.chips} />
+        <Bet bet={this.props.chips} />
         <button onClick={() => this.props.addToBet(10)}>Add 10</button>
       </div>
     );
@@ -20,7 +24,8 @@ function mapStateToProps({ chips }){
 
 function mapDispatchToProps(dispatch){
   return {
-    addToBet: payload => dispatch(addToBet(payload))
+    addToBet: payload => dispatch(addToBet(payload)),
+    fetchChips: () => dispatch(fetchChips())
   }
 }
 

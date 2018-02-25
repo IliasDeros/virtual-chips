@@ -10,4 +10,8 @@ let config = {
   messagingSenderId: "301476727106"
 }
 
-export default firebase.initializeApp(config)
+const fire = firebase.initializeApp(config),
+      database = fire.database()
+
+export default fire
+export { database }
