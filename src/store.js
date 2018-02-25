@@ -10,8 +10,8 @@ const rootReducer = combineReducers({
 const initialState = {}
 
 const middleware = applyMiddleware(
-  logger,
-  thunk
+  thunk,
+  logger
 )
 
 export default createStore(rootReducer, initialState, middleware)

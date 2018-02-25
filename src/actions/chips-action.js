@@ -13,9 +13,12 @@ export function watchChips(){
 
 export function addToBet(value){
   return (_, getState) => {
-    let { bet, total } = getState().chips
+    const chips = getState().chips
 
-    fire.database().ref('chips/bet').set(bet + value)
-    fire.database().ref('chips/total').set(total - value)
+    fire.database().ref('chips').set({
+      ...chips,
+      bet: chips.bet + value,
+      total: chips.total - value
+    })
   }
 }

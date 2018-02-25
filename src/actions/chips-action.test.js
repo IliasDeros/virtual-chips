@@ -38,27 +38,20 @@ describe('addToBet', () => {
 
   beforeEach(() => {
     fire.database = jest.fn().mockReturnValue({ ref: refMock })
+    refMock
   })
 
-  it('should add to bet', () => {
+  it('should update chips', () => {
     const setMock = jest.fn()
     refMock.mockImplementation(path => ({
-      set: path === 'chips/bet' ? setMock : jest.fn()
+      set: path === 'chips' ? setMock : jest.fn()
     }))
 
     actions.addToBet(10)(undefined, () => initialState)
 
-    expect(setMock).toBeCalledWith(30)
-  })
-
-  it('should update total', () => {
-    const setMock = jest.fn()
-    refMock.mockImplementation(path => ({
-      set: path === 'chips/total' ? setMock : jest.fn()
-    }))
-
-    actions.addToBet(10)(undefined, () => initialState)
-
-    expect(setMock).toBeCalledWith(90)
+    expect(setMock).toBeCalledWith({
+      bet: 30,
+      total: 90
+    })
   })
 })
