@@ -19,7 +19,7 @@ class Table extends Component {
           <button onClick={() => this.props.addToBet(-10)}>Remove 10</button>
           <Total total={this.props.chips.total} />
         </div>
-      : <span>Loading...</span>
+      : <span>Loading Chips...</span>
     );
   }
 }

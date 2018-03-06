@@ -2384,6 +2384,10 @@ find-up@^1.0.0, find-up@^1.1.2:
     path-exists "^2.0.0"
     pinkie-promise "^2.0.0"
 
+fingerprintjs2@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/fingerprintjs2/-/fingerprintjs2-1.6.1.tgz#e5f3af34361c74b13e12a380c51418dab76d6280"
+
 firebase@^4.10.1:
   version "4.10.1"
   resolved "https://registry.yarnpkg.com/firebase/-/firebase-4.10.1.tgz#68724a6f680ca5759bd870dcb18b5f6e09a176b1"

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": false,
   "dependencies": {
+    "fingerprintjs2": "^1.6.1",
     "firebase": "^4.10.1",
     "history": "^4.7.2",
     "react": "^16.2.0",
