@@ -1,11 +1,14 @@
-export default function(state = false, action){
+export default function(state = [], action){
   switch (action.type){
-    case 'SET_OPPONENTS':
-      const opponents = action.payload && Object.keys(action.payload).map(id => ({
-        ...action.payload[id],
-        id
-      }))
-      state = opponents
+    case 'ADD_OPPONENT':
+      state = [...state, action.payload]
+      break
+    case 'UPDATE_OPPONENT':
+      const id = action.payload.id
+
+      state = state.reduce((opponents, opponent) =>
+        opponents.concat(opponent.id === id ? action.payload : opponent)
+      , [])
       break
     // no default
   }

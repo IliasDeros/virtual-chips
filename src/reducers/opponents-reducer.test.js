@@ -1,14 +1,33 @@
 import reducer from './opponents-reducer'
 
 it('should return initial state', () => {
-  expect(reducer(undefined, {})).toBe(false)
+  expect(reducer(undefined, {})).toMatchObject([])
 })
 
-describe('SET_OPPONENTS', () => {
-  it('should update opponents mapped with IDs', () => {
-    expect(reducer(undefined, {
-      type: 'SET_OPPONENTS',
-      payload: {'id42': { otherProp: 'value' } }
-    })).toEqual([{ id: 'id42', otherProp: 'value' }])
+describe('ADD_OPPONENT', () => {
+  it('should add opponent', () => {
+    expect(reducer([{ name: 'Veronica' }], {
+      type: 'ADD_OPPONENT',
+      payload: { name: 'Albert' }
+    })).toEqual([
+      { name: 'Veronica' },
+      { name: 'Albert' }
+    ])
+  })
+})
+
+describe('UPDATE_OPPONENT', () => {
+  it('should do nothing if no existing opponent', () => {
+    expect(reducer([{ name: 'Veronica', id: 10 }], {
+      type: 'UPDATE_OPPONENT',
+      payload: { name: 'Albert', id: 12 }
+    })).toEqual([{ name: 'Veronica', id: 10 }])
+  })
+
+  it('should update existing opponent', () => {
+    expect(reducer([{ name: 'Veronica', id: 10 }], {
+      type: 'UPDATE_OPPONENT',
+      payload: { name: 'Albert', id: 10 }
+    })).toEqual([{ name: 'Albert', id: 10 }])
   })
 })

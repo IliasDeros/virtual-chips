@@ -11,8 +11,8 @@ class App extends Component {
 
   render() {
     return ([
-      this.props.player.id && <Nav />,
-      this.props.player.id ? <Player /> : <span>Loading Player...</span>
+      this.props.player.id && <Nav key='nav' />,
+      this.props.player.id ? <Player key='player' /> : <span>Loading Player...</span>
     ])
   }
 }
