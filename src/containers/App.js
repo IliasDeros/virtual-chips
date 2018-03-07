@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import Table from './Table'
+import Nav from './Nav'
+import Player from './Player'
 import { connect } from 'react-redux'
 import { loadPlayerId } from '../actions/player-action'
 
@@ -9,11 +10,10 @@ class App extends Component {
   }
 
   render() {
-    return (
-      this.props.player.id
-      ? <Table />
-      : <span>Loading Player...</span>
-    );
+    return ([
+      this.props.player.id && <Nav />,
+      this.props.player.id ? <Player /> : <span>Loading Player...</span>
+    ])
   }
 }
 
