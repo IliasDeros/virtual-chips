@@ -6,7 +6,7 @@ describe('watchChips', () => {
 
   beforeEach(() => {
     fire.database = jest.fn().mockReturnValue({
-      ref: path => path === 'player/42/chips' && {
+      ref: path => path === 'table/1/player/42/chips' && {
         on: (event, cb) => event === 'value' && (updateChips = cb)
       }
     })
@@ -17,7 +17,10 @@ describe('watchChips', () => {
           dispatchMock = jest.fn(),
           snapshotMock = { val(){ return expectedPayload }}
 
-    actions.watchChips()(dispatchMock, () => ({ table: { playerId: 42 } }))
+    actions.watchChips()(dispatchMock, () => ({
+      player: { id: 42 },
+      table: { id: 1 }
+    }))
     updateChips(snapshotMock)
 
     expect(dispatchMock).toBeCalledWith({
@@ -30,7 +33,8 @@ describe('watchChips', () => {
 describe('addToBet', () => {
   const refMock = jest.fn(),
         initialState = {
-          table: { playerId: 10 },
+          player: { id: 10 },
+          table: { id: 1 },
           chips: {
             bet: 20,
             total: 100
@@ -45,7 +49,7 @@ describe('addToBet', () => {
   it('should update chips', () => {
     const setMock = jest.fn()
     refMock.mockImplementation(path => ({
-      set: path === `player/10/chips` ? setMock : jest.fn()
+      set: path === `table/1/player/10/chips` ? setMock : jest.fn()
     }))
 
     actions.addToBet(10)(undefined, () => initialState)

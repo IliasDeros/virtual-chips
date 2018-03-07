@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Table from './Table'
 import { connect } from 'react-redux'
-import { loadPlayerId } from '../actions/table-action'
+import { loadPlayerId } from '../actions/player-action'
 
 class App extends Component {
   componentDidMount(){
@@ -10,15 +10,15 @@ class App extends Component {
 
   render() {
     return (
-      this.props.table.playerId
+      this.props.player.id
       ? <Table />
       : <span>Loading Player...</span>
     );
   }
 }
 
-function mapStateToProps({ table }){
-  return { table }
+function mapStateToProps({ player }){
+  return { player }
 }
 
 function mapDispatchToProps(dispatch){
