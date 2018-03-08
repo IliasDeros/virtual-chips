@@ -6,13 +6,13 @@ import { loadPlayerId } from '../actions/player-action'
 
 class App extends Component {
   componentDidMount(){
-    this.props.loadPlayer()
+    this.props.loadPlayerId()
   }
 
   render() {
     return ([
       this.props.player.id && <Nav key='nav' />,
-      this.props.player.id ? <Player key='player' /> : <span>Loading Player...</span>
+      this.props.player.id ? <Player key='player' /> : <span key='player-loading'>Loading Player...</span>
     ])
   }
 }
@@ -23,7 +23,7 @@ function mapStateToProps({ player }){
 
 function mapDispatchToProps(dispatch){
   return {
-    loadPlayer(){ dispatch(loadPlayerId()) }
+    loadPlayerId(){ dispatch(loadPlayerId()) }
   }
 }
 
