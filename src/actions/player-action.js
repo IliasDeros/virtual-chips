@@ -1,6 +1,11 @@
 import Fingerprint from 'fingerprintjs2'
 import fire from '../fire'
 
+function getFireRef({ table, player }){
+  let ref = `table/${table.id}/player/${player.id}/name`
+  return fire.database().ref(ref)
+}
+
 export function loadPlayerId(){
   return (dispatch, getState) => {
     new Fingerprint().get(result =>
@@ -14,10 +19,9 @@ export function loadPlayerId(){
 
 export function loadPlayerName(){
   return (dispatch, getState) => {
-    const { player, table } = getState(),
-          nameRef = `table/${table.id}/player/${player.id}/name`
+    const state = getState()
 
-    fire.database().ref(nameRef).on('value', snapshot => {
+    getFireRef(state).on('value', snapshot => {
       let playerName = snapshot.val()
 
       if (playerName){
@@ -29,7 +33,7 @@ export function loadPlayerName(){
         // generate a random player name
         fetch('https://cors-anywhere.herokuapp.com/http://namey.muffinlabs.com/name.json')
           .then(res => res.json())
-          .then(([name]) => fire.database().ref(nameRef).set(name))
+          .then(([name]) => getFireRef(state).set(name))
       }
     })
   }
