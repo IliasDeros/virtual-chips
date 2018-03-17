@@ -1,6 +1,11 @@
 import Fingerprint from 'fingerprintjs2'
 import fire from '../fire'
 
+const STATE = {
+  IDLE: 'idle',
+  FOLDED: 'folded'
+}
+
 function getFireRef(endpoint, { table, player }){
   let ref = `table/${table.id}/player/${player.id}/${endpoint}`
   return fire.database().ref(ref)
@@ -52,8 +57,14 @@ export function loadPlayerState(){
           payload: playerState
         })
       } else {
-        getFireRef('state', state).set('idle')
+        getFireRef('state', state).set(STATE.IDLE)
       }
     })
+  }
+}
+
+export function fold(){
+  return (_, getState) => {
+    getFireRef('state', getState()).set(STATE.FOLDED)
   }
 }
