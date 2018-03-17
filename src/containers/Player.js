@@ -3,12 +3,13 @@ import { connect } from 'react-redux'
 import Bet from '../components/Bet'
 import Total from '../components/Total'
 import { addToBet, watchChips } from '../actions/chips-action'
-import { loadPlayerName } from '../actions/player-action'
+import { loadPlayerName, loadPlayerState } from '../actions/player-action'
 
 class Table extends Component {
   componentDidMount(){
     this.props.watchChips()
     this.props.loadPlayerName()
+    this.props.loadPlayerState()
   }
 
   render() {
@@ -35,6 +36,7 @@ function mapDispatchToProps(dispatch){
   return {
     addToBet: payload => dispatch(addToBet(payload)),
     loadPlayerName: () => dispatch(loadPlayerName()),
+    loadPlayerState: () => dispatch(loadPlayerState()),
     watchChips: () => dispatch(watchChips())
   }
 }
