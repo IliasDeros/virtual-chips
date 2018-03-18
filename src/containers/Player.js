@@ -4,9 +4,11 @@ import Bet from '../components/Bet'
 import Total from '../components/Total'
 import { addToBet, watchChips } from '../actions/chips-action'
 import { fold, loadPlayerName, loadPlayerState } from '../actions/player-action'
+import { controlGameIfFirst } from '../actions/table-action'
 
 class Table extends Component {
   componentDidMount(){
+    this.props.controlGame()
     this.props.watchChips()
     this.props.loadPlayerName()
     this.props.loadPlayerState()
@@ -37,6 +39,7 @@ function mapStateToProps({ chips, player }){
 function mapDispatchToProps(dispatch){
   return {
     addToBet: payload => dispatch(addToBet(payload)),
+    controlGame: () => dispatch(controlGameIfFirst()),
     fold: () => dispatch(fold()),
     loadPlayerName: () => dispatch(loadPlayerName()),
     loadPlayerState: () => dispatch(loadPlayerState()),
