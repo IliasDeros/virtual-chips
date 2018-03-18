@@ -27,7 +27,7 @@ export function loadPlayerName(){
   return (dispatch, getState) => {
     const state = getState()
 
-    getFireRef('name', state).on('value', snapshot => {
+    getFireRef('name', state).on('value', async snapshot => {
       let playerName = snapshot.val()
 
       if (playerName){
@@ -37,9 +37,10 @@ export function loadPlayerName(){
         })
       } else {
         // generate a random player name
-        fetch('https://cors-anywhere.herokuapp.com/http://namey.muffinlabs.com/name.json')
-          .then(res => res.json())
-          .then(([name]) => getFireRef('name', state).set(name))
+        let res = await fetch('https://cors-anywhere.herokuapp.com/http://namey.muffinlabs.com/name.json')
+        const [name] = await res.json()
+
+        getFireRef('name', state).set(name)
       }
     })
   }
