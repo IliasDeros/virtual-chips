@@ -1,4 +1,5 @@
 import fire from '../fire'
+import { bet } from './player-action'
 
 function getFireRef({ player, table }){
   let ref = `table/${table.id}/player/${player.id}/chips`
@@ -7,17 +8,19 @@ function getFireRef({ player, table }){
 
 export function watchChips(){
   return (dispatch, getState) => {
-    const state = getState()
-
-    getFireRef(state).on('value', snapshot => {
-      const chips = snapshot.val()
+    getFireRef(getState()).on('value', snapshot => {
+      const chips = snapshot.val(),
+            state = getState()
 
       if (chips){
+        state.chips && dispatch(bet())
+
         dispatch({
           type: 'SET_CHIPS',
           payload: chips
         })
       } else {
+        // initialize chips
         getFireRef(state).set({
           bet: 0,
           total: 2500

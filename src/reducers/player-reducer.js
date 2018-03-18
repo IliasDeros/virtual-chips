@@ -11,6 +11,13 @@ export default function(state = {}, action){
         ...state,
         name: action.payload
       }
+      break
+    case 'SET_PLAYER_STATE':
+      state = {
+        ...state,
+        state: action.payload
+      }
+      break
     // no default
   }
 

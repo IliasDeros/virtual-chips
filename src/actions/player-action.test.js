@@ -56,3 +56,91 @@ describe('loadPlayerName', () => {
     })
   })
 })
+
+describe('loadPlayerState', () => {
+  let updateState, setMock = jest.fn()
+
+  beforeEach(() => {
+    const expectedPath = 'table/1/player/42/state'
+
+    fire.database = jest.fn().mockReturnValue({
+      ref: path => path === expectedPath && {
+        on: (event, cb) => event === 'value' && (updateState = cb),
+        set: setMock
+      }
+    })
+  })
+
+  it('should initialize state', () => {
+    const dispatchMock = jest.fn(),
+          initialState = {
+            player: { id: 42 },
+            table: { id: 1 }
+          }
+    actions.loadPlayerState()(dispatchMock, () => initialState)
+    updateState({ val(){} })
+
+    expect(setMock).toHaveBeenCalledWith('idle')
+  })
+
+  it('should update state', () => {
+    const dispatchMock = jest.fn(),
+          initialState = {
+            player: { id: 42 },
+            table: { id: 1 }
+          }
+    actions.loadPlayerState()(dispatchMock, () => initialState)
+    updateState({ val: () => 'folded' })
+
+    expect(dispatchMock).toHaveBeenCalledWith({
+      type: 'SET_PLAYER_STATE',
+      payload: 'folded'
+    })
+  })
+})
+
+describe('bet', () => {
+  let setMock = jest.fn()
+
+  beforeEach(() => {
+    const expectedPath = 'table/1/player/42/state'
+
+    fire.database = jest.fn().mockReturnValue({
+      ref: path => path === expectedPath && {
+        set: setMock
+      }
+    })
+  })
+
+  it('should update state', () => {
+    const initialState = {
+      player: { id: 42 },
+      table: { id: 1 }
+    }
+    actions.bet()(undefined, () => initialState)
+    expect(setMock).toHaveBeenCalledWith('bet')
+  })
+})
+
+describe('fold', () => {
+  let setMock = jest.fn()
+
+  beforeEach(() => {
+    const expectedPath = 'table/1/player/42/state'
+
+    fire.database = jest.fn().mockReturnValue({
+      ref: path => path === expectedPath && {
+        set: setMock
+      }
+    })
+  })
+
+  it('should update state', () => {
+    const initialState = {
+      player: { id: 42 },
+      table: { id: 1 }
+    }
+    actions.fold()(undefined, () => initialState)
+    expect(setMock).toHaveBeenCalledWith('folded')
+  })
+})
