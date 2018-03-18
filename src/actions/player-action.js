@@ -2,6 +2,7 @@ import Fingerprint from 'fingerprintjs2'
 import fire from '../fire'
 
 const STATE = {
+  BET: 'bet',
   IDLE: 'idle',
   FOLDED: 'folded'
 }
@@ -60,6 +61,12 @@ export function loadPlayerState(){
         getFireRef('state', state).set(STATE.IDLE)
       }
     })
+  }
+}
+
+export function bet(){
+  return (_, getState) => {
+    getFireRef('state', getState()).set(STATE.BET)
   }
 }
 

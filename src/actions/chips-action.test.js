@@ -1,10 +1,12 @@
 import * as actions from './chips-action'
+import * as playerActions from './player-action'
 import fire from 'virtual-chips/src/fire'
 
 describe('watchChips', () => {
   let updateChips
 
   beforeEach(() => {
+    playerActions.bet = jest.fn().mockReturnValue('bet')
     fire.database = jest.fn().mockReturnValue({
       ref: path => path === 'table/1/player/42/chips' && {
         on: (event, cb) => event === 'value' && (updateChips = cb)
@@ -27,6 +29,20 @@ describe('watchChips', () => {
       type: 'SET_CHIPS',
       payload: expectedPayload
     })
+  })
+
+  it('should set state to "bet" when changing chips', () => {
+    const dispatchMock = jest.fn(),
+          snapshotMock = { val(){ return 12 }}
+
+    actions.watchChips()(dispatchMock, () => ({
+      chips: {},
+      player: { id: 42 },
+      table: { id: 1 }
+    }))
+    updateChips(snapshotMock)
+
+    expect(dispatchMock).toBeCalledWith('bet')
   })
 })
 
