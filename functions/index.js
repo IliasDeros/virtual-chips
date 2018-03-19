@@ -1,7 +1,9 @@
 const admin = require('firebase-admin')
 const functions = require('firebase-functions')
 
-exports.progressRounds = functions.database.ref('table/{tableId}/state').onUpdate(event => {
+admin.initializeApp(functions.config().firebase)
+
+exports.progressRounds = functions.database.ref('table/{tableId}/action').onUpdate(event => {
   const data = event.data.val()
   console.log("data!")
   console.log(data)
