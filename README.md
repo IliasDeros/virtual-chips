@@ -1,5 +1,23 @@
 ![virtual chips](https://rlv.zcache.com/carbon_fiber_any_color_poker_chips_set-r2b608122bb2846e8a24dfdb0282f97b5_zrag1_8byvr_630.jpg?view_padding=%5B285%2C0%2C285%2C0%5D)
 
+
+### Installation
+1. `git clone git@github.com:IliasDeros/virtual-chips.git`
+2. `yarn` or `npm install`
+3. `cd functions`
+4. `yarn` or `npm install`
+
+### Running
+1. `yarn start`
+2. visit app at http://localhost:3000/
+
+### Deploying
+1. `yarn deploy`
+2. visit app at https://virtual-chips.firebaseapp.com/
+
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
