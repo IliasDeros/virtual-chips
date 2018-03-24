@@ -4,8 +4,6 @@
 ### Installation
 1. `git clone git@github.com:IliasDeros/virtual-chips.git`
 2. `yarn` or `npm install`
-3. `cd functions`
-4. `yarn` or `npm install`
 
 ### Running
 1. `yarn start`
@@ -14,6 +12,16 @@
 ### Deploying
 1. `yarn deploy`
 2. visit app at https://virtual-chips.firebaseapp.com/
+
+### Updating functions
+*functions* is the backend portion of the app. 
+See Firebase [Cloud Functions](https://firebase.google.com/docs/functions/)
+
+1. `cd functions`
+2. `yarn` or `npm install`
+3. `npm install -g firebase-tools`
+4. `firebase login`
+5. `firebase deploy --only functions`
 
 
 ---
