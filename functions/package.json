@@ -8,7 +8,7 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "test": "mocha"
+    "test": "mocha ./**/*.test.js"
   },
   "dependencies": {
     "firebase-admin": "~5.8.1",
@@ -18,7 +18,8 @@
     "eslint": "^4.12.0",
     "eslint-plugin-promise": "^3.6.0",
     "mocha": "^5.0.4",
-    "sinon": "^4.4.6"
+    "samsam": "^1.3.0",
+    "sinon": "^4.4.8"
   },
   "private": true
 }
