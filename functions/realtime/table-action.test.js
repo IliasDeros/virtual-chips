@@ -25,17 +25,17 @@ describe('tableAction', () => {
         })
     })
     
-    describe('next round', () => {
+    describe('next turn', () => {
         let valueStub
         
         beforeEach(() => {
             valueStub = sinon.stub()
-            fakeWriteEvent.data.val = () => 'next round'
+            fakeWriteEvent.data.val = () => 'next turn'
             fakeTableRef.once = sinon.stub().withArgs('value')
                 .resolves({ val: valueStub })
         })
         
-        it('should update initial round', done => {
+        it('should update initial turn', done => {
             valueStub.returns({
                 player: {
                     'first': { chips: { bet: 100 } },
@@ -47,28 +47,28 @@ describe('tableAction', () => {
                     'player/first/chips/bet': 0,
                     'player/second/chips/bet': 0,
                     pot: 250,
-                    round: 1
+                    turn: 1
                 })
                 done()
             }
             tableAction(fakeWriteEvent)
         })
         
-        it('should update second round', done => {
+        it('should update second turn', done => {
             valueStub.returns({
                 player: {
                     'first': { chips: { bet: 100 } },
                     'second': { chips: { bet: 150 } }
                 },
                 pot: 100,
-                round: 1,
+                turn: 1,
             })
             fakeTableRef.update = payload => {
                 assert.deepStrictEqual(payload, {
                     'player/first/chips/bet': 0,
                     'player/second/chips/bet': 0,
                     pot: 350,
-                    round: 2
+                    turn: 2
                 })
                 done()
             }

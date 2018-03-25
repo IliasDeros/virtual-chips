@@ -3,7 +3,7 @@
 */
 
 const ACTION_UPDATE = {
-  'next round': nextRoundUpdates
+  'next turn': nextTurnUpdates
 }
 
 exports.onWrite = writeEvent => {
@@ -27,9 +27,9 @@ exports.onWrite = writeEvent => {
   return action
 }
 
-function nextRoundUpdates(table){
+function nextTurnUpdates(table){
   const updates = makePlayerUpdatesHash(table)
-  updates.round = (table.round || 0) + 1
+  updates.turn = (table.turn || 0) + 1
   updates.pot = makePotUpdate(table)
   return updates
 }
