@@ -61,6 +61,20 @@ describe('watchChips', () => {
       expect(dispatchMock).toBeCalledWith('idle')
     })
   })
+  
+  it('should set state to "idle" when setting chips to 0', () => {
+    const dispatchMock = jest.fn(),
+          snapshotMock = { val(){ return { bet: 0 } }}
+
+    actions.watchChips()(dispatchMock, () => ({
+      chips: {},
+      player: { id: 42 },
+      table: { id: 1 }
+    }))
+    updateChips(snapshotMock)
+
+    expect(dispatchMock).toBeCalledWith('idle')
+  })
 })
 
 describe('addToBet', () => {
