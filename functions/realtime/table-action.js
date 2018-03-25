@@ -1,24 +1,27 @@
 /*
 * do things when the table's "action" is updated
 */
+
+const ACTION_UPDATE = {
+  'next round': nextRoundUpdates
+}
+
 exports.onWrite = writeEvent => {
   // Exit when the data is deleted.
   if (!writeEvent.data.exists()) { return null }
 
   const action = writeEvent.data.val(),
-        tableRef = writeEvent.data.ref.parent
+        tableRef = writeEvent.data.ref.parent,
+        actionUpdate = ACTION_UPDATE[action]
   
-  switch (action){
-    case 'next round':
-      tableRef.once('value')
-        .then(snapshot => {
-          tableRef.update(nextRoundUpdates(snapshot.val()))
-          return tableRef.child('action').remove()
-        })
-        .catch(error => console.error('Error reading "table":', error.stack))
-      break
-    default:
-      throw new Error(`Unexpected action ${action}. Available actions: ['next round']`)
+  if (actionUpdate){
+    tableRef.once('value').then(snapshot => {
+      tableRef.update(actionUpdate(snapshot.val()))
+      return tableRef.child('action').remove()
+    }).catch(error => console.error('Error reading "table":', error.stack))
+  } else {
+    const availableActions = `[${Object.keys(ACTION_UPDATE).join(',')}]`
+    throw new Error(`Unexpected action ${action}. Available actions: ${availableActions}`)
   }
   
   return action
