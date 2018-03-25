@@ -12,7 +12,7 @@ export function controlGame(){
     fire.database().ref(`table/${table.id}`).on('value', snapshot => {
       switch (table.turn || Turn.PRE_FLOP){
         case Turn.PRE_FLOP:
-          isTurnFinished(table) && setAction(Action.NEXT_TURN)
+          isTurnFinished(snapshot.val()) && setAction(Action.NEXT_TURN)
           break
         case Turn.RIVER:
           // call functions.win if none is bet/idle

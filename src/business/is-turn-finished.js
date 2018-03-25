@@ -18,5 +18,5 @@ export default function isTurnFinished(table){
           [State.ALL_IN, State.CALLED, State.CHECKED, State.FOLDED].includes(state)
         )
   
-  return allSameBet && allDone
+  return players.length >= 2 && allSameBet && allDone
 }
