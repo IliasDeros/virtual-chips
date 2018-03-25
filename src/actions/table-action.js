@@ -1,26 +1,18 @@
 import fire from '../fire'
-import State from '../constants/state'
+import Action from '../constants/action'
 import Turn from '../constants/turn'
+import isTurnFinished from '../business/is-turn-finished'
 
 export function controlGame(){
   return (dispatch, getState) => {
-    const { table } = getState()
+    const { table } = getState(),
+          setAction = a => fire.database().ref(`table/${table.id}/action`).set(a)
 
     // this function is run for every single table-wide update
     fire.database().ref(`table/${table.id}`).on('value', snapshot => {
-      const table = snapshot.val(),
-            players = Object.keys(table.player).map(key => table.player[key]),
-            playerBets = players.map(p => p.chips.bet)
-
-      switch (table.turn || 0){
+      switch (table.turn || Turn.PRE_FLOP){
         case Turn.PRE_FLOP:
-          // call functions.nextTurn if all called/checked
-          const allSameBet = !!playerBets.reduce((a, b) => a === b ? a : NaN),
-                allCallCheck = players.every(({ state }) =>
-                  [State.CALLED, State.CHECKED].includes(state)
-                )
-
-          // call functions.nextTurn
+          isTurnFinished(table) && setAction(Action.NEXT_TURN)
           break
         case Turn.RIVER:
           // call functions.win if none is bet/idle
