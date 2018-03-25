@@ -144,3 +144,26 @@ describe('fold', () => {
     expect(setMock).toHaveBeenCalledWith('folded')
   })
 })
+
+describe('idle', () => {
+  let setMock = jest.fn()
+
+  beforeEach(() => {
+    const expectedPath = 'table/1/player/42/state'
+
+    fire.database = jest.fn().mockReturnValue({
+      ref: path => path === expectedPath && {
+        set: setMock
+      }
+    })
+  })
+
+  it('should update state', () => {
+    const initialState = {
+      player: { id: 42 },
+      table: { id: 1 }
+    }
+    actions.idle()(undefined, () => initialState)
+    expect(setMock).toHaveBeenCalledWith('idle')
+  })
+})
