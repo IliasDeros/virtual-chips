@@ -1,5 +1,5 @@
 import fire from '../fire'
-import { bet } from './player-action'
+import { bet, idle } from './player-action'
 
 function getFireRef({ player, table }){
   let ref = `table/${table.id}/player/${player.id}/chips`
@@ -13,8 +13,12 @@ export function watchChips(){
             state = getState()
 
       if (chips){
-        state.chips && dispatch(bet())
-
+        // update player state
+        if (state.chips){
+          dispatch(chips.bet > 0 ? bet() : idle())
+        }
+        
+        // update chips
         dispatch({
           type: 'SET_CHIPS',
           payload: chips

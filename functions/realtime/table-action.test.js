@@ -46,8 +46,6 @@ describe('tableAction', () => {
                 assert.deepStrictEqual(payload, {
                     'player/first/chips/bet': 0,
                     'player/second/chips/bet': 0,
-                    'player/first/state': 'idle',
-                    'player/second/state': 'idle',
                     pot: 250,
                     turn: 1
                 })
@@ -69,8 +67,6 @@ describe('tableAction', () => {
                 assert.deepStrictEqual(payload, {
                     'player/first/chips/bet': 0,
                     'player/second/chips/bet': 0,
-                    'player/first/state': 'idle',
-                    'player/second/state': 'idle',
                     pot: 350,
                     turn: 2
                 })

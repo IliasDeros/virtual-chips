@@ -71,3 +71,9 @@ export function fold(){
     getFireRef('state', getState()).set(State.FOLDED)
   }
 }
+
+export function idle(){
+  return (_, getState) => {
+    getFireRef('state', getState()).set(State.IDLE)
+  }
+}
