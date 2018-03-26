@@ -17,7 +17,7 @@ export function watchChips(){
         if (state.chips){
           chips.bet === 0 && dispatch(idle())
         }
-        
+
         // update chips
         dispatch({
           type: 'SET_CHIPS',
@@ -39,10 +39,11 @@ export function addToBet(value){
     const state = getState(),
           chips = state.chips
 
-    getFireRef(state).set({
-      ...chips,
-      bet: chips.bet + value,
-      total: chips.total - value
-    })
+    getFireRef(state).transaction((currentValue = chips) => ({
+        ...currentValue,
+        bet: currentValue.bet + value,
+        total: currentValue.total - value
+      })
+    )
   }
 }

@@ -31,37 +31,37 @@ describe('watchChips', () => {
       payload: expectedPayload
     })
   })
-  
+
   describe('update player state', () => {
     it('should not update state to "idle" when setting chips', () => {
       const dispatchMock = jest.fn(),
             snapshotMock = { val(){ return { bet: 100 } }}
-  
+
       actions.watchChips()(dispatchMock, () => ({
         chips: {},
         player: { id: 42 },
         table: { id: 1 }
       }))
       updateChips(snapshotMock)
-  
+
       expect(dispatchMock).not.toBeCalledWith('idle')
     })
-    
+
     it('should set state to "idle" when setting chips to 0', () => {
       const dispatchMock = jest.fn(),
             snapshotMock = { val(){ return { bet: 0 } }}
-  
+
       actions.watchChips()(dispatchMock, () => ({
         chips: {},
         player: { id: 42 },
         table: { id: 1 }
       }))
       updateChips(snapshotMock)
-  
+
       expect(dispatchMock).toBeCalledWith('idle')
     })
   })
-  
+
   it('should set state to "idle" when setting chips to 0', () => {
     const dispatchMock = jest.fn(),
           snapshotMock = { val(){ return { bet: 0 } }}
@@ -93,15 +93,18 @@ describe('addToBet', () => {
     refMock
   })
 
-  it('should update chips', () => {
+  it('should update chips atomically', () => {
     const setMock = jest.fn()
     refMock.mockImplementation(path => ({
-      set: path === `table/1/player/10/chips` ? setMock : jest.fn()
+      transaction: path === `table/1/player/10/chips` ? setMock : jest.fn()
     }))
 
     actions.addToBet(10)(undefined, () => initialState)
 
-    expect(setMock).toBeCalledWith({
+    let transactionFn = setMock.mock.calls[0][0]
+    const transactionValue = transactionFn()
+
+    expect(transactionValue).toEqual({
       bet: 30,
       total: 90
     })
