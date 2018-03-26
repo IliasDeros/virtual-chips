@@ -4,7 +4,7 @@ import Bet from '../components/Bet'
 import Total from '../components/Total'
 import { addToBet, callBet, watchChips } from '../actions/chips-action'
 import { bet, fold, loadPlayerName, loadPlayerState } from '../actions/player-action'
-import { controlGameIfFirst } from '../actions/table-action'
+import { controlGameIfFirst } from '../actions/game-action'
 
 class Table extends Component {
   componentDidMount(){
