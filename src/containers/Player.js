@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Bet from '../components/Bet'
 import Total from '../components/Total'
-import { addToBet, watchChips } from '../actions/chips-action'
+import { addToBet, callBet, watchChips } from '../actions/chips-action'
 import { bet, fold, loadPlayerName, loadPlayerState } from '../actions/player-action'
 import { controlGameIfFirst } from '../actions/table-action'
 
@@ -18,12 +18,14 @@ class Table extends Component {
     return (
       this.props.chips
       ? <div className="container">
-          <h2>{this.props.player.name || this.props.player.id}</h2>
+          <h2>{this.props.player.name || this.props.player.id} ({this.props.player.state || 'idle'})</h2>
           <Bet bet={this.props.chips.bet} />
           <button onClick={() => this.props.addToBet(10)}>Add 10</button>
           <br/>
           <button onClick={() => this.props.addToBet(-10)}>Remove 10</button>
           <br/><br/>
+          <button onClick={() => this.props.call()}>CALL</button>
+          <br/>
           <button onClick={() => this.props.fold()}>FOLD</button>
           <Total total={this.props.chips.total} />
         </div>
@@ -39,9 +41,10 @@ function mapStateToProps({ chips, player }){
 function mapDispatchToProps(dispatch){
   return {
     addToBet: payload => {
-      dispatch(addToBet(payload)) // increase bet 
+      dispatch(addToBet(payload)) // increase bet
       dispatch(bet())             // update player state
     },
+    call: () => dispatch(callBet()),
     controlGame: () => dispatch(controlGameIfFirst()),
     fold: () => dispatch(fold()),
     loadPlayerName: () => dispatch(loadPlayerName()),

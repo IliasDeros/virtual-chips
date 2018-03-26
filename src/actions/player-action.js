@@ -60,9 +60,21 @@ export function loadPlayerState(){
   }
 }
 
+export function allIn(){
+  return (_, getState) => {
+    getFireRef('state', getState()).set(State.ALL_IN)
+  }
+}
+
 export function bet(){
   return (_, getState) => {
     getFireRef('state', getState()).set(State.BET)
+  }
+}
+
+export function call(){
+  return (_, getState) => {
+    getFireRef('state', getState()).set(State.CALLED)
   }
 }
 

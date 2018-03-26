@@ -99,6 +99,29 @@ describe('loadPlayerState', () => {
   })
 })
 
+describe('allIn', () => {
+  let setMock = jest.fn()
+
+  beforeEach(() => {
+    const expectedPath = 'table/1/player/42/state'
+
+    fire.database = jest.fn().mockReturnValue({
+      ref: path => path === expectedPath && {
+        set: setMock
+      }
+    })
+  })
+
+  it('should update state', () => {
+    const initialState = {
+      player: { id: 42 },
+      table: { id: 1 }
+    }
+    actions.allIn()(undefined, () => initialState)
+    expect(setMock).toHaveBeenCalledWith('all in')
+  })
+})
+
 describe('bet', () => {
   let setMock = jest.fn()
 
@@ -119,6 +142,29 @@ describe('bet', () => {
     }
     actions.bet()(undefined, () => initialState)
     expect(setMock).toHaveBeenCalledWith('bet')
+  })
+})
+
+describe('call', () => {
+  let setMock = jest.fn()
+
+  beforeEach(() => {
+    const expectedPath = 'table/1/player/42/state'
+
+    fire.database = jest.fn().mockReturnValue({
+      ref: path => path === expectedPath && {
+        set: setMock
+      }
+    })
+  })
+
+  it('should update state', () => {
+    const initialState = {
+      player: { id: 42 },
+      table: { id: 1 }
+    }
+    actions.call()(undefined, () => initialState)
+    expect(setMock).toHaveBeenCalledWith('called')
   })
 })
 

@@ -1,14 +1,14 @@
 import fire from '../fire'
-import { idle } from './player-action'
+import { allIn, call, idle } from './player-action'
 
-function getFireRef({ player, table }){
+function getChipsRef({ player, table }){
   let ref = `table/${table.id}/player/${player.id}/chips`
   return fire.database().ref(ref)
 }
 
 export function watchChips(){
   return (dispatch, getState) => {
-    getFireRef(getState()).on('value', snapshot => {
+    getChipsRef(getState()).on('value', snapshot => {
       const chips = snapshot.val(),
             state = getState()
 
@@ -25,7 +25,7 @@ export function watchChips(){
         })
       } else {
         // initialize chips
-        getFireRef(state).set({
+        getChipsRef(state).set({
           bet: 0,
           total: 2500
         })
@@ -39,11 +39,35 @@ export function addToBet(value){
     const state = getState(),
           chips = state.chips
 
-    getFireRef(state).transaction((currentValue = chips) => ({
+    getChipsRef(state).transaction((currentValue = chips) => ({
         ...currentValue,
         bet: currentValue.bet + value,
         total: currentValue.total - value
       })
     )
+  }
+}
+
+export function callBet(){
+  return (dispatch, getState) => {
+    const state = getState(),
+          { chips, opponents } = state
+
+    const betToCall = Math.max(...opponents.map(p => p.chips.bet))
+
+    getChipsRef(state).transaction((currentValue = chips) => {
+      const { bet, total } = currentValue,
+            amountMissingForCall = betToCall - bet,
+            betAmount = Math.min(total, amountMissingForCall)
+
+      return {
+        ...currentValue,
+        bet: currentValue.bet + betAmount,
+        total: currentValue.total - betAmount
+      }
+    }, function onComplete(_, commited, snapshot){
+      const { bet } = snapshot.val()
+      commited && dispatch(bet < betToCall ? allIn() : call())
+    })
   }
 }
