@@ -11,14 +11,11 @@ export function controlGame(){
     // this function is run for every single table-wide update
     fire.database().ref(`table/${table.id}`).on('value', snapshot => {
       switch (table.turn || Turn.PRE_FLOP){
-        case Turn.PRE_FLOP:
-          isTurnFinished(snapshot.val()) && setAction(Action.NEXT_TURN)
-          break
         case Turn.RIVER:
           // call functions.win if none is bet/idle
           break
         default:
-          // call functions.nextTurn if all called, or all checked
+          isTurnFinished(snapshot.val()) && setAction(Action.NEXT_TURN)
       }
     })
   }
