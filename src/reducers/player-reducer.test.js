@@ -21,3 +21,12 @@ describe('SET_PLAYER_STATE', () => {
     })).toEqual({ state: 'folded' })
   })
 })
+
+describe('SET_PLAYER_TOKEN', () => {
+  it('should unset token by default', () => {
+    expect(reducer(undefined, {
+      type: 'SET_PLAYER_TOKEN',
+      payload: 'dealer'
+    })).toEqual(({ token: 'dealer' }))
+  })
+})

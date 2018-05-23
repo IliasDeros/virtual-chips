@@ -18,6 +18,11 @@ export default function(state = {}, action){
         state: action.payload
       }
       break
+    case 'SET_PLAYER_TOKEN':
+      state = {
+        ...state,
+        token: action.payload
+      }
     // no default
   }
 
