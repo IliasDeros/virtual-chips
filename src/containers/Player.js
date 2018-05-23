@@ -19,7 +19,10 @@ class Table extends Component {
     return (
       this.props.chips
       ? <div className="container">
-          <h2>{this.props.player.name || this.props.player.id} ({this.props.player.state || 'idle'})</h2>
+          <h2>{this.props.player.name || this.props.player.id}
+            ({this.props.player.state || 'idle'})
+            {(() => this.props.player.token && ` - ${this.props.player.token}`)()}
+          </h2>
           <Bet bet={this.props.chips.bet} />
           <button onClick={() => this.props.addToBet(10)}>Add 10</button>
           <br/>
