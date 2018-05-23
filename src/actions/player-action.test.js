@@ -100,31 +100,48 @@ describe('loadPlayerState', () => {
 })
 
 describe('loadPlayerToken', () => {
-  let updateState, setMock = jest.fn()
+  let updateRound, setMock = jest.fn()
 
   beforeEach(() => {
-    const expectedPath = 'table/1/round'
+    const roundPath = 'table/1/round',
+          playerPath = 'table/1/player'
 
     fire.database = jest.fn().mockReturnValue({
-      ref: path => path === expectedPath && {
-        on: (event, cb) => event === 'value' && (updateState = cb),
-        set: setMock
+      ref: path => {
+        if (path === roundPath){
+          return {
+            on: (event, cb) => event === 'value' && (updateRound = cb),
+            set: setMock
+          }
+        } else if (path === playerPath){
+          return {
+            once: event => event === 'value' && Promise.resolve({
+              val: () => ({ 42: { id: 42 } })
+            })
+          }
+        }
       }
     })
   })
 
-  it('should update token', () => {
+  it('should update token', done => {
     const dispatchMock = jest.fn(),
           initialState = {
             player: { id: 42 },
             table: { id: 1 }
           }
-    actions.loadPlayerToken()(dispatchMock, () => initialState)
-    updateState({ val: () => 2 })
 
-    expect(dispatchMock).toHaveBeenCalledWith({
-      type: 'SET_PLAYER_TOKEN',
-      payload: 2
+    const loadPromise = new Promise(resolve =>
+      actions.loadPlayerToken()(dispatchMock, () => initialState, resolve)
+    )
+    updateRound({ val: () => 0 })
+
+    loadPromise.then(() => {
+      expect(dispatchMock).toHaveBeenCalledWith({
+        type: 'SET_PLAYER_TOKEN',
+        payload: 'big blind'
+      })
+      done()
     })
   })
 })

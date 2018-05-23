@@ -1,6 +1,7 @@
 import Fingerprint from 'fingerprintjs2'
 import fire from '../fire'
 import State from '../constants/state'
+import getToken from '../business/get-token'
 
 function getFireRef(endpoint, { table, player }){
   let ref = `table/${table.id}/player/${player.id}/${endpoint}`
@@ -61,17 +62,25 @@ export function loadPlayerState(){
 }
 
 export function loadPlayerToken(){
-  return (dispatch, getState) => {
+  return (dispatch, getState, done = function(){}) => {
     const state = getState(),
           tableId = state.table.id,
-          roundRef = `table/${tableId}/round`
+          roundRef = `table/${tableId}/round`,
+          playerRef = `table/${tableId}/player`
 
     // watch table round
-    fire.database().ref(roundRef).on('value', snapshot => {
+    fire.database().ref(roundRef).on('value', async roundSnapshot => {
+      const playerSnapshot = await fire.database().ref(playerRef).once('value'),
+            table = {
+              player: playerSnapshot.val(),
+              round: roundSnapshot.val()
+            }
+
       dispatch({
         type: 'SET_PLAYER_TOKEN',
-        payload: snapshot.val()
+        payload: getToken(table, state.player)
       })
+      done()
     })
   }
 }
