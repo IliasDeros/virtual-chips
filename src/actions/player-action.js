@@ -60,6 +60,22 @@ export function loadPlayerState(){
   }
 }
 
+export function loadPlayerToken(){
+  return (dispatch, getState) => {
+    const state = getState(),
+          tableId = state.table.id,
+          roundRef = `table/${tableId}/round`
+
+    // watch table round
+    fire.database().ref(roundRef).on('value', snapshot => {
+      dispatch({
+        type: 'SET_PLAYER_TOKEN',
+        payload: snapshot.val()
+      })
+    })
+  }
+}
+
 export function allIn(){
   return (_, getState) => {
     getFireRef('state', getState()).set(State.ALL_IN)

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import Bet from '../components/Bet'
 import Total from '../components/Total'
 import { addToBet, callBet, watchChips } from '../actions/chips-action'
-import { bet, fold, loadPlayerName, loadPlayerState } from '../actions/player-action'
+import { bet, fold, loadPlayerName, loadPlayerState, loadPlayerToken } from '../actions/player-action'
 import { controlGameIfFirst } from '../actions/game-action'
 
 class Table extends Component {
@@ -12,6 +12,7 @@ class Table extends Component {
     this.props.watchChips()
     this.props.loadPlayerName()
     this.props.loadPlayerState()
+    this.props.loadPlayerToken()
   }
 
   render() {
@@ -49,6 +50,7 @@ function mapDispatchToProps(dispatch){
     fold: () => dispatch(fold()),
     loadPlayerName: () => dispatch(loadPlayerName()),
     loadPlayerState: () => dispatch(loadPlayerState()),
+    loadPlayerToken: () => dispatch(loadPlayerToken()),
     watchChips: () => dispatch(watchChips())
   }
 }

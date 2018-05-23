@@ -99,6 +99,36 @@ describe('loadPlayerState', () => {
   })
 })
 
+describe('loadPlayerToken', () => {
+  let updateState, setMock = jest.fn()
+
+  beforeEach(() => {
+    const expectedPath = 'table/1/round'
+
+    fire.database = jest.fn().mockReturnValue({
+      ref: path => path === expectedPath && {
+        on: (event, cb) => event === 'value' && (updateState = cb),
+        set: setMock
+      }
+    })
+  })
+
+  it('should update token', () => {
+    const dispatchMock = jest.fn(),
+          initialState = {
+            player: { id: 42 },
+            table: { id: 1 }
+          }
+    actions.loadPlayerToken()(dispatchMock, () => initialState)
+    updateState({ val: () => 2 })
+
+    expect(dispatchMock).toHaveBeenCalledWith({
+      type: 'SET_PLAYER_TOKEN',
+      payload: 2
+    })
+  })
+})
+
 describe('allIn', () => {
   let setMock = jest.fn()
 
