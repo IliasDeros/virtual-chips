@@ -103,17 +103,14 @@ describe('loadPlayerToken', () => {
   let updateRound, setMock = jest.fn()
 
   beforeEach(() => {
-    const roundPath = 'table/1/round',
-          playerPath = 'table/1/player'
-
     fire.database = jest.fn().mockReturnValue({
       ref: path => {
-        if (path === roundPath){
+        if (path === 'table/1/round'){
           return {
             on: (event, cb) => event === 'value' && (updateRound = cb),
             set: setMock
           }
-        } else if (path === playerPath){
+        } else if (path === 'table/1/player'){
           return {
             once: event => event === 'value' && Promise.resolve({
               val: () => ({ 42: { id: 42 } })

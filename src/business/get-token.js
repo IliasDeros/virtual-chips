@@ -7,6 +7,10 @@ import Token from '../constants/token'
 *     1. Dealer
 *     2. Small Blind
 *     3. Big Blind
+*
+* @param table { player: { id: {} }, round: 0 }
+* @param player { id: 123 }
+* @returns Token
 */
 export default function getToken(table, player){
   let token,
