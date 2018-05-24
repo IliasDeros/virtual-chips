@@ -103,19 +103,27 @@ describe('loadPlayerToken', () => {
   let updateRound, setMock = jest.fn()
 
   beforeEach(() => {
+    const tableRoundMock = {
+      on: (event, cb) => event === 'value' && (updateRound = cb),
+      set: setMock
+    },
+    tablePlayerMock = {
+      once: event => event === 'value' && Promise.resolve({
+        val: () => ({ 42: { id: 42 } })
+      })
+    },
+    tablePlayerTokenMock = {
+      set: setMock
+    }
     fire.database = jest.fn().mockReturnValue({
       ref: path => {
-        if (path === 'table/1/round'){
-          return {
-            on: (event, cb) => event === 'value' && (updateRound = cb),
-            set: setMock
-          }
-        } else if (path === 'table/1/player'){
-          return {
-            once: event => event === 'value' && Promise.resolve({
-              val: () => ({ 42: { id: 42 } })
-            })
-          }
+        switch (path){
+          case 'table/1/round':
+            return tableRoundMock
+          case 'table/1/player':
+            return tablePlayerMock
+          case 'table/1/player/42/token':
+            return tablePlayerTokenMock
         }
       }
     })
@@ -138,6 +146,24 @@ describe('loadPlayerToken', () => {
         type: 'SET_PLAYER_TOKEN',
         payload: 'big blind'
       })
+      done()
+    })
+  })
+
+  it('should update the token in db', () => {
+    const dispatchMock = jest.fn(),
+          initialState = {
+            player: { id: 42 },
+            table: { id: 1 }
+          }
+
+    const loadPromise = new Promise(resolve =>
+      actions.loadPlayerToken()(dispatchMock, () => initialState, resolve)
+    )
+    updateRound({ val: () => 0 })
+
+    loadPromise.then(() => {
+      expect(setMock).toHaveBeenCalledWith('big blind')
       done()
     })
   })
