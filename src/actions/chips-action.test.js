@@ -1,6 +1,7 @@
 import * as actions from './chips-action'
 import * as playerActions from './player-action'
 import fire from 'virtual-chips/src/fire'
+import Token from '../constants/token'
 
 describe('watchChips', () => {
   let updateChips
@@ -76,6 +77,60 @@ describe('watchChips', () => {
     updateChips(snapshotMock)
 
     expect(dispatchMock).toBeCalledWith('idle')
+  })
+})
+
+describe('watchToken', () => {
+  let transactionMock, updateToken
+  const initialState = {
+          player: { id: 42 },
+          table: { id: 1 },
+          chips: {
+            bet: 0,
+            total: 2500
+          }
+        }
+
+  beforeEach(() => {
+    transactionMock = jest.fn()
+    fire.database = jest.fn().mockReturnValue({
+      ref: path => {
+        switch (path){
+          case 'table/1/player/42/chips':
+            return { transaction: transactionMock }
+          case 'table/1/player/42/token':
+            return {
+              on: (event, cb) => event === 'value' && (updateToken = cb)
+            }
+        }
+      }
+    })
+  })
+
+  it('should set small blind bet', () => {
+    actions.watchToken()(jest.fn(), () => initialState)
+    updateToken({ val: () => Token.SMALL_BLIND })
+
+    let transactionFn = transactionMock.mock.calls[0][0]
+    const transactionValue = transactionFn()
+
+    expect(transactionValue).toEqual({
+      bet: 100,
+      total: 2400
+    })
+  })
+
+  it('should set big blind bet', () => {
+    actions.watchToken()(jest.fn(), () => initialState)
+    updateToken({ val: () => Token.BIG_BLIND })
+
+    let transactionFn = transactionMock.mock.calls[0][0]
+    const transactionValue = transactionFn()
+
+    expect(transactionValue).toEqual({
+      bet: 200,
+      total: 2300
+    })
   })
 })
 

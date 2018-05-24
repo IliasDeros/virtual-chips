@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Bet from '../components/Bet'
 import Total from '../components/Total'
-import { addToBet, callBet, watchChips } from '../actions/chips-action'
+import { addToBet, callBet, watchToken, watchChips } from '../actions/chips-action'
 import { bet, fold, loadPlayerName, loadPlayerState, loadPlayerToken } from '../actions/player-action'
 import { controlGameIfFirst } from '../actions/game-action'
 
@@ -10,6 +10,7 @@ class Table extends Component {
   componentDidMount(){
     this.props.controlGame()
     this.props.watchChips()
+    this.props.watchToken()
     this.props.loadPlayerName()
     this.props.loadPlayerState()
     this.props.loadPlayerToken()
@@ -54,7 +55,8 @@ function mapDispatchToProps(dispatch){
     loadPlayerName: () => dispatch(loadPlayerName()),
     loadPlayerState: () => dispatch(loadPlayerState()),
     loadPlayerToken: () => dispatch(loadPlayerToken()),
-    watchChips: () => dispatch(watchChips())
+    watchChips: () => dispatch(watchChips()),
+    watchToken: () => dispatch(watchToken())
   }
 }
 

@@ -1,14 +1,15 @@
 import fire from '../fire'
+import Token from '../constants/token'
 import { allIn, call, idle } from './player-action'
 
-function getChipsRef({ player, table }){
-  let ref = `table/${table.id}/player/${player.id}/chips`
+function getFireRef(endpoint, { player, table }){
+  let ref = `table/${table.id}/player/${player.id}/${endpoint}`
   return fire.database().ref(ref)
 }
 
 export function watchChips(){
   return (dispatch, getState) => {
-    getChipsRef(getState()).on('value', snapshot => {
+    getFireRef('chips', getState()).on('value', snapshot => {
       const chips = snapshot.val(),
             state = getState()
 
@@ -25,10 +26,37 @@ export function watchChips(){
         })
       } else {
         // initialize chips
-        getChipsRef(state).set({
+        getFireRef('chips', state).set({
           bet: 0,
           total: 2500
         })
+      }
+    })
+  }
+}
+
+export function watchToken(){
+  return (dispatch, getState) => {
+    const state = getState()
+
+    getFireRef('token', state).on('value', snapshot => {
+      const currentBet = state.chips.bet || 0
+      let bet
+
+      switch (snapshot.val()){
+        case Token.DEALER_SMALL:
+        case Token.SMALL_BLIND:
+          bet = 100
+          break
+        case Token.BIG_BLIND:
+          bet = 200
+          break
+        default:
+          bet = 0
+      }
+
+      if (currentBet < bet){
+        addToBet(bet - currentBet)(dispatch, getState)
       }
     })
   }
@@ -39,7 +67,7 @@ export function addToBet(value){
     const state = getState(),
           chips = state.chips
 
-    getChipsRef(state).transaction((currentValue = chips) => ({
+    getFireRef('chips', state).transaction((currentValue = chips) => ({
         ...currentValue,
         bet: currentValue.bet + value,
         total: currentValue.total - value
@@ -55,7 +83,7 @@ export function callBet(){
 
     const betToCall = Math.max(...opponents.map(p => p.chips.bet))
 
-    getChipsRef(state).transaction((currentValue = chips) => {
+    getFireRef('chips', state).transaction((currentValue = chips) => {
       const { bet, total } = currentValue,
             amountMissingForCall = betToCall - bet,
             betAmount = Math.min(total, amountMissingForCall)
