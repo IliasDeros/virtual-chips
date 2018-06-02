@@ -16,10 +16,12 @@ exports.onWrite = writeEvent => {
         actionUpdate = ACTION_UPDATE[action]
 
   if (actionUpdate){
-    tableRef.once('value').then(snapshot => {
-      tableRef.update(actionUpdate(snapshot.val()))
-      return tableRef.child('action').remove()
-    }).catch(error => console.error('Error reading "table":', error.stack))
+    tableRef.once('value')
+      .then(snapshot => {
+          tableRef.update(actionUpdate(snapshot.val()))
+          return tableRef.child('action').remove()
+        }, error => console.error('Error reading "table":', error.stack))
+      .catch(error => console.error('Error updating table', error.stack))
   } else {
     const availableActions = `[${Object.keys(ACTION_UPDATE).join(',')}]`
     throw new Error(`Unexpected action ${action}. Available actions: ${availableActions}`)
