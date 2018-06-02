@@ -35,7 +35,7 @@ describe('isGameWon', () => {
       beforeEach(() => { table = {} })
       afterEach(() => expect(isGameWon(table)).toBeFalsy())
 
-      it('should not be finished when not all players folded', () => {
+      it('when not all players folded', () => {
         table.player = {
           0: { state: State.IDLE },
           1: { state: State.IDLE },
@@ -43,11 +43,15 @@ describe('isGameWon', () => {
         }
       })
 
-      it('should not be finished when not all players tied', () => {
+      it('when not all players tied', () => {
         table.player = {
           0: { state: State.TIED },
           1: { state: State.IDLE }
         }
+      })
+
+      it('when there is only 1 player', () => {
+        table.player = { 0: { state: State.TIED } }
       })
     })
 })

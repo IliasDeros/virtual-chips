@@ -8,18 +8,20 @@ import isGameWon from '../business/is-game-won'
 
 export function controlGame(){
   return (dispatch, getState) => {
-    const { table } = getState()
+    const tableId = getState().table.id
 
     // this function is run for every single table-wide update
-    fire.database().ref(`table/${table.id}`).on('value', snapshot => {
+    fire.database().ref(`table/${tableId}`).on('value', snapshot => {
+      const table = snapshot.val()
+
       switch (table.turn || Turn.PRE_FLOP){
         case Turn.PRE_FLOP:
         case Turn.FLOP:
         case Turn.TURN:
-          isTurnFinished(snapshot.val()) && dispatch(setAction(Action.NEXT_TURN))
+          isTurnFinished(table) && dispatch(setAction(Action.NEXT_TURN))
           // eslint-disable-next-line
         default:
-          isGameWon(snapshot.val()) && dispatch(setAction(Action.WIN_ROUND))
+          isGameWon(table) && dispatch(setAction(Action.WIN_ROUND))
       }
     })
   }
