@@ -1,7 +1,7 @@
 import * as actions from './game-action'
 import fire from 'virtual-chips/src/fire'
 
-describe('watchChips', () => {
+describe('controlGame', () => {
   let getPlayersOnce, getPlayersPromise
 
   beforeEach(() => {

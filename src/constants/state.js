@@ -5,5 +5,6 @@ export default {
   CALLED: 'called',
   CHECKED: 'checked',
   IDLE: 'idle',
-  FOLDED: 'folded'
+  FOLDED: 'folded',
+  TIED: 'tied'
 }
