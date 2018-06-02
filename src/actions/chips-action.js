@@ -7,8 +7,10 @@ function getFireRef(endpoint, { player, table }){
   return fire.database().ref(ref)
 }
 
-export function watchChips(){
+export function watchChips(onInitialize = function(){}){
   return (dispatch, getState) => {
+    let initialized = false
+
     getFireRef('chips', getState()).on('value', snapshot => {
       const chips = snapshot.val(),
             state = getState()
@@ -31,6 +33,9 @@ export function watchChips(){
           total: 2500
         })
       }
+
+      initialized || onInitialize()
+      initialized = true
     })
   }
 }

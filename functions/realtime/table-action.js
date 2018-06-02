@@ -20,7 +20,7 @@ exports.onWrite = writeEvent => {
       .then(snapshot => {
           tableRef.update(actionUpdate(snapshot.val()))
           return tableRef.child('action').remove()
-        }, error => console.error('Error reading "table":', error.stack))
+        }, error => console.error('Error reading table:', error.stack))
       .catch(error => console.error('Error updating table', error.stack))
   } else {
     const availableActions = `[${Object.keys(ACTION_UPDATE).join(',')}]`

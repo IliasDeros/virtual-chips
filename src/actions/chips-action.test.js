@@ -35,6 +35,20 @@ describe('watchChips', () => {
     })
   })
 
+  it('should set state to "idle" when setting chips to 0', () => {
+    const dispatchMock = jest.fn(),
+          snapshotMock = { val(){ return { bet: 0 } }}
+
+    actions.watchChips()(dispatchMock, () => ({
+      chips: {},
+      player: { id: 42 },
+      table: { id: 1 }
+    }))
+    updateChips(snapshotMock)
+
+    expect(dispatchMock).toBeCalledWith('idle')
+  })
+
   describe('update player state', () => {
     it('should not update state to "idle" when setting chips', () => {
       const dispatchMock = jest.fn(),
@@ -65,18 +79,28 @@ describe('watchChips', () => {
     })
   })
 
-  it('should set state to "idle" when setting chips to 0', () => {
-    const dispatchMock = jest.fn(),
-          snapshotMock = { val(){ return { bet: 0 } }}
+  describe('onInitialize', () => {
+    let onInitialize
+    const snapshotMock = { val(){ return {} }}
 
-    actions.watchChips()(dispatchMock, () => ({
-      chips: {},
-      player: { id: 42 },
-      table: { id: 1 }
-    }))
-    updateChips(snapshotMock)
+    beforeEach(() => {
+      onInitialize = jest.fn()
+      actions.watchChips(onInitialize)(jest.fn(), () => ({
+        player: { id: 42 },
+        table: { id: 1 }
+      }))
+    })
 
-    expect(dispatchMock).toBeCalledWith('idle')
+    it('should execute callback on first update', () => {
+      updateChips(snapshotMock)
+      expect(onInitialize).toHaveBeenCalledTimes(1)
+    })
+
+    it('should not execute callback on second update', () => {
+      updateChips(snapshotMock)
+      updateChips(snapshotMock)
+      expect(onInitialize).toHaveBeenCalledTimes(1)
+    })
   })
 })
 
