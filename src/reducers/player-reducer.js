@@ -1,5 +1,11 @@
 export default function(state = {}, action){
   switch (action.type){
+    case 'SET_PLAYER_HOST':
+      state = {
+        ...state,
+        host: true
+      }
+      break
     case 'SET_PLAYER_ID':
       state = {
         ...state,

@@ -1,4 +1,6 @@
 import fire from '../fire'
+import { setAction } from './table-action'
+import { setPlayerHost } from './player-action'
 import Action from '../constants/action'
 import Turn from '../constants/turn'
 import isTurnFinished from '../business/is-turn-finished'
@@ -6,8 +8,7 @@ import isGameWon from '../business/is-game-won'
 
 export function controlGame(){
   return (dispatch, getState) => {
-    const { table } = getState(),
-          setAction = a => fire.database().ref(`table/${table.id}/action`).set(a)
+    const { table } = getState()
 
     // this function is run for every single table-wide update
     fire.database().ref(`table/${table.id}`).on('value', snapshot => {
@@ -15,9 +16,10 @@ export function controlGame(){
         case Turn.PRE_FLOP:
         case Turn.FLOP:
         case Turn.TURN:
-          isTurnFinished(snapshot.val()) && setAction(Action.NEXT_TURN)
+          isTurnFinished(snapshot.val()) && dispatch(setAction(Action.NEXT_TURN))
+          // eslint-disable-next-line
         default:
-          isGameWon(snapshot.val()) && setAction(Action.WIN_ROUND)
+          isGameWon(snapshot.val()) && dispatch(setAction(Action.WIN_ROUND))
       }
     })
   }
@@ -38,6 +40,7 @@ export function controlGameIfFirst(){
 
     if (playerIsFirst(getState, players)){
       dispatch(controlGame())
+      dispatch(setPlayerHost())
     }
   }
 }

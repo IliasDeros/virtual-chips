@@ -30,3 +30,11 @@ describe('SET_PLAYER_TOKEN', () => {
     })).toEqual(({ token: 'dealer' }))
   })
 })
+
+describe('SET_PLAYER_HOST', () => {
+  it('should set player host', () => {
+    expect(reducer(undefined, {
+      type: 'SET_PLAYER_HOST'
+    })).toEqual(({ host: true }))
+  })
+})

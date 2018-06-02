@@ -24,6 +24,7 @@ class Table extends Component {
             ({this.props.player.state || 'idle'})
             {(() => this.props.player.token && ` - ${this.props.player.token}`)()}
           </h2>
+          {(() => this.props.player.host && <p>You are the host.</p>)()}
           <Bet bet={this.props.chips.bet} />
           <button onClick={() => this.props.addToBet(10)}>Add 10</button>
           <br/>

@@ -283,3 +283,9 @@ describe('idle', () => {
     expect(setMock).toHaveBeenCalledWith('idle')
   })
 })
+
+describe('setPlayerHost', () => {
+  it('should be the expected type', () => {
+    expect(actions.setPlayerHost()).toEqual({ type: 'SET_PLAYER_HOST' })
+  })
+})

@@ -24,3 +24,10 @@ export function watchTable(id = 'default'){
     })
   }
 }
+
+export function setAction(action){
+  return (dispatch, getState) => {
+    const table = getState().table
+    fire.database().ref(`table/${table.id}/action`).set(action)
+  }
+}
