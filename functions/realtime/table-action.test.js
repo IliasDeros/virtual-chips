@@ -87,8 +87,8 @@ describe('tableAction', () => {
         it('should win round', done => {
             actionStub.returns({
                 player: {
-                    'first': { state: 'idle', chips: { total: 200 } },
-                    'second': { state: 'folded', chips: { total: 500 } }
+                    'first': { state: 'idle', chips: { bet: 100, total: 200 } },
+                    'second': { state: 'folded', chips: { bet: 500, total: 500 } }
                 },
                 pot: 2000,
                 turn: 2,
@@ -96,11 +96,13 @@ describe('tableAction', () => {
             })
             fakeTableRef.update = payload => {
                 assert.deepStrictEqual(payload, {
-                    'player/first/chips/total': 2200,
+                    'player/first/chips/total': 2800,   // pot + bets
                     pot: 0,
                     round: 1,
                     turn: 0,
+                    'player/first/bet': 0,
                     'player/first/state': 'idle',
+                    'player/second/bet': 0,
                     'player/second/state': 'idle',
                 })
                 done()
