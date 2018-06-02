@@ -87,7 +87,7 @@ describe('tableAction', () => {
         it('should win round', done => {
             actionStub.returns({
                 player: {
-                    'first': { id: 'first', state: 'idle', chips: { total: 200 } },
+                    'first': { state: 'idle', chips: { total: 200 } },
                     'second': { state: 'folded', chips: { total: 500 } }
                 },
                 pot: 2000,

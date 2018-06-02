@@ -52,12 +52,15 @@ function nextTurnUpdates(table){
 }
 
 function winRoundUpdates(table){
-  const updates = {},
-        players = Object.keys(table.player).map(key => table.player[key])
+  const updates = {}
 
   // give pot to unfolded player
-  const unfolded = players.find(p => p.state !== 'folded')
-  updates[`player/${unfolded.id}/chips/total`] = unfolded.chips.total + table.pot
+  const unfoldedId = Object.keys(table.player).find(id => {
+          let player = table.player[id]
+          return player.state !== 'folded'
+        }),
+        playerTotal = table.player[unfoldedId].chips.total
+  updates[`player/${unfoldedId}/chips/total`] = playerTotal + table.pot
 
   // proceed table to next round
   Object.assign(updates, {
