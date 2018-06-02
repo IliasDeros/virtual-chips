@@ -63,19 +63,19 @@ function winRoundUpdates(table){
         tableTotal = Object.keys(table.player).reduce((total, id) => {
             let playerBet = table.player[id].chips.bet
             return total + playerBet
-        }, table.pot)
+        }, table.pot || 0)
   updates[`player/${unfoldedId}/chips/total`] = playerTotal + tableTotal
 
   // proceed table to next round
   Object.assign(updates, {
     pot: 0,
-    round: table.round + 1,
+    round: (table.round || 0) + 1,
     turn: 0
   })
 
   // reset players
   Object.keys(table.player).forEach(id => {
-    updates[`player/${id}/bet`] = 0
+    updates[`player/${id}/chips/bet`] = 0
     updates[`player/${id}/state`] = 'idle'
   })
 

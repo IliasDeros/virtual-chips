@@ -100,9 +100,9 @@ describe('tableAction', () => {
                     pot: 0,
                     round: 1,
                     turn: 0,
-                    'player/first/bet': 0,
+                    'player/first/chips/bet': 0,
                     'player/first/state': 'idle',
-                    'player/second/bet': 0,
+                    'player/second/chips/bet': 0,
                     'player/second/state': 'idle',
                 })
                 done()
