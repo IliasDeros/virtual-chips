@@ -66,5 +66,8 @@ function winRoundUpdates(table){
     turn: 0
   })
 
+  // reset player states
+  Object.keys(table.player).forEach(id => updates[`player/${id}/state`] = 'idle')
+
   return updates
 }

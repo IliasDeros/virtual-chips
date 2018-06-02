@@ -99,7 +99,9 @@ describe('tableAction', () => {
                     'player/first/chips/total': 2200,
                     pot: 0,
                     round: 1,
-                    turn: 0
+                    turn: 0,
+                    'player/first/state': 'idle',
+                    'player/second/state': 'idle',
                 })
                 done()
             }
