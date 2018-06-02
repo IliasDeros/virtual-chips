@@ -3,7 +3,8 @@
 */
 
 const ACTION_UPDATE = {
-  'next turn': nextTurnUpdates
+  'next turn': nextTurnUpdates,
+  'win round': winRoundUpdates
 }
 
 exports.onWrite = writeEvent => {
@@ -13,7 +14,7 @@ exports.onWrite = writeEvent => {
   const action = writeEvent.data.val(),
         tableRef = writeEvent.data.ref.parent,
         actionUpdate = ACTION_UPDATE[action]
-  
+
   if (actionUpdate){
     tableRef.once('value').then(snapshot => {
       tableRef.update(actionUpdate(snapshot.val()))
@@ -23,7 +24,7 @@ exports.onWrite = writeEvent => {
     const availableActions = `[${Object.keys(ACTION_UPDATE).join(',')}]`
     throw new Error(`Unexpected action ${action}. Available actions: ${availableActions}`)
   }
-  
+
   return action
 }
 
@@ -32,20 +33,38 @@ function nextTurnUpdates(table){
   updates.turn = (table.turn || 0) + 1
   updates.pot = makePotUpdate(table)
   return updates
+
+  function makePotUpdate(table){
+    const player = table.player,
+          bets = Object.keys(player).reduce((sum, id) =>
+            sum + player[id].chips.bet
+          , 0)
+
+    return bets + (table.pot || 0)
+  }
+
+  function makePlayerUpdatesHash(table){
+    return Object.keys(table.player).reduce((hash, id) => {
+      hash[`player/${id}/chips/bet`] = 0
+      return hash
+    }, {})
+  }
 }
 
-function makePotUpdate(table){
-  const player = table.player,
-        bets = Object.keys(player).reduce((sum, id) => 
-          sum + player[id].chips.bet
-        , 0)
-  
-  return bets + (table.pot || 0)
-}
+function winRoundUpdates(table){
+  const updates = {},
+        players = Object.keys(table.player).map(key => table.player[key])
 
-function makePlayerUpdatesHash(table){
-  return Object.keys(table.player).reduce((hash, id) => {
-    hash[`player/${id}/chips/bet`] = 0
-    return hash
-  }, {})
+  // give pot to unfolded player
+  const unfolded = players.find(p => p.state !== 'folded')
+  updates[`player/${unfolded.id}/chips/total`] = unfolded.chips.total + table.pot
+
+  // proceed table to next round
+  Object.assign(updates, {
+    pot: 0,
+    round: table.round + 1,
+    turn: 0
+  })
+
+  return updates
 }

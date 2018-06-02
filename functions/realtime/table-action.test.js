@@ -5,6 +5,8 @@ const action = require('./table-action')
 const tableAction = action.onWrite
 const sinon = require('sinon')
 
+let actionStub
+
 const fakeTableRef = {
         child: sinon.stub().returns({ remove: function(){} })
     },
@@ -19,24 +21,22 @@ const fakeTableRef = {
 describe('tableAction', () => {
     describe('unsupported action', () => {
         beforeEach(() => fakeWriteEvent.val = () => 'testing')
-        
+
         it('should throw error', () => {
             assert.throws(() => tableAction(fakeWriteEvent))
         })
     })
-    
+
     describe('next turn', () => {
-        let valueStub
-        
         beforeEach(() => {
-            valueStub = sinon.stub()
+            actionStub = sinon.stub()
             fakeWriteEvent.data.val = () => 'next turn'
             fakeTableRef.once = sinon.stub().withArgs('value')
-                .resolves({ val: valueStub })
+                .resolves({ val: actionStub })
         })
-        
+
         it('should update initial turn', done => {
-            valueStub.returns({
+            actionStub.returns({
                 player: {
                     'first': { chips: { bet: 100 } },
                     'second': { chips: { bet: 150 } }
@@ -53,9 +53,9 @@ describe('tableAction', () => {
             }
             tableAction(fakeWriteEvent)
         })
-        
+
         it('should update second turn', done => {
-            valueStub.returns({
+            actionStub.returns({
                 player: {
                     'first': { chips: { bet: 100 } },
                     'second': { chips: { bet: 150 } }
@@ -69,6 +69,37 @@ describe('tableAction', () => {
                     'player/second/chips/bet': 0,
                     pot: 350,
                     turn: 2
+                })
+                done()
+            }
+            tableAction(fakeWriteEvent)
+        })
+    })
+
+    describe('win round', () => {
+        beforeEach(() => {
+            actionStub = sinon.stub()
+            fakeWriteEvent.data.val = () => 'win round'
+            fakeTableRef.once = sinon.stub().withArgs('value')
+                .resolves({ val: actionStub })
+        })
+
+        it('should win round', done => {
+            actionStub.returns({
+                player: {
+                    'first': { id: 'first', state: 'idle', chips: { total: 200 } },
+                    'second': { state: 'folded', chips: { total: 500 } }
+                },
+                pot: 2000,
+                turn: 2,
+                round: 0
+            })
+            fakeTableRef.update = payload => {
+                assert.deepStrictEqual(payload, {
+                    'player/first/chips/total': 2200,
+                    pot: 0,
+                    round: 1,
+                    turn: 0
                 })
                 done()
             }
