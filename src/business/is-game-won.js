@@ -11,7 +11,7 @@ export default function isGameWon(table){
   if (players.length <= 1){ return }
 
   const states = players.map(p => p.state),
-        nonFolded = states.filter(s => s !== State.FOLDED),
+        nonFolded = states.filter(s => s && s !== State.FOLDED),
         allTied = nonFolded.every(s => s === State.TIED)
 
   return nonFolded.length === 1 || allTied
