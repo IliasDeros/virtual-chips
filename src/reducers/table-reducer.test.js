@@ -1,16 +1,18 @@
 import reducer from './table-reducer'
 
 it('should return initial state', () => {
-  expect(reducer(undefined, {})).toMatchObject({ id: 'default' })
+  expect(reducer(undefined, {})).toMatchObject({
+    id: 'default',
+    pot: 0
+  })
 })
 
 describe('SET_ACTION', () => {
   it('should update action', () => {
-    expect(reducer(undefined, {
+    expect(reducer({}, {
       type: 'SET_ACTION',
       payload: 'action'
     })).toEqual({
-      id: 'default',
       action: 'action'
     })
   })
@@ -18,11 +20,10 @@ describe('SET_ACTION', () => {
 
 describe('SET_POT', () => {
   it('should update pot', () => {
-    expect(reducer(undefined, {
+    expect(reducer({}, {
       type: 'SET_POT',
       payload: 1000
     })).toEqual({
-      id: 'default',
       pot: 1000
     })
   })
@@ -30,11 +31,10 @@ describe('SET_POT', () => {
 
 describe('SET_TURN', () => {
   it('should update turn', () => {
-    expect(reducer(undefined, {
+    expect(reducer({}, {
       type: 'SET_TURN',
       payload: 2
     })).toEqual({
-      id: 'default',
       turn: 2
     })
   })

@@ -1,4 +1,9 @@
-export default function(state = { id: 'default' }, action){
+const initialState = {
+  id: 'default',
+  pot: 0
+}
+
+export default function(state = initialState, action){
   switch (action.type){
     case 'SET_ACTION':
       state = {
