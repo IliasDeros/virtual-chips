@@ -95,6 +95,7 @@ describe('tableAction', () => {
                     'player/first/state': 'idle',
                     'player/second/chips/bet': 0,
                     'player/second/state': 'idle',
+                    'player/third/chips/bet': 0,
                     pot: 650,
                     turn: 2
                 })
