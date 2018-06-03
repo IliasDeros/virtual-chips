@@ -1,7 +1,7 @@
 import * as actions from './opponents-action'
 import fire from 'virtual-chips/src/fire'
 
-describe('watchChips', () => {
+describe('watchOpponents', () => {
   let addChild, updateChild
 
   beforeEach(() => {
@@ -28,7 +28,10 @@ describe('watchChips', () => {
 
   it('should ignore current player', () => {
     const dispatchMock = jest.fn(),
-          getStateMock = () => ({ table: { id: 1 } })
+          getStateMock = () => ({
+            opponents: [],
+            table: { id: 1 }
+          })
 
     actions.watchOpponents()(dispatchMock, getStateMock)
 
@@ -38,6 +41,7 @@ describe('watchChips', () => {
   it('should add opponents', () => {
     const dispatchMock = jest.fn(),
           getStateMock = () => ({
+            opponents: [],
             table: { id: 1 },
             player: {}
           })
@@ -51,9 +55,26 @@ describe('watchChips', () => {
     })
   })
 
+  it('should not add opponents twice', () => {
+    const dispatchMock = jest.fn(),
+          getStateMock = () => ({
+            table: { id: 1 },
+            player: {},
+            opponents: [
+              { id: 'id', name: 'Albert' }
+            ]
+          })
+
+    actions.watchOpponents()(dispatchMock, getStateMock)
+    addChild({ key: 'id', val: () => ({ name: 'Albert' }) })
+
+    expect(dispatchMock).toHaveBeenCalledTimes(0)
+  })
+
   it('should update opponents', () => {
     const dispatchMock = jest.fn(),
           getStateMock = () => ({
+            opponents: [],
             table: { id: 1 },
             player: {}
           })

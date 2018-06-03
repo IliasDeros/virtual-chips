@@ -27,6 +27,7 @@ export function watchOpponents(){
     fire.database().ref(playerRef).on('child_added', data => {
       const opponentId = data.key
       if (opponentId === player.id) { return }
+      if (getState().opponents.some(({ id }) => opponentId === id)) { return }
 
       addOpponent(dispatch, data)
 

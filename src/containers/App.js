@@ -16,10 +16,8 @@ class App extends Component {
     switch(this.props.table.action){
       case Action.NEXT_TURN:
         return <h1>Next Turn!</h1>
-        break
       case Action.WIN_ROUND:
         return <h1>Next ROUND</h1>
-        break
       default:
         return [
           this.props.player.id && <Nav key='nav' />,
