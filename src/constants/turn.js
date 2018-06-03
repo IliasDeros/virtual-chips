@@ -4,4 +4,5 @@ export default {
   FLOP: 1,      // 3 common cards flipped
   TURN: 2,      // 4 common cards flipped
   RIVER: 3,     // 5 common cards flipped
+  FINISHED: 4
 }

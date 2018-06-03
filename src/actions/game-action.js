@@ -21,6 +21,7 @@ export function controlGame(){
         case Turn.PRE_FLOP:
         case Turn.FLOP:
         case Turn.TURN:
+        case Turn.RIVER:
           isTurnFinished(table) && dispatch(setAction(Action.NEXT_TURN))
           // eslint-disable-next-line
         default:

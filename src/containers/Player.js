@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import Turn from '../constants/turn'
 import PlayerMoves from './PlayerMoves'
 import Bet from '../components/Bet'
 import Total from '../components/Total'
@@ -26,11 +27,17 @@ class Player extends Component {
             {(() => this.props.player.token && ` - ${this.props.player.token}`)()}
           </h2>
           {(() => this.props.player.host && <p>You are the host.</p>)()}
-          <Bet bet={this.props.chips.bet} />
-          <button onClick={() => this.props.addToBet(100)}>Add 100</button>
-          <br/>
-          <button onClick={() => this.props.addToBet(-100)}>Remove 100</button>
-          <br/><br/>
+
+          {(() => this.props.table && this.props.table.turn !== Turn.FINISHED && (
+            <div>
+              <Bet bet={this.props.chips.bet} />
+              <button onClick={() => this.props.addToBet(100)}>Add 100</button>
+              <br/>
+              <button onClick={() => this.props.addToBet(-100)}>Remove 100</button>
+              <br/><br/>
+            </div>
+          ))()}
+
           <PlayerMoves />
           <Total total={this.props.chips.total} />
         </div>
@@ -39,8 +46,8 @@ class Player extends Component {
   }
 }
 
-function mapStateToProps({ chips, player }){
-  return { chips, player }
+function mapStateToProps({ chips, player, table }){
+  return { chips, player, table }
 }
 
 function mapDispatchToProps(dispatch){

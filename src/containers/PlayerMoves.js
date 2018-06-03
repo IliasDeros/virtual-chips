@@ -16,7 +16,7 @@ class PlayerMoves extends Component {
   static getDerivedStateFromProps(props, state){
     return {
       canCheck: canCheck(props),
-      isLastTurn: props.table.turn === Turn.RIVER
+      isRoundFinished: props.table.turn === Turn.FINISHED
     }
   }
 
@@ -25,7 +25,7 @@ class PlayerMoves extends Component {
 
     return (
       <div className="player-moves">
-        {(() => this.state.isLastTurn || move)()}
+        {(() => this.state.isRoundFinished || move)()}
         <FoldMove onClick={() => this.props.fold()} />
       </div>
     )

@@ -14,6 +14,7 @@ export default props => {
         {card}{card}{card}{card}
       </div>
     case Turn.RIVER:
+    case Turn.FINISHED:
       return <div className="turn turn-river">
         {card}{card}{card}{card}{card}
       </div>
