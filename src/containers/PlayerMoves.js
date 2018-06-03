@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import canCheck from '../business/can-check'
+import Turn from '../constants/turn'
 import { connect } from 'react-redux'
 import { callBet } from '../actions/chips-action'
 import { check, fold } from '../actions/player-action'
@@ -8,22 +9,23 @@ import CheckMove from '../components/CheckMove'
 import FoldMove from '../components/FoldMove'
 
 class PlayerMoves extends Component {
+  callMove = <CallMove onClick={() => this.props.call()} />
+  checkMove = <CheckMove onClick={() => this.props.check()} />
   state = {}
 
   static getDerivedStateFromProps(props, state){
     return {
-      canCheck: canCheck(props)
+      canCheck: canCheck(props),
+      isLastTurn: props.table.turn === Turn.RIVER
     }
   }
 
   render() {
-    const callBtn = <CallMove onClick={() => this.props.call()} />,
-          checkBtn = <CheckMove onClick={() => this.props.check()} />
+    const move = this.state.canCheck ? this.checkMove : this.callMove
 
     return (
-      <div className="player-moves-container">
-        {(() => this.state.canCheck ? checkBtn : callBtn)()}
-        <br/>
+      <div className="player-moves">
+        {(() => this.state.isLastTurn || move)()}
         <FoldMove onClick={() => this.props.fold()} />
       </div>
     )
