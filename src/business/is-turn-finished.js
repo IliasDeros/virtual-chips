@@ -9,14 +9,23 @@ import State from '../constants/state'
 */
 export default function isTurnFinished(table){
   const players = Object.keys(table.player).map(key => table.player[key]),
-        activeBets = players
-          .filter(p => ![State.ALL_IN, State.FOLDED].includes(p.state))
-          .map(p => p.chips.bet),
+        activePlayers = players
+          .filter(p => ![State.ALL_IN, State.FOLDED].includes(p.state)),
+        activeBets = activePlayers.map(p => p.chips.bet),
 
         allSameBet = !isNaN(activeBets.reduce((a, b) => a === b ? a : NaN)),
-        allDone = players.every(({ state }) =>
-          [State.ALL_IN, State.BET, State.CALLED, State.CHECKED, State.FOLDED].includes(state)
-        )
+        allChecked = activePlayers.every(({ state }) => state === State.CHECKED),
+        allCalled = activePlayers.every(({ state }) => state === State.CALLED),
 
-  return activeBets.length >= 2 && allSameBet && allDone
+        onlyOneBet = activePlayers
+          .filter(p => [State.BET, State.CHECKED].includes(p.state))
+          .length === 1,
+        othersCalled = activePlayers
+          .filter(({ state }) => state === State.CALLED)
+          .length = activePlayers.length - 1,
+        calledHighestBet = onlyOneBet && othersCalled
+
+  return activeBets.length >= 2 &&
+    allSameBet &&
+    (allCalled || allChecked || calledHighestBet)
 }

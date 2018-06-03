@@ -78,5 +78,12 @@ describe('isTurnFinished', () => {
                 0: { chips: { bet: 500 }, state: State.CHECKED }
             }
         })
+
+        it('should not be finished when all players are betting', () => {
+             table.player = {
+                0: { chips: { bet: 500 }, state: State.BET },
+                1: { chips: { bet: 500 }, state: State.BET }
+            }
+        })
     })
 })
