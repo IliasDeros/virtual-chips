@@ -4,6 +4,18 @@ it('should return initial state', () => {
   expect(reducer(undefined, {})).toMatchObject({ id: 'default' })
 })
 
+describe('SET_ACTION', () => {
+  it('should update action', () => {
+    expect(reducer(undefined, {
+      type: 'SET_ACTION',
+      payload: 'action'
+    })).toEqual({
+      id: 'default',
+      action: 'action'
+    })
+  })
+})
+
 describe('SET_POT', () => {
   it('should update pot', () => {
     expect(reducer(undefined, {

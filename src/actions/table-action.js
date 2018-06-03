@@ -7,6 +7,14 @@ function getTableRef(id, path){
 
 export function watchTable(id = 'default'){
   return (dispatch, getState) => {
+    // watch action
+    getTableRef(id, 'action').on('value', snapshot => {
+      dispatch({
+        type: 'SET_ACTION',
+        payload: snapshot.val()
+      })
+    })
+
     // watch pot
     getTableRef(id, 'pot').on('value', snapshot => {
       dispatch({

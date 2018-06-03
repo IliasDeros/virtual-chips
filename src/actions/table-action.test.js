@@ -2,13 +2,16 @@ import fire from 'virtual-chips/src/fire'
 import * as actions from './table-action'
 
 describe('watchTable', () => {
-  let updatePot, updateTurn
+  let updateAction, updatePot, updateTurn
 
   beforeEach(() => {
     fire.database = jest.fn().mockReturnValue({
       ref: path => ({
         on: (event, cb) => {
           switch (path){
+            case 'table/default/action':
+              updateAction = cb
+              break
             case 'table/default/pot':
               updatePot = cb
               break
@@ -20,6 +23,20 @@ describe('watchTable', () => {
           }
         }
       })
+    })
+  })
+
+  it('should update action on action update', () => {
+    const dispatchMock = jest.fn()
+
+    actions.watchTable()(dispatchMock)
+    updateAction({
+      val: () => 'action'
+    })
+
+    expect(dispatchMock).toBeCalledWith({
+      type: 'SET_ACTION',
+      payload: 'action'
     })
   })
 
