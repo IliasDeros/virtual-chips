@@ -2,6 +2,7 @@ import * as actions from './chips-action'
 import * as playerActions from './player-action'
 import fire from 'virtual-chips/src/fire'
 import Token from '../constants/token'
+import Turn from '../constants/turn'
 
 describe('watchChips', () => {
   let updateChips
@@ -84,7 +85,7 @@ describe('watchToken', () => {
   let transactionMock, updateToken
   const initialState = {
           player: { id: 42 },
-          table: { id: 1 },
+          table: { id: 1, turn: Turn.PRE_FLOP },
           chips: {
             bet: 0,
             total: 2500
@@ -131,6 +132,14 @@ describe('watchToken', () => {
       bet: 200,
       total: 2300
     })
+  })
+
+  it('should not set blind after PRE_FLOP', () => {
+    initialState.table.turn = Turn.FLOP
+    actions.watchToken()(jest.fn(), () => initialState)
+    updateToken({ val: () => Token.BIG_BLIND })
+
+    expect(transactionMock).not.toHaveBeenCalled()
   })
 })
 

@@ -1,5 +1,6 @@
 import fire from '../fire'
 import Token from '../constants/token'
+import Turn from '../constants/turn'
 import { allIn, call, idle } from './player-action'
 
 function getFireRef(endpoint, { player, table }){
@@ -38,7 +39,11 @@ export function watchChips(){
 export function watchToken(){
   return (dispatch, getState) => {
     getFireRef('token', getState()).on('value', snapshot => {
-      const currentBet = getState().chips.bet || 0
+      const state = getState(),
+            currentBet = state.chips.bet || 0
+
+      if (state.table.turn !== Turn.PRE_FLOP){ return }
+
       let bet
 
       switch (snapshot.val()){
