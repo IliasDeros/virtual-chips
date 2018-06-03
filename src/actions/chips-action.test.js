@@ -78,30 +78,6 @@ describe('watchChips', () => {
       expect(dispatchMock).toBeCalledWith('idle')
     })
   })
-
-  describe('onInitialize', () => {
-    let onInitialize
-    const snapshotMock = { val(){ return {} }}
-
-    beforeEach(() => {
-      onInitialize = jest.fn()
-      actions.watchChips(onInitialize)(jest.fn(), () => ({
-        player: { id: 42 },
-        table: { id: 1 }
-      }))
-    })
-
-    it('should execute callback on first update', () => {
-      updateChips(snapshotMock)
-      expect(onInitialize).toHaveBeenCalledTimes(1)
-    })
-
-    it('should not execute callback on second update', () => {
-      updateChips(snapshotMock)
-      updateChips(snapshotMock)
-      expect(onInitialize).toHaveBeenCalledTimes(1)
-    })
-  })
 })
 
 describe('watchToken', () => {

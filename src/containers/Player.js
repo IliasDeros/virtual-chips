@@ -9,7 +9,8 @@ import { controlGameIfFirst } from '../actions/game-action'
 class Table extends Component {
   componentDidMount(){
     this.props.controlGame()
-    this.props.watchChips(() => this.props.watchToken())
+    this.props.watchChips()
+    this.props.watchToken()
     this.props.loadPlayerName()
     this.props.loadPlayerState()
     this.props.loadPlayerToken()
@@ -55,7 +56,7 @@ function mapDispatchToProps(dispatch){
     loadPlayerName: () => dispatch(loadPlayerName()),
     loadPlayerState: () => dispatch(loadPlayerState()),
     loadPlayerToken: () => dispatch(loadPlayerToken()),
-    watchChips: fn => dispatch(watchChips(fn)),
+    watchChips: () => dispatch(watchChips()),
     watchToken: () => dispatch(watchToken())
   }
 }
