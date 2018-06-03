@@ -1,7 +1,7 @@
 import fire from '../fire'
 import Token from '../constants/token'
 import Turn from '../constants/turn'
-import { allIn, call, idle } from './player-action'
+import { allIn, call } from './player-action'
 
 function getFireRef(endpoint, { player, table }){
   let ref = `table/${table.id}/player/${player.id}/${endpoint}`
@@ -15,11 +15,6 @@ export function watchChips(){
             state = getState()
 
       if (chips){
-        // update player state
-        if (state.chips){
-          chips.bet === 0 && dispatch(idle())
-        }
-
         // update chips
         dispatch({
           type: 'SET_CHIPS',
