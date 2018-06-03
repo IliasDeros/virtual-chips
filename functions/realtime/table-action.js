@@ -46,9 +46,11 @@ function nextTurnUpdates(table){
   }
 
   function makePlayerUpdatesHash(table){
-    return Object.keys(table.player).reduce((hash, id) => {
-      hash[`player/${id}/chips/bet`] = 0
-      hash[`player/${id}/state`] = 'idle'
+    return Object.keys(table.player)
+      .filter(id => table.player[id].state !== 'folded')
+      .reduce((hash, id) => {
+        hash[`player/${id}/chips/bet`] = 0
+        hash[`player/${id}/state`] = 'idle'
       return hash
     }, {})
   }

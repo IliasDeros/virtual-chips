@@ -78,6 +78,30 @@ describe('tableAction', () => {
             }
             tableAction(fakeWriteEvent)
         })
+
+        it('should leave players folded', done => {
+            actionStub.returns({
+                player: {
+                    'first': { chips: { bet: 100 } },
+                    'second': { chips: { bet: 150 } },
+                    'third': { chips: { bet: 300 }, state: 'folded' }
+                },
+                pot: 100,
+                turn: 1,
+            })
+            fakeTableRef.update = payload => {
+                assert.deepStrictEqual(payload, {
+                    'player/first/chips/bet': 0,
+                    'player/first/state': 'idle',
+                    'player/second/chips/bet': 0,
+                    'player/second/state': 'idle',
+                    pot: 650,
+                    turn: 2
+                })
+                done()
+            }
+            tableAction(fakeWriteEvent)
+        })
     })
 
     describe('win round', () => {
