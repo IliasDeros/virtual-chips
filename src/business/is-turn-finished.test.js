@@ -45,6 +45,13 @@ describe('isTurnFinished', () => {
                 1: { chips: { bet: 200 }, state: State.CALLED }
             }
         })
+
+        it('should be finished when all players are checked', () => {
+            table.player = {
+                0: { chips: { bet: 0 }, state: State.CHECKED },
+                1: { chips: { bet: 0 }, state: State.CHECKED }
+            }
+        })
     })
 
     describe('falsy', () => {

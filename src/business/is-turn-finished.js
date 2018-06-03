@@ -13,7 +13,7 @@ export default function isTurnFinished(table){
           .filter(p => ![State.ALL_IN, State.FOLDED].includes(p.state))
           .map(p => p.chips.bet),
 
-        allSameBet = !!activeBets.reduce((a, b) => a === b ? a : NaN),
+        allSameBet = !isNaN(activeBets.reduce((a, b) => a === b ? a : NaN)),
         allDone = players.every(({ state }) =>
           [State.ALL_IN, State.BET, State.CALLED, State.CHECKED, State.FOLDED].includes(state)
         )

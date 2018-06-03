@@ -45,7 +45,9 @@ describe('tableAction', () => {
             fakeTableRef.update = payload => {
                 assert.deepStrictEqual(payload, {
                     'player/first/chips/bet': 0,
+                    'player/first/state': 'idle',
                     'player/second/chips/bet': 0,
+                    'player/second/state': 'idle',
                     pot: 250,
                     turn: 1
                 })
@@ -66,7 +68,9 @@ describe('tableAction', () => {
             fakeTableRef.update = payload => {
                 assert.deepStrictEqual(payload, {
                     'player/first/chips/bet': 0,
+                    'player/first/state': 'idle',
                     'player/second/chips/bet': 0,
+                    'player/second/state': 'idle',
                     pot: 350,
                     turn: 2
                 })

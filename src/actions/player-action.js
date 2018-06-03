@@ -96,6 +96,12 @@ export function call(){
   }
 }
 
+export function check(){
+  return (_, getState) => {
+    getFireRef('state', getState()).set(State.CHECKED)
+  }
+}
+
 export function fold(){
   return (_, getState) => {
     getFireRef('state', getState()).set(State.FOLDED)
