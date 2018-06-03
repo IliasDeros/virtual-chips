@@ -6,15 +6,15 @@
 2. `yarn` or `npm install`
 
 ### Running
-1. `yarn start`
+1. `yarn start` or `npm start`
 2. visit app at http://localhost:3000/
 
 ### Deploying
-1. `yarn deploy`
+1. `yarn deploy` or `npm run deploy`
 2. visit app at https://virtual-chips.firebaseapp.com/
 
 ### Updating functions
-*functions* is the backend portion of the app. 
+*functions* is the backend portion of the app.
 See Firebase [Cloud Functions](https://firebase.google.com/docs/functions/)
 
 1. `cd functions`
