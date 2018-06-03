@@ -42,10 +42,8 @@ export function watchChips(onInitialize = function(){}){
 
 export function watchToken(){
   return (dispatch, getState) => {
-    const state = getState()
-
-    getFireRef('token', state).on('value', snapshot => {
-      const currentBet = state.chips.bet || 0
+    getFireRef('token', getState()).on('value', snapshot => {
+      const currentBet = getState().chips.bet || 0
       let bet
 
       switch (snapshot.val()){

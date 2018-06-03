@@ -25,9 +25,9 @@ class Table extends Component {
           </h2>
           {(() => this.props.player.host && <p>You are the host.</p>)()}
           <Bet bet={this.props.chips.bet} />
-          <button onClick={() => this.props.addToBet(10)}>Add 10</button>
+          <button onClick={() => this.props.addToBet(100)}>Add 100</button>
           <br/>
-          <button onClick={() => this.props.addToBet(-10)}>Remove 10</button>
+          <button onClick={() => this.props.addToBet(-100)}>Remove 100</button>
           <br/><br/>
           <button onClick={() => this.props.call()}>CALL</button>
           <br/>

@@ -14,6 +14,9 @@ export function controlGame(){
     fire.database().ref(`table/${tableId}`).on('value', snapshot => {
       const table = snapshot.val()
 
+      // ignore self update
+      if (table.action){ return }
+
       switch (table.turn || Turn.PRE_FLOP){
         case Turn.PRE_FLOP:
         case Turn.FLOP:
