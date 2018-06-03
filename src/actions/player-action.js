@@ -1,7 +1,6 @@
 import Fingerprint from 'fingerprintjs2'
 import fire from '../fire'
 import State from '../constants/state'
-import Turn from '../constants/turn'
 import getToken from '../business/get-token'
 
 function getFireRef(endpoint, { table, player }){

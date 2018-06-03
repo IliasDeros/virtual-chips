@@ -18,6 +18,32 @@ class Player extends Component {
     this.props.loadPlayerToken()
   }
 
+  componentDidUpdate(prevProps){
+    this.setupToken(prevProps)
+  }
+
+  // update token on round 0, turn 0 when opponents are updated
+  setupToken(prevProps){
+    if (isGameStarting(this.props) && playersAddedOrRemoved(this.props)){
+      this.props.loadPlayerToken()
+    }
+
+    function isGameStarting(props){
+      let round = props.table.round, turn = props.table.turn,
+          isInitialRound = isNaN(round) || round === 0,
+          isInitialTurn = isNaN(turn) || turn === Turn.PRE_FLOP
+
+      return isInitialRound && isInitialTurn
+    }
+
+    function playersAddedOrRemoved(props){
+      let prevLength = prevProps.opponents && prevProps.opponents.length,
+          curLength = props.opponents && props.opponents.length
+
+      return prevLength && prevLength !== curLength
+    }
+  }
+
   render() {
     return (
       this.props.chips
@@ -46,8 +72,8 @@ class Player extends Component {
   }
 }
 
-function mapStateToProps({ chips, player, table }){
-  return { chips, player, table }
+function mapStateToProps({ chips, opponents, player, table }){
+  return { chips, opponents, player, table }
 }
 
 function mapDispatchToProps(dispatch){

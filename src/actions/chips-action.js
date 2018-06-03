@@ -53,9 +53,7 @@ export function watchToken(){
           bet = 0
       }
 
-      if (currentBet < bet){
-        addToBet(bet - currentBet)(dispatch, getState)
-      }
+      addToBet(bet - currentBet)(dispatch, getState)
     })
   }
 }
