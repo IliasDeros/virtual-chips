@@ -22,7 +22,7 @@ export default function isTurnFinished(table){
           .length === 1,
         othersCalled = activePlayers
           .filter(({ state }) => state === State.CALLED)
-          .length = activePlayers.length - 1,
+          .length === activePlayers.length - 1,
         calledHighestBet = onlyOneBet && othersCalled
 
   return activeBets.length >= 2 &&

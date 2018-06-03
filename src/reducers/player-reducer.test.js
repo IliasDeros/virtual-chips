@@ -1,7 +1,8 @@
 import reducer from './player-reducer'
+import State from '../constants/state'
 
 it('should return initial state', () => {
-  expect(reducer(undefined, {})).toMatchObject({})
+  expect(reducer(undefined, { state: State.IDLE })).toMatchObject({})
 })
 
 describe('SET_PLAYER_ID', () => {
@@ -9,7 +10,7 @@ describe('SET_PLAYER_ID', () => {
     expect(reducer(undefined, {
       type: 'SET_PLAYER_ID',
       payload: 42
-    })).toEqual({ id: 42 })
+    })).toEqual({ id: 42, state: State.IDLE })
   })
 })
 
@@ -27,7 +28,7 @@ describe('SET_PLAYER_TOKEN', () => {
     expect(reducer(undefined, {
       type: 'SET_PLAYER_TOKEN',
       payload: 'dealer'
-    })).toEqual(({ token: 'dealer' }))
+    })).toEqual(({ token: 'dealer', state: State.IDLE }))
   })
 })
 
@@ -35,6 +36,6 @@ describe('SET_PLAYER_HOST', () => {
   it('should set player host', () => {
     expect(reducer(undefined, {
       type: 'SET_PLAYER_HOST'
-    })).toEqual(({ host: true }))
+    })).toEqual(({ host: true, state: State.IDLE }))
   })
 })
