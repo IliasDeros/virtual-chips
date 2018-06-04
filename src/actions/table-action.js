@@ -1,4 +1,5 @@
 import fire from '../fire'
+import Turn from '../constants/turn'
 
 function getTableRef(id, path){
   let ref = `table/${id}/${path}`
@@ -19,7 +20,7 @@ export function watchTable(id = 'default'){
     getTableRef(id, 'pot').on('value', snapshot => {
       dispatch({
         type: 'SET_POT',
-        payload: snapshot.val()
+        payload: snapshot.val() || 0
       })
     })
 
@@ -27,7 +28,7 @@ export function watchTable(id = 'default'){
     getTableRef(id, 'turn').on('value', snapshot => {
       dispatch({
         type: 'SET_TURN',
-        payload: snapshot.val()
+        payload: snapshot.val() || Turn.PRE_FLOP
       })
     })
   }

@@ -1,5 +1,6 @@
 import fire from 'virtual-chips/src/fire'
 import * as actions from './table-action'
+import Turn from '../constants/turn'
 
 describe('watchTable', () => {
   let updateAction, updatePot, updateTurn
@@ -40,6 +41,20 @@ describe('watchTable', () => {
     })
   })
 
+  it('should set pot to 0 by default', () => {
+    const dispatchMock = jest.fn()
+
+    actions.watchTable()(dispatchMock)
+    updatePot({
+      val: () => undefined
+    })
+
+    expect(dispatchMock).toBeCalledWith({
+      type: 'SET_POT',
+      payload: 0
+    })
+  })
+
   it('should update pot on pot update', () => {
     const dispatchMock = jest.fn()
 
@@ -51,6 +66,20 @@ describe('watchTable', () => {
     expect(dispatchMock).toBeCalledWith({
       type: 'SET_POT',
       payload: 2
+    })
+  })
+
+  it('should set turn to pre flop by defualt', () => {
+    const dispatchMock = jest.fn()
+
+    actions.watchTable()(dispatchMock)
+    updateTurn({
+      val: () => undefined
+    })
+
+    expect(dispatchMock).toBeCalledWith({
+      type: 'SET_TURN',
+      payload: Turn.PRE_FLOP
     })
   })
 
