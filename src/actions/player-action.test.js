@@ -307,6 +307,29 @@ describe('idle', () => {
   })
 })
 
+describe('tie', () => {
+  let setMock = jest.fn()
+
+  beforeEach(() => {
+    const expectedPath = 'table/1/player/42/state'
+
+    fire.database = jest.fn().mockReturnValue({
+      ref: path => path === expectedPath && {
+        set: setMock
+      }
+    })
+  })
+
+  it('should update state', () => {
+    const initialState = {
+      player: { id: 42 },
+      table: { id: 1 }
+    }
+    actions.tie()(undefined, () => initialState)
+    expect(setMock).toHaveBeenCalledWith('tied')
+  })
+})
+
 describe('setPlayerHost', () => {
   it('should be the expected type', () => {
     expect(actions.setPlayerHost()).toEqual({ type: 'SET_PLAYER_HOST' })

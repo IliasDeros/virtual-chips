@@ -117,6 +117,12 @@ export function idle(){
   }
 }
 
+export function tie(){
+  return (_, getState) => {
+    getFireRef('state', getState()).set(State.TIED)
+  }
+}
+
 export function setPlayerHost() {
   return { type: 'SET_PLAYER_HOST' }
 }

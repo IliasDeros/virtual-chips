@@ -60,24 +60,25 @@ function nextTurnUpdates(table){
 function winRoundUpdates(table){
   const updates = {}
 
-  // give bets + pot to unfolded player
-  const unfoldedId = Object.keys(table.player).find(id => {
-          let player = table.player[id]
-          return player.state !== 'folded'
-        }),
-        playerTotal = table.player[unfoldedId].chips.total,
-        tableTotal = Object.keys(table.player).reduce((total, id) => {
-            let playerBet = table.player[id].chips.bet
-            return total + playerBet
-        }, table.pot || 0)
-  updates[`player/${unfoldedId}/chips/total`] = playerTotal + tableTotal
+  // share pot between winners
+  const tableTotal = Object.keys(table.player).reduce((total, id) => {
+          let playerBet = table.player[id].chips.bet
+          return total + playerBet
+        }, table.pot || 0),
+        winnerIds = Object.keys(table.player).filter(id =>
+          table.player[id].state !== 'folded'
+        ),
+        gains = tableTotal / winnerIds.length
 
-  // proceed table to next round
-  Object.assign(updates, {
-    pot: 0,
-    round: (table.round || 0) + 1,
-    turn: 0
+  winnerIds.forEach(id => {
+    let player = table.player[id],
+        playerTotal = player.chips.total
+
+    updates[`player/${id}/chips/total`] = playerTotal + gains
   })
+
+
+  Object.assign(updates, nextRoundUpdates(table))
 
   // reset players
   Object.keys(table.player).forEach(id => {
@@ -86,4 +87,12 @@ function winRoundUpdates(table){
   })
 
   return updates
+}
+
+function nextRoundUpdates({ round }){
+  return {
+    pot: 0,
+    round: (round || 0) + 1,
+    turn: 0
+  }
 }

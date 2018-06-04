@@ -138,5 +138,39 @@ describe('tableAction', () => {
             }
             tableAction(fakeWriteEvent)
         })
+
+        it('should win round tied', done => {
+            actionStub.returns({
+                player: {
+                    'first': { state: 'tied', chips: { bet: 0, total: 200 } },
+                    'second': { state: 'tied', chips: { bet: 0, total: 500 } },
+                    'third': { state: 'tied', chips: { bet: 0, total: 800 } },
+                    'fourth': { state: 'folded', chips: { bet: 0, total: 1000 } }
+                },
+                pot: 3000,
+                turn: 3,
+                round: 0
+            })
+            fakeTableRef.update = payload => {
+                assert.deepStrictEqual(payload, {
+                    'player/first/chips/total': 1200,  // 1/3 pot + total
+                    'player/second/chips/total': 1500,
+                    'player/third/chips/total': 1800,
+                    pot: 0,
+                    round: 1,
+                    turn: 0,
+                    'player/first/chips/bet': 0,
+                    'player/first/state': 'idle',
+                    'player/second/chips/bet': 0,
+                    'player/second/state': 'idle',
+                    'player/third/chips/bet': 0,
+                    'player/third/state': 'idle',
+                    'player/fourth/chips/bet': 0,
+                    'player/fourth/state': 'idle',
+                })
+                done()
+            }
+            tableAction(fakeWriteEvent)
+        })
     })
 })
