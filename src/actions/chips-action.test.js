@@ -170,3 +170,38 @@ describe('callBet', () => {
     })
   })
 })
+
+describe('allInBet', () => {
+  const refMock = jest.fn()
+  let initialState
+
+  beforeEach(() => {
+    initialState = {
+      player: { id: 10 },
+      table: { id: 1 },
+      chips: {
+        bet: 20,
+        total: 100
+      }
+    }
+    fire.database = jest.fn().mockReturnValue({ ref: refMock })
+  })
+
+  it('should bet all the remaining money', () => {
+    const dispatchMock = jest.fn(),
+          setMock = jest.fn()
+    refMock.mockImplementation(path => ({
+      transaction: path === `table/1/player/10/chips` ? setMock : jest.fn()
+    }))
+
+    actions.allInBet()(dispatchMock, () => initialState)
+
+    let transactionFn = setMock.mock.calls[0][0]
+    const transactionValue = transactionFn()
+
+    expect(transactionValue).toEqual({
+      bet: 120,
+      total: 0
+    })
+  })
+})

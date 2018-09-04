@@ -95,3 +95,23 @@ export function callBet(){
     })
   }
 }
+
+export function allInBet(){
+  return (dispatch, getState) => {
+    const state = getState(),
+          { chips } = state
+
+    getFireRef('chips', state).transaction((currentValue = chips) => {
+      const { bet, total } = currentValue,
+            totalBet = total + bet
+
+      return {
+        ...currentValue,
+        bet: totalBet,
+        total: 0
+      }
+    }, function onComplete(_, commited, snapshot){
+      commited && dispatch(allIn())
+    })
+  }
+}
