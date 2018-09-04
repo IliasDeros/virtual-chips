@@ -48,8 +48,13 @@ function nextTurnUpdates(table){
   function makePlayerUpdatesHash(table){
     return Object.keys(table.player)
       .reduce((hash, id) => {
+        const player = table.player[id]
+
         hash[`player/${id}/chips/bet`] = 0
-        if (table.player[id].state !== 'folded'){
+        hash[`player/${id}/chips/totalBet`] =
+          (player.chips.totalBet || 0) + player.chips.bet
+
+        if (player.state !== 'folded'){
           hash[`player/${id}/state`] = 'idle'
         }
       return hash

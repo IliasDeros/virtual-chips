@@ -45,8 +45,10 @@ describe('tableAction', () => {
             fakeTableRef.update = payload => {
                 assert.deepStrictEqual(payload, {
                     'player/first/chips/bet': 0,
+                    'player/first/chips/totalBet': 100,
                     'player/first/state': 'idle',
                     'player/second/chips/bet': 0,
+                    'player/second/chips/totalBet': 150,
                     'player/second/state': 'idle',
                     pot: 250,
                     turn: 1
@@ -59,8 +61,8 @@ describe('tableAction', () => {
         it('should update second turn', done => {
             actionStub.returns({
                 player: {
-                    'first': { chips: { bet: 100 } },
-                    'second': { chips: { bet: 150 } }
+                    'first': { chips: { bet: 100, totalBet: 100 } },
+                    'second': { chips: { bet: 150, totalBet: 100 } }
                 },
                 pot: 100,
                 turn: 1,
@@ -68,8 +70,10 @@ describe('tableAction', () => {
             fakeTableRef.update = payload => {
                 assert.deepStrictEqual(payload, {
                     'player/first/chips/bet': 0,
+                    'player/first/chips/totalBet': 200,
                     'player/first/state': 'idle',
                     'player/second/chips/bet': 0,
+                    'player/second/chips/totalBet': 250,
                     'player/second/state': 'idle',
                     pot: 350,
                     turn: 2
@@ -92,10 +96,13 @@ describe('tableAction', () => {
             fakeTableRef.update = payload => {
                 assert.deepStrictEqual(payload, {
                     'player/first/chips/bet': 0,
+                    'player/first/chips/totalBet': 100,
                     'player/first/state': 'idle',
                     'player/second/chips/bet': 0,
+                    'player/second/chips/totalBet': 150,
                     'player/second/state': 'idle',
                     'player/third/chips/bet': 0,
+                    'player/third/chips/totalBet': 300,
                     pot: 650,
                     turn: 2
                 })
