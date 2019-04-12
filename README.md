@@ -13,6 +13,10 @@
 1. `yarn deploy` or `npm run deploy`
 2. visit app at https://virtual-chips.firebaseapp.com/
 
+### Testing
+All actions and reducers are unit-tested. Execute tests by running `npm test`.
+Cloud functions are also tested, use the same command inside `cd functions`
+
 ### Updating functions
 *functions* is the backend portion of the app.
 See Firebase [Cloud Functions](https://firebase.google.com/docs/functions/)
