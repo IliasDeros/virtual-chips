@@ -1,3 +1,5 @@
+const { calculateSidePots } = require('../business/calculate-sidepots')
+
 /*
 * do things when the table's "action" is updated
 */
@@ -65,31 +67,35 @@ function nextTurnUpdates(table){
 function winRoundUpdates(table){
   const updates = {}
 
-  // share pot between winners
-  const tableTotal = Object.keys(table.player).reduce((total, id) => {
-          let playerBet = table.player[id].chips.bet
-          return total + playerBet
-        }, table.pot || 0),
-        winnerIds = Object.keys(table.player).filter(id =>
-          table.player[id].state !== 'folded'
-        ),
-        gains = tableTotal / winnerIds.length
+  const players = getPlayers(table)
+  const sidepots = calculateSidePots(players)
+  const winnerIds = getWinnerIds(table)
+  const isWinner = player => winnerIds.includes(player.id)
+  const addToTotal = gains => player => {
+    const key = `player/${player.id}/chips/total`
+    const playerTotal = updates[key] || player.chips.total
+    updates[key] = playerTotal + gains
+  }
 
-  winnerIds.forEach(id => {
-    let player = table.player[id],
-        playerTotal = player.chips.total
+  const distributeSidepotToPlayers = sidepot => {
+    const winningPlayers = sidepot.players.filter(isWinner)
 
-    updates[`player/${id}/chips/total`] = playerTotal + gains
-  })
+    // Distribute pot between winners
+    if (winningPlayers.length) {
+      winningPlayers.forEach(addToTotal(sidepot.pot / winningPlayers.length))
+    }
 
+    // Distribute pot between non-winners
+    else {
+      sidepot.players.forEach(addToTotal(sidepot.pot / sidepot.players.length))
+    }
+  }
 
-  Object.assign(updates, nextRoundUpdates(table))
-
-  // reset players
-  Object.keys(table.player).forEach(id => {
-    updates[`player/${id}/chips/bet`] = 0
-    updates[`player/${id}/state`] = 'idle'
-  })
+  sidepots.forEach(distributeSidepotToPlayers)
+  Object.assign(updates,
+    nextRoundUpdates(table),
+    ...players.map(resetPlayerUpdates)
+  )
 
   return updates
 }
@@ -100,4 +106,23 @@ function nextRoundUpdates({ round }){
     round: (round || 0) + 1,
     turn: 0
   }
+}
+
+function getPlayers(table) {
+  return Object.keys(table.player)
+    .map(id => Object.assign({ id }, table.player[id]))
+}
+
+function resetPlayerUpdates({ id }){
+  const updates = {}
+  updates[`player/${id}/chips/bet`] = 0
+  updates[`player/${id}/chips/totalBet`] = 0
+  updates[`player/${id}/state`] = 'idle'
+  return updates
+}
+
+function getWinnerIds(table) {
+  return Object.keys(table.player).filter(id =>
+    table.player[id].state !== 'folded'
+  )
 }

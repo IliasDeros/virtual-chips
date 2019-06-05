@@ -120,11 +120,11 @@ describe('tableAction', () => {
                 .resolves({ val: actionStub })
         })
 
-        it('should win round', done => {
+        it('first player should win round', done => {
             actionStub.returns({
                 player: {
-                    'first': { state: 'idle', chips: { bet: 100, total: 200 } },
-                    'second': { state: 'folded', chips: { bet: 500, total: 500 } }
+                    'first': { state: 'idle', chips: { totalBet: 1000, total: 200 } },
+                    'second': { state: 'folded', chips: { totalBet: 500, total: 500 } }
                 },
                 pot: 2000,
                 turn: 2,
@@ -132,13 +132,15 @@ describe('tableAction', () => {
             })
             fakeTableRef.update = payload => {
                 assert.deepStrictEqual(payload, {
-                    'player/first/chips/total': 2800,   // pot + bets
+                    'player/first/chips/total': 1700,   // player total + totalBets
                     pot: 0,
                     round: 1,
                     turn: 0,
                     'player/first/chips/bet': 0,
+                    'player/first/chips/totalBet': 0,
                     'player/first/state': 'idle',
                     'player/second/chips/bet': 0,
+                    'player/second/chips/totalBet': 0,
                     'player/second/state': 'idle',
                 })
                 done()
@@ -149,10 +151,10 @@ describe('tableAction', () => {
         it('should win round tied', done => {
             actionStub.returns({
                 player: {
-                    'first': { state: 'tied', chips: { bet: 0, total: 200 } },
-                    'second': { state: 'tied', chips: { bet: 0, total: 500 } },
-                    'third': { state: 'tied', chips: { bet: 0, total: 800 } },
-                    'fourth': { state: 'folded', chips: { bet: 0, total: 1000 } }
+                    'first': { state: 'tied', chips: { totalBet: 1000, total: 200 } },
+                    'second': { state: 'tied', chips: { totalBet: 1000, total: 500 } },
+                    'third': { state: 'tied', chips: { totalBet: 1000, total: 800 } },
+                    'fourth': { state: 'folded', chips: { totalBet: 0, total: 1000 } }
                 },
                 pot: 3000,
                 turn: 3,
@@ -160,19 +162,63 @@ describe('tableAction', () => {
             })
             fakeTableRef.update = payload => {
                 assert.deepStrictEqual(payload, {
-                    'player/first/chips/total': 1200,  // 1/3 pot + total
+                    'player/first/chips/total': 1200,  // totalBet + total
                     'player/second/chips/total': 1500,
                     'player/third/chips/total': 1800,
                     pot: 0,
                     round: 1,
                     turn: 0,
                     'player/first/chips/bet': 0,
+                    'player/first/chips/totalBet': 0,
                     'player/first/state': 'idle',
                     'player/second/chips/bet': 0,
+                    'player/second/chips/totalBet': 0,
                     'player/second/state': 'idle',
                     'player/third/chips/bet': 0,
+                    'player/third/chips/totalBet': 0,
                     'player/third/state': 'idle',
                     'player/fourth/chips/bet': 0,
+                    'player/fourth/chips/totalBet': 0,
+                    'player/fourth/state': 'idle',
+                })
+                done()
+            }
+            tableAction(fakeWriteEvent)
+        })
+
+        it('should distribute side-pots between two ties', done => {
+          actionStub.returns({
+                player: {
+                    'first': { name: 'Player 1', state: 'tied', chips: { totalBet: 200, total: 0 } },
+                    'second': { name: 'Player 2', state: 'folded', chips: { totalBet: 400, total: 1 } },
+                    'third': { name: 'Player 3', state: 'tied', chips: { totalBet: 600, total: 0 } },
+                    'fourth': { name: 'Player 4', state: 'folded', chips: { totalBet: 600, total: 1 } }
+                },
+                pot: 1800,
+                turn: 3,
+                round: 0
+            })
+
+            fakeTableRef.update = payload => {
+                assert.deepStrictEqual(payload, {
+                    'player/first/chips/total': 400,
+                    'player/third/chips/total': 1200,
+                    'player/second/chips/total': 101,
+                    'player/fourth/chips/total': 101,
+                    pot: 0,
+                    round: 1,
+                    turn: 0,
+                    'player/first/chips/bet': 0,
+                    'player/first/chips/totalBet': 0,
+                    'player/first/state': 'idle',
+                    'player/second/chips/bet': 0,
+                    'player/second/chips/totalBet': 0,
+                    'player/second/state': 'idle',
+                    'player/third/chips/bet': 0,
+                    'player/third/chips/totalBet': 0,
+                    'player/third/state': 'idle',
+                    'player/fourth/chips/bet': 0,
+                    'player/fourth/chips/totalBet': 0,
                     'player/fourth/state': 'idle',
                 })
                 done()

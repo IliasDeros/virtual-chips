@@ -13,9 +13,9 @@ module.exports = {
 
     players
       // sort from lowest to highest
-      .sort((a, b) => a.chips.total - b.chips.total)
+      .sort((a, b) => a.chips.totalBet - b.chips.totalBet)
 
-      // distribute side pots, from first sidepot to main pot
+      // distribute side pots, from smallest sidepot to main pot
       .forEach((player, i) => {
         // Distribute totalBet through existing sidepots
         let remainingBet = sidePots.reduce((bet, sidePot) =>

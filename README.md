@@ -27,7 +27,6 @@ See Firebase [Cloud Functions](https://firebase.google.com/docs/functions/)
 4. `firebase login`
 5. `firebase deploy --only functions`
 
-
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
