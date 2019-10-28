@@ -5,44 +5,16 @@ import PlayerMoves from './PlayerMoves'
 import PlayerToken from './PlayerToken'
 import Bet from '../components/Bet'
 import Total from '../components/Total'
-import { addToBet, watchToken, watchChips } from '../actions/chips-action'
-import { bet, loadPlayerName, loadPlayerState, loadPlayerToken } from '../actions/player-action'
+import { addToBet, watchChips } from '../actions/chips-action'
+import { bet, loadPlayerName, loadPlayerState } from '../actions/player-action'
 import { controlGameIfFirst } from '../actions/game-action'
 
 class Player extends Component {
   componentDidMount(){
     this.props.controlGame()
     this.props.watchChips()
-    this.props.watchToken()
     this.props.loadPlayerName()
     this.props.loadPlayerState()
-    this.props.loadPlayerToken()
-  }
-
-  componentDidUpdate(prevProps){
-    this.setupToken(prevProps)
-  }
-
-  // update token on round 0, turn 0 when opponents are updated
-  setupToken(prevProps){
-    if (isGameStarting(this.props) && playersAddedOrRemoved(this.props)){
-      this.props.loadPlayerToken()
-    }
-
-    function isGameStarting(props){
-      let round = props.table.round, turn = props.table.turn,
-          isInitialRound = isNaN(round) || round === 0,
-          isInitialTurn = isNaN(turn) || turn === Turn.PRE_FLOP
-
-      return isInitialRound && isInitialTurn
-    }
-
-    function playersAddedOrRemoved(props){
-      let prevLength = prevProps.opponents && prevProps.opponents.length,
-          curLength = props.opponents && props.opponents.length
-
-      return prevLength && prevLength !== curLength
-    }
   }
 
   render() {
@@ -86,9 +58,7 @@ function mapDispatchToProps(dispatch){
     controlGame: () => dispatch(controlGameIfFirst()),
     loadPlayerName: () => dispatch(loadPlayerName()),
     loadPlayerState: () => dispatch(loadPlayerState()),
-    loadPlayerToken: () => dispatch(loadPlayerToken()),
-    watchChips: () => dispatch(watchChips()),
-    watchToken: () => dispatch(watchToken())
+    watchChips: () => dispatch(watchChips())
   }
 }
 
