@@ -15,7 +15,12 @@ class PlayerMoves extends Component {
   checkMove = <CheckMove onClick={() => this.props.check()} />
   tieMove = <TieMove onClick={() => this.props.tie()} />
 
-  static getDerivedStateFromProps(props, state){
+  constructor(props) {
+    super(...props)
+    this.state = {}
+  }
+  
+  static getDerivedStateFromProps(props){
     return {
       canCheck: canCheck(props),
       isRoundFinished: props.table.turn === Turn.FINISHED

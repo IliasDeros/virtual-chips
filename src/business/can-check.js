@@ -5,7 +5,7 @@ export default function canCheck({ chips, opponents, player, table }){
   const isAlone = opponents.length === 0,
         isFirstTurn = table.turn === Turn.PRE_FLOP,
         isBigBlind = player.token === Token.BIG_BLIND,
-        noRaise = !opponents.every(({ bet }) => bet <= 200)
+        noRaise = opponents.every(({ chips: { bet } }) => bet <= 200)
 
   if (isAlone){ return true }
 
