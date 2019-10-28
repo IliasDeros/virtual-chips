@@ -24,7 +24,7 @@ class Player extends Component {
     }
 
     return (
-      <div className="container">
+      <div className="player">
         <h2>{this.props.player.name || this.props.player.id}
           ({this.props.player.state || 'idle'})
           <PlayerToken />

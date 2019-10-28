@@ -1,0 +1,52 @@
+/**
+* Table of contents
+*
+* # Variables
+* # Global
+* # Layout
+*/
+
+
+
+/************************************************
+* # Variables
+************************************************/
+:root {
+  --color-green-table: #1F7D3D;
+  --color-green-table-dark: #0E612D;
+}
+
+
+
+/************************************************
+* # Global
+************************************************/
+body {
+  padding: 0;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+
+
+/************************************************
+* # Layout
+************************************************/
+.application {
+  background: var(--color-green-table);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.player {
+  background: var(--color-green-table);
+}
+
+.pot-container, .topnav, .turn {
+  background: var(--color-green-table-dark);
+}

@@ -10,7 +10,9 @@ class Nav extends Component {
 
   render() {
     return (
-      <OpponentsList opponents={this.props.opponents} />
+      <div className="topnav">
+        <OpponentsList opponents={this.props.opponents} />
+      </div>
     );
   }
 }
