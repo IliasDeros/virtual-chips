@@ -2,6 +2,11 @@ import React from 'react'
 
 export default props => {
   return (
-    <button onClick={props.onClick}>ALL IN</button>
+    <button 
+      className="player-moves__move player-moves__move--allin" 
+      onClick={props.onClick}
+    >
+      ALL IN
+    </button>
   )
 }
