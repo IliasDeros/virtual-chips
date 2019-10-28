@@ -4,6 +4,7 @@ import Turn from '../constants/turn'
 import PlayerMoves from './PlayerMoves'
 import PlayerToken from './PlayerToken'
 import Bet from '../components/Bet'
+import LoadingChips from '../components/LoadingChips'
 import Total from '../components/Total'
 import { addToBet, watchChips } from '../actions/chips-action'
 import { bet, loadPlayerName, loadPlayerState } from '../actions/player-action'
@@ -18,29 +19,31 @@ class Player extends Component {
   }
 
   render() {
+    if (!this.props.chips) {
+      return <LoadingChips />
+    }
+
     return (
-      this.props.chips
-      ? <div className="container">
-          <h2>{this.props.player.name || this.props.player.id}
-            ({this.props.player.state || 'idle'})
-            <PlayerToken />
-          </h2>
-          {(() => this.props.player.host && <p>You are the host.</p>)()}
+      <div className="container">
+        <h2>{this.props.player.name || this.props.player.id}
+          ({this.props.player.state || 'idle'})
+          <PlayerToken />
+        </h2>
+        {(() => this.props.player.host && <p>You are the host.</p>)()}
 
-          {(() => this.props.table && this.props.table.turn !== Turn.FINISHED && (
-            <div>
-              <Bet bet={this.props.chips.bet} />
-              <button onClick={() => this.props.addToBet(100)}>Add 100</button>
-              <br/>
-              <button onClick={() => this.props.addToBet(-100)}>Remove 100</button>
-              <br/><br/>
-            </div>
-          ))()}
+        {(() => this.props.table && this.props.table.turn !== Turn.FINISHED && (
+          <div>
+            <Bet bet={this.props.chips.bet} />
+            <button onClick={() => this.props.addToBet(100)}>Add 100</button>
+            <br/>
+            <button onClick={() => this.props.addToBet(-100)}>Remove 100</button>
+            <br/><br/>
+          </div>
+        ))()}
 
-          <PlayerMoves />
-          <Total total={this.props.chips.total} />
-        </div>
-      : <span>Loading Chips...</span>
+        <PlayerMoves />
+        <Total total={this.props.chips.total} />
+      </div>
     );
   }
 }
