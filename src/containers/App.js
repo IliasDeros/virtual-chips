@@ -24,7 +24,7 @@ class App extends Component {
         return [
           this.props.player.id && <Nav key='nav' />,
           !isNaN(this.props.table.turn) && <Turn key='turn' turn={this.props.table.turn} />,
-          !isNaN(this.props.table.pot) && <Pot key='pot' pot={this.props.table.pot} />,
+          <Pot key='pot' pot={this.props.table.pot} />,
           this.props.player.id ? <Player key='player' /> : <span key='player-loading'>Loading Player...</span>
         ]
     }

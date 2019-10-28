@@ -3,18 +3,18 @@
 
 ### Installation
 1. `git clone git@github.com:IliasDeros/virtual-chips.git`
-2. `yarn` or `npm install`
+2. `yarn`
 
 ### Running
-1. `yarn start` or `npm start`
+1. `yarn start`
 2. visit app at http://localhost:3000/
 
 ### Deploying
-1. `yarn deploy` or `npm run deploy`
+1. `yarn deploy`
 2. visit app at https://virtual-chips.firebaseapp.com/
 
 ### Testing
-All actions and reducers are unit-tested. Execute tests by running `npm test`.
+All actions and reducers are unit-tested. Execute tests by running `yarn test`.
 Cloud functions are also tested, use the same command inside `cd functions`
 
 ### Updating functions

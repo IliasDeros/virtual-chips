@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Turn from '../constants/turn'
 import PlayerMoves from './PlayerMoves'
+import PlayerToken from './PlayerToken'
 import Bet from '../components/Bet'
 import Total from '../components/Total'
 import { addToBet, watchToken, watchChips } from '../actions/chips-action'
@@ -50,7 +51,7 @@ class Player extends Component {
       ? <div className="container">
           <h2>{this.props.player.name || this.props.player.id}
             ({this.props.player.state || 'idle'})
-            {(() => this.props.player.token && ` - ${this.props.player.token}`)()}
+            <PlayerToken />
           </h2>
           {(() => this.props.player.host && <p>You are the host.</p>)()}
 
