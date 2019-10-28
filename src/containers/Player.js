@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Turn from '../constants/turn'
-import PlayerMoves from './PlayerMoves'
 import PlayerToken from './PlayerToken'
 import Bet from '../components/Bet'
 import LoadingChips from '../components/LoadingChips'
@@ -19,29 +18,39 @@ class Player extends Component {
   }
 
   render() {
+    const canBet = this.props.table && this.props.table.turn !== Turn.FINISHED
+
     if (!this.props.chips) {
       return <LoadingChips />
     }
 
     return (
-      <div className="container">
+      <div className="player">
         <h2>{this.props.player.name || this.props.player.id}
           ({this.props.player.state || 'idle'})
           <PlayerToken />
         </h2>
         {(() => this.props.player.host && <p>You are the host.</p>)()}
+        
+        {canBet && <Bet bet={this.props.chips.bet} />}
 
-        {(() => this.props.table && this.props.table.turn !== Turn.FINISHED && (
-          <div>
-            <Bet bet={this.props.chips.bet} />
-            <button onClick={() => this.props.addToBet(100)}>Add 100</button>
-            <br/>
-            <button onClick={() => this.props.addToBet(-100)}>Remove 100</button>
-            <br/><br/>
-          </div>
-        ))()}
+        {canBet && <div>
+          <button 
+            className="player__bet player__bet--add" 
+            onClick={() => this.props.addToBet(100)}
+          >
+            Add 100
+          </button>
+          <br/>
+          <button 
+            className="player__bet player__bet--remove" 
+            onClick={() => this.props.addToBet(-100)}
+          >
+            Remove 100
+          </button>
+          <br/><br/>
+        </div>}
 
-        <PlayerMoves />
         <Total total={this.props.chips.total} />
       </div>
     );

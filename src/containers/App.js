@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import Nav from './Nav'
 import Player from './Player'
+import PlayerMoves from './PlayerMoves'
 import { connect } from 'react-redux'
 import { loadPlayerId } from '../actions/player-action'
 import { watchTable } from '../actions/table-action'
 import Action from '../constants/action'
-import Pot from '../components/Pot'
-import Turn from '../components/Turn'
+import LoadingPlayer from '../components/LoadingPlayer'
 
 class App extends Component {
   componentDidMount(){
@@ -21,12 +21,11 @@ class App extends Component {
       case Action.WIN_ROUND:
         return <h1>Next ROUND</h1>
       default:
-        return [
-          this.props.player.id && <Nav key='nav' />,
-          !isNaN(this.props.table.turn) && <Turn key='turn' turn={this.props.table.turn} />,
-          <Pot key='pot' pot={this.props.table.pot} />,
-          this.props.player.id ? <Player key='player' /> : <span key='player-loading'>Loading Player...</span>
-        ]
+        return <main className="application">
+          {this.props.player.id && <Nav />}
+          {this.props.player.id ? <Player /> : <LoadingPlayer />}
+          <PlayerMoves />
+        </main>
     }
   }
 }
