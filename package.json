@@ -4,7 +4,7 @@
   "private": false,
   "dependencies": {
     "fingerprintjs2": "^1.6.1",
-    "firebase": "^4.10.1",
+    "firebase": "^7.2.3",
     "history": "^4.7.2",
     "react": "16.8.6",
     "react-dom": "16.8.6",
