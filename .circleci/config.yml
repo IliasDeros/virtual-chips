@@ -7,7 +7,6 @@ jobs:
   build:
     docker:
       - image: circleci/node:10.13
-    working_directory: ~/repo
     steps:
       - checkout
 
@@ -26,4 +25,4 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: yarn test
+      - run: yarn test src/**
