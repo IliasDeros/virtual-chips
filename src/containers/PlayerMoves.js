@@ -14,11 +14,7 @@ class PlayerMoves extends Component {
   callMove = <CallMove onClick={() => this.props.call()} />
   checkMove = <CheckMove onClick={() => this.props.check()} />
   tieMove = <TieMove onClick={() => this.props.tie()} />
-
-  constructor(props) {
-    super(...props)
-    this.state = {}
-  }
+  state = {}
   
   static getDerivedStateFromProps(props){
     return {
