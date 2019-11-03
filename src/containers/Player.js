@@ -1,13 +1,14 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import Turn from '../constants/turn'
 import PlayerToken from './PlayerToken'
 import Bet from '../components/Bet'
 import LoadingChips from '../components/LoadingChips'
 import Total from '../components/Total'
-import { addToBet, watchChips } from '../actions/chips-action'
-import { bet, loadPlayerName, loadPlayerState } from '../actions/player-action'
+import { watchChips } from '../actions/chips-action'
+import { loadPlayerName, loadPlayerState } from '../actions/player-action'
 import { controlGameIfFirst } from '../actions/game-action'
+import BetMenu from './BetMenu'
 
 class Player extends Component {
   componentDidMount(){
@@ -32,24 +33,10 @@ class Player extends Component {
         </h2>
         {(() => this.props.player.host && <p>You are the host.</p>)()}
         
-        {canBet && <Bet bet={this.props.chips.bet} />}
-
-        {canBet && <div>
-          <button 
-            className="player__bet player__bet--add" 
-            onClick={() => this.props.addToBet(100)}
-          >
-            Add 100
-          </button>
-          <br/>
-          <button 
-            className="player__bet player__bet--remove" 
-            onClick={() => this.props.addToBet(-100)}
-          >
-            Remove 100
-          </button>
-          <br/><br/>
-        </div>}
+        {canBet && <Fragment>
+          <Bet bet={this.props.chips.bet} />
+          <BetMenu />
+        </Fragment>}
 
         <Total total={this.props.chips.total} />
       </div>
@@ -63,10 +50,6 @@ function mapStateToProps({ chips, opponents, player, table }){
 
 function mapDispatchToProps(dispatch){
   return {
-    addToBet: payload => {
-      dispatch(addToBet(payload)) // increase bet
-      dispatch(bet())             // update player state
-    },
     controlGame: () => dispatch(controlGameIfFirst()),
     loadPlayerName: () => dispatch(loadPlayerName()),
     loadPlayerState: () => dispatch(loadPlayerState()),
