@@ -7,14 +7,14 @@ describe('controlGame', () => {
   beforeEach(() => {
     fire.database = jest.fn().mockReturnValue({
       ref: path => path === 'table/1/player' && {
-        once: (event) => event === 'value' && (getPlayersPromise = new Promise(res =>
+        once: (event) => event === 'value' && new Promise(res =>
           getPlayersOnce = res
-        ))
+        )
       }
     })
   })
 
-  it('should control game flow if first player on table', async () => {
+  it.only('should control game flow if first player on table', async () => {
     expect.assertions(1)
     const initialState = {
             player: { id: '20' },
@@ -22,15 +22,17 @@ describe('controlGame', () => {
           },
           dispatchMock = jest.fn()
 
-    actions.controlGameIfFirst()(dispatchMock, () => initialState)
-    getPlayersOnce({
+    const actionPromise = actions.controlGameIfFirst()(
+      dispatchMock, () => initialState
+    )
+    await getPlayersOnce({
       val: () => ({
         '20': {},
         'another player': {}
       })
     })
 
-    await getPlayersPromise
+    await actionPromise
     expect(dispatchMock).toHaveBeenCalled()
   })
 })

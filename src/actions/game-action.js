@@ -41,7 +41,7 @@ export function controlGameIfFirst(){
   return async (dispatch, getState) => {
     const tableId = getState().table.id
 
-    let snapshot = await fire.database().ref(`table/${tableId}/player`).once('value')
+    const snapshot = await fire.database().ref(`table/${tableId}/player`).once('value')
     const players = snapshot.val()
 
     if (playerIsFirst(getState, players)){
