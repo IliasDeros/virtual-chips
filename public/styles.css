@@ -3,6 +3,7 @@
 *
 * # Variables
 * # Global
+* # Utils
 * # Layout
 * # Player
 * # Player Moves
@@ -41,6 +42,20 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
+}
+
+
+
+/************************************************
+* # Utils
+************************************************/
+.hide {
+  display: none !important;
+}
+
+.invisible {
+  opacity: 0 !important;
+  cursor: default !important;
 }
 
 
@@ -87,18 +102,23 @@ h1, h2, h3, h4, h5, h6 {
   margin: 1rem;
 }
 
+.player__bet-menu {
+  width: 100%;
+}
+
 .player__bet {
+  display: block;
   font-size: 100%;
   font-family: inherit;
   border: 0;
   border-right: 0.4rem solid var(--color-green-table-dark);
   border-bottom: 0.4rem solid var(--color-green-table-dark);
   padding: 0.8rem;
-  margin: 0.8rem;
+  margin: 0.8rem auto;
   background: transparent;
   color: white;
   font-size: 1.2rem;
-  width: 10rem;
+  min-width: 10rem;
   cursor: pointer;
 }
 
@@ -112,7 +132,14 @@ h1, h2, h3, h4, h5, h6 {
   border-left: 0.4rem solid transparent;
 }
 
+.player__bet--confirm {
+  width: 100%;
+  border-left: 0.4rem solid var(--color-green-table-dark);
+}
 
+.player__bet--confirm:active {
+  border-right: 0.4rem solid transparent;
+}
 
 /************************************************
 * # Player Moves

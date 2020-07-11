@@ -72,6 +72,23 @@ export function addToBet(value){
   }
 }
 
+export function addToRaise(value){
+  return (dispatch, getState) => {
+    const state = getState()
+    const { chips } = state
+
+    const raise = (chips.raise || 0) + value
+    
+    dispatch({
+      type: 'SET_CHIPS',
+      payload: {
+        ...chips,
+        raise
+      }
+    })
+  }
+}
+
 export function callBet(){
   return (dispatch, getState) => {
     const state = getState(),

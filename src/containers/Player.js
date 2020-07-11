@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Turn from '../constants/turn'
 import PlayerToken from './PlayerToken'
 import Bet from '../components/Bet'
+import BetButton from '../components/BetButton'
 import LoadingChips from '../components/LoadingChips'
 import Total from '../components/Total'
 import { watchChips } from '../actions/chips-action'
@@ -11,6 +12,10 @@ import { controlGameIfFirst } from '../actions/game-action'
 import BetMenu from './BetMenu'
 
 class Player extends Component {
+  state = {
+    betMenuVisible: true
+  }
+
   componentDidMount(){
     this.props.controlGame()
     this.props.watchChips()
@@ -19,26 +24,38 @@ class Player extends Component {
   }
 
   render() {
-    const canBet = this.props.table && this.props.table.turn !== Turn.FINISHED
+    const {
+      chips,
+      table,
+      player
+    } = this.props
+    const canBet = table && table.turn !== Turn.FINISHED
+    const showBetMenu = (event) => {
+      event.stopPropagation()
+      this.setState({ betMenuVisible: true })
+    }
 
-    if (!this.props.chips) {
+    if (!chips) {
       return <LoadingChips />
     }
 
     return (
       <div className="player">
-        <h2>{this.props.player.name || this.props.player.id}
-          ({this.props.player.state || 'idle'})
+        {/* Details */}
+        <h2>{player.name || player.id}
+          ({player.state || 'idle'})
           <PlayerToken />
         </h2>
-        {(() => this.props.player.host && <p>You are the host.</p>)()}
+        {(() => player.host && <p>You are the host.</p>)()}
         
+        {/* Bet */}
         {canBet && <Fragment>
-          <Bet bet={this.props.chips.bet} />
-          <BetMenu />
+          <Bet bet={chips.bet + (chips.raise || 0)} />
+          {this.state.betMenuVisible ? <BetMenu /> : <BetButton onClick={showBetMenu} />}
         </Fragment>}
 
-        <Total total={this.props.chips.total} />
+        {/* Total */}
+        <Total total={chips.total} />
       </div>
     );
   }

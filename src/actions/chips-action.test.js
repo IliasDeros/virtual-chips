@@ -132,6 +132,69 @@ describe('addToBet', () => {
   })
 })
 
+describe('addToRaise', () => {
+  let dispatchMock
+  let initialState
+
+  beforeEach(() => {
+    dispatchMock = jest.fn()
+    initialState = {
+      player: { id: 10 },
+      table: { id: 1 },
+      chips: {
+        bet: 20,
+        total: 100
+      }
+    }
+  })
+
+  it('initializes a raise', () => {
+    const action = actions.addToRaise(200)
+    action(dispatchMock, () => initialState)
+
+    expect(dispatchMock.mock.calls[0][0]).toEqual({
+      type: 'SET_CHIPS',
+      payload: {
+        bet: 20,
+        raise: 200,
+        total: 100,
+      }
+    })
+  })
+
+  it('increments a raise', () => {
+    initialState.chips.raise = 100
+
+    const action = actions.addToRaise(200)
+    action(dispatchMock, () => initialState)
+
+    expect(dispatchMock.mock.calls[0][0]).toEqual({
+      type: 'SET_CHIPS',
+      payload: {
+        bet: 20,
+        raise: 300,
+        total: 100,
+      }
+    })
+  })
+
+  it('decrements a raise', () => {
+    initialState.chips.raise = 100
+
+    const action = actions.addToRaise(-100)
+    action(dispatchMock, () => initialState)
+
+    expect(dispatchMock.mock.calls[0][0]).toEqual({
+      type: 'SET_CHIPS',
+      payload: {
+        bet: 20,
+        raise: 0,
+        total: 100,
+      }
+    })
+  })
+})
+
 describe('callBet', () => {
   const refMock = jest.fn()
   let initialState

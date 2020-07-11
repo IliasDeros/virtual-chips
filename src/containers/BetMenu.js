@@ -1,27 +1,37 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { addToBet } from '../actions/chips-action'
+import { addToBet, addToRaise } from '../actions/chips-action'
 import { bet } from '../actions/player-action'
 
 function BetMenu(props) {
-  const add100 = () => props.addToBet(100)
-  const remove100 = () => props.addToBet(-100)
+  const raise = props.chips.raise
+  const add100 = () => props.addToRaise(100)
+  const remove100 = () => raise && props.addToRaise(-100)
+  const confirmRaise = () => raise && props.addToBet(raise)
 
   return (
     <div className="player__bet-menu">
       <button className="player__bet player__bet--add" onClick={add100}>
-        Add 100
+        ↑ 100 $
       </button>
-      <br/>
-      <button className="player__bet player__bet--remove" onClick={remove100}>
-        Remove 100
+      <button 
+        className={`player__bet player__bet--remove ${raise ? '' : 'invisible'}`} 
+        onClick={remove100}
+      >
+        ↓ 100 $
+      </button>
+      <button 
+        className={`player__bet player__bet--confirm ${raise ? '' : 'invisible'}`} 
+        onClick={confirmRaise}
+      >
+        Confirm
       </button>
     </div>
   )
 }
 
-function mapStateToProps(){ 
-  return {}
+function mapStateToProps({ chips }){ 
+  return { chips }
 }
 
 function mapDispatchToProps(dispatch){
@@ -29,9 +39,9 @@ function mapDispatchToProps(dispatch){
     addToBet: payload => {
       dispatch(addToBet(payload)) // increase bet
       dispatch(bet())             // update player state
-    }
+    },
+    addToRaise: payload => dispatch(addToRaise(payload))
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BetMenu)
-
