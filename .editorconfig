@@ -2,8 +2,5 @@ root = true
 
 [*]
 trim_trailing_whitespace = true
-
-# Exclude clojure
-[*.{js,py,rb,ts}]
 insert_final_newline = true
 indent_size = 2
