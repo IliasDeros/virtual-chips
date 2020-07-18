@@ -22,7 +22,7 @@ exports.onWrite = writeEvent => {
       .then(snapshot => {
           tableRef.update(actionUpdate(snapshot.val()))
           return tableRef.child('action').remove()
-        }, error => console.error('Error reading table:', error.stack))
+       })
       .catch(error => console.error('Error updating table', error.stack))
   } else {
     const availableActions = `[${Object.keys(ACTION_UPDATE).join(',')}]`
@@ -101,6 +101,7 @@ function winRoundUpdates(table){
 }
 
 function nextRoundUpdates({ round }){
+  // TODO: Move the player token forward
   return {
     pot: 0,
     round: (round || 0) + 1,
