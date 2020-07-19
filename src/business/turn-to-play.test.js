@@ -1,5 +1,6 @@
 import turnToPlay from './turn-to-play'
 import State from '../constants/state'
+import Token from '../constants/token'
 import isTurnFinished from './is-turn-finished'
 
 jest.mock('./is-turn-finished', () => jest.fn())
@@ -17,8 +18,8 @@ describe('turnToPlay', () => {
   describe('on first round', () => {
     it('returns the dealer in a heads up', () => {
       table.player = {
-        'big blind': {},
-        'dealer': {},
+        'big blind': { token: Token.BIG_BLIND },
+        'dealer': { token: Token.DEALER_SMALL },
       }
       expect(turnToPlay(table)).toEqual('dealer')
     })
@@ -26,9 +27,9 @@ describe('turnToPlay', () => {
     it('returns the player after the big blind', () => {
       table.player = {
         'index 0': {},
-        'dealer': {},
-        'small blind': {},
-        'big blind': {},
+        'dealer': { token: Token.DEALER },
+        'small blind': { token: Token.SMALL_BLIND },
+        'big blind': { token: Token.BIG_BLIND },
         'under the gun': {}
       }
       expect(turnToPlay(table)).toEqual('under the gun')
@@ -37,9 +38,9 @@ describe('turnToPlay', () => {
     it('returns the player after big blind, wrapping', () => {
       table.player = {
         'under the gun': {},
-        'dealer': {},
-        'small blind': {},
-        'big blind': {}
+        'dealer': { token: Token.DEALER },
+        'small blind': { token: Token.SMALL_BLIND },
+        'big blind': { token: Token.BIG_BLIND }
       }
       expect(turnToPlay(table)).toEqual('under the gun')
     })
@@ -48,8 +49,8 @@ describe('turnToPlay', () => {
       table.player = {
         'under the gun FOLDED': { state: State.FOLDED },
         'under the gun': {},
-        'dealer': {},
-        'small blind': {},
+        'dealer': { token: Token.DEALER },
+        'small blind': { token: Token.SMALL_BLIND },
         'big blind': { state: State.FOLDED }
       }
       expect(turnToPlay(table)).toEqual('under the gun')
@@ -64,8 +65,8 @@ describe('turnToPlay', () => {
     it('returns the player on left of dealer in heads-up', () => {
       Object.assign(table, {
         player: {
-          'dealer': {},
-          'big blind': {},
+          'dealer': { token: Token.DEALER },
+          'big blind': { token: Token.BIG_BLIND },
         },
         round: 0
       })
@@ -75,9 +76,9 @@ describe('turnToPlay', () => {
     it('returns the small blind', () => {
       table.player = {
         'player 0': {},
-        'dealer': {},
-        'small blind': {},
-        'big blind': {},
+        'dealer': { token: Token.DEALER },
+        'small blind': { token: Token.SMALL_BLIND },
+        'big blind': { token: Token.BIG_BLIND },
         'under the gun': {}
       }
       expect(turnToPlay(table)).toEqual('small blind')
@@ -86,9 +87,9 @@ describe('turnToPlay', () => {
     it('returns the small blind, wrapping', () => {
       Object.assign(table, {
         player: {
-          'small blind': {},
-          'big blind': {},
-          'dealer': {}
+          'small blind': { token: Token.SMALL_BLIND },
+          'big blind': { token: Token.BIG_BLIND },
+          'dealer': { token: Token.DEALER }
         },
         round: 2
       })
@@ -99,8 +100,8 @@ describe('turnToPlay', () => {
       Object.assign(table, {
         player: {
           'small blind': { state: State.FOLDED },
-          'big blind': {},
-          'dealer': {}
+          'big blind': { token: Token.BIG_BLIND },
+          'dealer': { token: Token.DEALER }
         },
         round: 2
       })
