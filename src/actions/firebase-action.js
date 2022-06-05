@@ -3,7 +3,6 @@ import Fingerprint from "fingerprintjs2";
 import Turn from "constants/turn";
 import selectors from "reducers/selectors";
 import { updateGame } from "actions/host-action";
-import { setPlayerHost } from "actions/player-action";
 
 const fingerprintMockParam = "player";
 
@@ -74,16 +73,20 @@ function _orderMeFirst(indexedPlayers, meId) {
   return players;
 }
 
+function _setHost(playerId) {
+  return (players) => players.map((p) => ({ ...p, isHost: p.id === playerId }));
+}
+
 function watchPlayers(id, meId, { dispatch }) {
   onValue(getTableRef(id), (snapshot) => {
     const table = snapshot.val();
-    const { player } = table;
+    const { host: hostId, player } = table;
 
     if (!player) {
       return;
     }
 
-    const payload = _orderMeFirst(player, meId);
+    const payload = _setHost(hostId)(_orderMeFirst(player, meId));
     dispatch({ type: "SET_PLAYERS_ME_FIRST", payload });
     dispatch(updateGame(table, payload));
   });
@@ -121,22 +124,6 @@ function initializeHost(tableId, playerId) {
   );
 }
 
-function watchHost(id, playerId, dispatcher) {
-  const { dispatch } = dispatcher;
-  const hostRef = getTableRef(id, "host");
-
-  onValue(hostRef, (snapshot) => {
-    const host = snapshot.val();
-    const isCurrentPlayerHost = host === playerId;
-
-    if (!isCurrentPlayerHost) {
-      return;
-    }
-
-    dispatch(setPlayerHost());
-  });
-}
-
 export function watchTable(id = "default") {
   return async (dispatch, getState) => {
     const dispatcher = { dispatch, getState };
@@ -146,7 +133,6 @@ export function watchTable(id = "default") {
     watchTurn(id, dispatcher);
     const playerId = await initializePlayer(id);
     initializeHost(id, playerId);
-    watchHost(id, playerId, dispatcher);
     watchPlayers(id, playerId, dispatcher);
   };
 }

@@ -1,36 +1,46 @@
 const initialState = {
-  id: 'default',
+  id: "default",
   pot: 0,
-  players: []
+  players: [],
+};
+
+function setFirstPlayerHost(state) {
+  if (!state.players.length) {
+    return {
+      ...state,
+      isHost: true,
+    };
+  }
 }
 
-export default function(state = initialState, action){
-  switch (action.type){
-    case 'SET_ACTION':
+export default function (state = initialState, action) {
+  switch (action.type) {
+    case "SET_ACTION":
       state = {
         ...state,
-        action: action.payload
-      }
-      break
-    case 'SET_POT':
+        action: action.payload,
+      };
+      break;
+    case "SET_POT":
       state = {
         ...state,
-        pot: action.payload
-      }
-      break
-    case 'SET_TURN':
+        pot: action.payload,
+      };
+      break;
+    case "SET_TURN":
       state = {
         ...state,
-        turn: action.payload
-      }
-      break
-    case 'SET_PLAYERS_ME_FIRST':
+        turn: action.payload,
+      };
+      break;
+    // no default
+    case "SET_PLAYERS_ME_FIRST":
       state = {
         ...state,
-        players: action.payload
-      }
+        players: action.payload,
+      };
     // no default
   }
 
-  return state
+  return state;
 }

@@ -128,10 +128,6 @@ export function tie() {
   };
 }
 
-export function setPlayerHost() {
-  return { type: "SET_PLAYER_HOST" };
-}
-
 // Watch table round update and execute a callback with the table
 function onRoundUpdate(table, cb) {
   let roundRef = `table/${table.id}/round`;

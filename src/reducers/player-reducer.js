@@ -2,12 +2,6 @@ import State from "../constants/state";
 
 export default function (state = { state: State.IDLE }, action) {
   switch (action.type) {
-    case "SET_PLAYER_HOST":
-      state = {
-        ...state,
-        isHost: true,
-      };
-      break;
     case "SET_PLAYER_ID":
       state = {
         ...state,

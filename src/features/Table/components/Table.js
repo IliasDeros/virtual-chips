@@ -17,7 +17,7 @@ class Table extends Component {
     return (
       <div>
         <div>
-          You: {me.name}
+          You{me.isHost && " (host)"}: {me.name}
           {me.token && ` - ${me.token}`}
         </div>
         {otherPlayers.map((player) => (

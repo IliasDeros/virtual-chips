@@ -26,7 +26,7 @@ function _nextRoundUpdates({ round }) {
 function _resetPlayerUpdates({ id, chips }) {
   const updates = {};
   updates[`player/${id}/bet`] = 0;
-  updates[`player/${id}/lastRoundChips`] = chips;
+  updates[`player/${id}/lastRoundChips`] = chips || 0;
   updates[`player/${id}/state`] = State.IDLE;
   updates[`player/${id}/totalBet`] = 0;
   return updates;
