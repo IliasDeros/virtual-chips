@@ -1,6 +1,7 @@
 const initialState = {
   id: 'default',
-  pot: 0
+  pot: 0,
+  players: []
 }
 
 export default function(state = initialState, action){
@@ -23,6 +24,11 @@ export default function(state = initialState, action){
         turn: action.payload
       }
       break
+    case 'SET_PLAYERS_ME_FIRST':
+      state = {
+        ...state,
+        players: action.payload
+      }
     // no default
   }
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import App from './App'
 import { Provider } from 'react-redux'
 import store from '../store'
@@ -9,6 +9,7 @@ it('renders without crashing', () => {
   Fingerprint.prototype.get = jest.fn()
 
   const div = document.createElement('div')
-
-  ReactDOM.render(<Provider store={store}><App /></Provider>, div)
+  const root = createRoot(div)
+  root.render(<Provider store={store}><App /></Provider>)
+  root.unmount()
 })

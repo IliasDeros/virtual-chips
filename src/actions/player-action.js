@@ -1,11 +1,12 @@
 import Fingerprint from 'fingerprintjs2'
-import fire from '../fire'
+import { get, getDatabase, onValue, ref, set } from "firebase/database";
 import State from '../constants/state'
 import getToken from '../business/get-token'
 
 function getFireRef(endpoint, { table, player }){
-  let ref = `table/${table.id}/player/${player.id}/${endpoint}`
-  return fire.database().ref(ref)
+  let url = `table/${table.id}/player/${player.id}/${endpoint}`
+  const db = getDatabase();
+  return ref(db, url)
 }
 
 export function loadPlayerId(){
@@ -23,7 +24,7 @@ export function loadPlayerName(){
   return (dispatch, getState) => {
     const state = getState()
 
-    getFireRef('name', state).on('value', async snapshot => {
+    onValue(getFireRef('name', state), async snapshot => {
       let playerName = snapshot.val()
 
       if (playerName){
@@ -36,7 +37,7 @@ export function loadPlayerName(){
         let res = await fetch('https://cors-anywhere.herokuapp.com/http://namey.muffinlabs.com/name.json')
         const [name] = await res.json()
 
-        getFireRef('name', state).set(name)
+        set(getFireRef('name', state), name)
       }
     })
   }
@@ -46,7 +47,7 @@ export function loadPlayerState(){
   return (dispatch, getState) => {
     const state = getState()
 
-    getFireRef('state', state).on('value', snapshot => {
+    onValue(getFireRef('state', state), snapshot => {
       let playerState = snapshot.val()
 
       if (playerState){
@@ -55,7 +56,7 @@ export function loadPlayerState(){
           payload: playerState
         })
       } else {
-        getFireRef('state', state).set(State.IDLE)
+        set(getFireRef('state', state), State.IDLE)
       }
     })
   }
@@ -76,50 +77,50 @@ export function loadPlayerToken(){
         type: 'SET_PLAYER_TOKEN',
         payload: token
       })
-      getFireRef('token', state).set(token)
+      set(getFireRef('token', state), token)
     }
   }
 }
 
 export function allIn(){
   return (_, getState) => {
-    getFireRef('state', getState()).set(State.ALL_IN)
+    set(getFireRef('state', getState()), State.ALL_IN)
   }
 }
 
 export function bet(){
   return (_, getState) => {
-    getFireRef('state', getState()).set(State.BET)
+    set(getFireRef('state', getState()), State.BET)
   }
 }
 
 export function call(){
   return (_, getState) => {
-    getFireRef('state', getState()).set(State.CALLED)
+    set(getFireRef('state', getState()), State.CALLED)
   }
 }
 
 export function check(){
   return (_, getState) => {
-    getFireRef('state', getState()).set(State.CHECKED)
+    set(getFireRef('state', getState()), State.CHECKED)
   }
 }
 
 export function fold(){
   return (_, getState) => {
-    getFireRef('state', getState()).set(State.FOLDED)
+    set(getFireRef('state', getState()), State.FOLDED)
   }
 }
 
 export function idle(){
   return (_, getState) => {
-    getFireRef('state', getState()).set(State.IDLE)
+    set(getFireRef('state', getState()), State.IDLE)
   }
 }
 
 export function tie(){
   return (_, getState) => {
-    getFireRef('state', getState()).set(State.TIED)
+    set(getFireRef('state', getState()), State.TIED)
   }
 }
 
@@ -132,7 +133,8 @@ function onRoundUpdate(table, cb){
   let roundRef = `table/${table.id}/round`
 
   // watch table round
-  fire.database().ref(roundRef).on('value', async roundSnapshot => {
+  const db = getDatabase()
+  onValue(ref(db, roundRef), async roundSnapshot => {
     const playerSnapshot = await loadPlayers(table),
           updatedTable = {
             player: playerSnapshot.val(),
@@ -145,5 +147,6 @@ function onRoundUpdate(table, cb){
 
 function loadPlayers(table){
   let playerRef = `table/${table.id}/player`
-  return fire.database().ref(playerRef).once('value')
+  const db = getDatabase()
+  return get(ref(db, playerRef))
 }

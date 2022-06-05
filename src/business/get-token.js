@@ -45,3 +45,20 @@ export default function getToken(table, player){
 function isHeadsUp(table){
   return Object.keys(table.player).length <= 2
 }
+
+import Token from '../constants/token'
+
+/*
+* compute the player tokens associated to their position and the table round
+* - In heads-up play with two blinds, the small blind is on the dealer
+* - Order is :
+*     1. Dealer
+*     2. Small Blind
+*     3. Big Blind
+*
+* @param table { players: [{ id: '1' }], playerPositions: ['1'], round: 0 }
+* @returns Token.DEALER | Token.SMALL_BLIND | Token.BIG_BLIND | null
+*/
+export default function setTokens(table){
+  // TODO!
+}

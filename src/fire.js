@@ -1,5 +1,5 @@
 // From firebase's "Add Firebase to your web app"
-import firebase from 'firebase'
+import { initializeApp } from 'firebase/app';
 
 let config = {
   apiKey: "AIzaSyBHpScqjoYoRbR9qQpyo02D_r_2oxaIloU",
@@ -10,6 +10,4 @@ let config = {
   messagingSenderId: "301476727106"
 }
 
-const fire = firebase.initializeApp(config)
-
-export default fire
+export const initializeFirebase = () => initializeApp(config)

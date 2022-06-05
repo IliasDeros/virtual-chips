@@ -1,10 +1,12 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import PlayerMoves from './PlayerMoves'
 import { Provider } from 'react-redux'
 import store from '../store'
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<Provider store={store}><PlayerMoves /></Provider>, div);
+  const root = createRoot(div)
+  root.render(<Provider store={store}><PlayerMoves /></Provider>);
+  root.unmount()
 })

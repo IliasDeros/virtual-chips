@@ -1,4 +1,4 @@
-import fire from '../fire'
+import { get, getDatabase, onValue, ref } from "firebase/database";
 import { setAction } from './table-action'
 import { setPlayerHost } from './player-action'
 import Action from '../constants/action'
@@ -11,7 +11,7 @@ export function controlGame(){
     const tableId = getState().table.id
 
     // this function is run for every single table-wide update
-    fire.database().ref(`table/${tableId}`).on('value', snapshot => {
+    onValue(ref(getDatabase(), `table/${tableId}`), snapshot => {
       const table = snapshot.val()
 
       // ignore self update
@@ -41,7 +41,7 @@ export function controlGameIfFirst(){
   return async (dispatch, getState) => {
     const tableId = getState().table.id
 
-    const snapshot = await fire.database().ref(`table/${tableId}/player`).once('value')
+    const snapshot = await get(ref(getDatabase(), `table/${tableId}/player`))
     const players = snapshot.val()
 
     if (playerIsFirst(getState, players)){

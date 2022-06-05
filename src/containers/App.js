@@ -2,19 +2,12 @@ import React, { Component } from 'react'
 import Nav from './Nav'
 import Player from './Player'
 import PlayerMoves from './PlayerMoves'
-import { connect } from 'react-redux'
-import { loadPlayerId } from '../actions/player-action'
-import { watchTable } from '../actions/table-action'
 import Action from '../constants/action'
 import LoadingPlayer from '../components/LoadingPlayer'
+import TableScreen from 'features/TableScreen/components/TableScreen'
 
 class App extends Component {
-  componentDidMount(){
-    this.props.loadPlayerId()
-    this.props.watchTable()
-  }
-
-  render() {
+  renderAppContents() {
     switch(this.props.table.action){
       case Action.NEXT_TURN:
         return <h1>Next Turn!</h1>
@@ -28,17 +21,12 @@ class App extends Component {
         </main>
     }
   }
-}
 
-function mapStateToProps({ player, table }){
-  return { player, table }
-}
-
-function mapDispatchToProps(dispatch){
-  return {
-    loadPlayerId(){ dispatch(loadPlayerId()) },
-    watchTable(){ dispatch(watchTable()) }
+  render() {
+    return <React.Fragment>
+      <TableScreen />
+    </React.Fragment>
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default App
