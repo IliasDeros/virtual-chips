@@ -16,9 +16,15 @@ class Table extends Component {
 
     return (
       <div>
-        <div>You: {me.name}</div>
+        <div>
+          You: {me.name}
+          {me.token && ` - ${me.token}`}
+        </div>
         {otherPlayers.map((player) => (
-          <div key={player.id}>{player.name}</div>
+          <div key={player.id}>
+            {player.name}
+            {player.token && ` - ${player.token}`}
+          </div>
         ))}
         Table
         <div>Pot: {pot}</div>

@@ -9,6 +9,7 @@ import selectors from "reducers/selectors";
 import State from "constants/state";
 import Turn from "constants/turn";
 import { calculateSidePots } from "../business/calculate-sidepots";
+import getToken from "../business/get-token";
 
 function getTableRef(id) {
   return ref(getDatabase(), `table/${id}`);
@@ -72,8 +73,35 @@ export function winRound(table, players) {
       _winRoundUpdates(players),
       ...players.map(_resetPlayerUpdates)
     );
-    dispatch({ type: "WIN_ROUND" }); // Just for logging
+    dispatch({ type: "LOG_WIN_ROUND" });
     update(getTableRef(tableId), tableUpdates);
+  };
+}
+
+function setTokens(table, players) {
+  return (dispatch, getState) => {
+    const noUpdates = {};
+    const tableId = selectors.getTableId(getState());
+    const tokenUpdates = players.reduce((updates, player) => {
+      const token = getToken(table, players, player);
+      const alreadyHasCorrectToken = player.token === token;
+
+      if (alreadyHasCorrectToken) {
+        return updates;
+      }
+
+      return {
+        ...updates,
+        [`player/${player.id}/token`]: token,
+      };
+    }, noUpdates);
+
+    if (tokenUpdates === noUpdates) {
+      return;
+    }
+
+    dispatch({ type: "LOG_SET_TOKENS" });
+    update(getTableRef(tableId), tokenUpdates);
   };
 }
 
@@ -81,6 +109,7 @@ export function updateGame(table, players) {
   return (dispatch) => {
     switch (table.turn || Turn.PRE_FLOP) {
       case Turn.PRE_FLOP:
+        dispatch(setTokens(table, players));
       case Turn.FLOP:
       case Turn.TURN:
       case Turn.RIVER:
@@ -93,6 +122,7 @@ export function updateGame(table, players) {
   };
 }
 
+/** Deprecated */
 export function controlGame() {
   return (dispatch, getState) => {
     const tableId = selectors.getTableId(getState());
@@ -120,7 +150,7 @@ export function controlGame() {
   };
 }
 
-// the game flow is handled by the first player in the table
+/** Deprecated */
 export function controlGameIfFirst() {
   function playerIsFirst(getState, players) {
     const playerId = getState().player.id;
