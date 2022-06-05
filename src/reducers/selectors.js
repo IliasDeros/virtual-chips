@@ -5,6 +5,9 @@ export const selectors = {
   getPlayers(state) {
     return state.table.players;
   },
+  getTableId(state) {
+    return state.table.id;
+  },
 };
 
 export default selectors;

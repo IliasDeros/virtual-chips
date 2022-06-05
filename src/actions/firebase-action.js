@@ -1,7 +1,9 @@
 import { getDatabase, onValue, ref, runTransaction } from "firebase/database";
 import Fingerprint from "fingerprintjs2";
-import Turn from "../constants/turn";
+import Turn from "constants/turn";
 import selectors from "reducers/selectors";
+import { updateGame } from "actions/game-action";
+import { setPlayerHost } from "actions/player-action";
 
 const fingerprintMockParam = "player";
 
@@ -74,14 +76,16 @@ function _orderMeFirst(indexedPlayers, meId) {
 
 function watchPlayers(id, meId, { dispatch }) {
   onValue(getTableRef(id), (snapshot) => {
-    const players = snapshot.val().player;
+    const table = snapshot.val();
+    const { player } = table;
 
-    if (!players) {
+    if (!player) {
       return;
     }
 
-    const payload = _orderMeFirst(players, meId);
+    const payload = _orderMeFirst(player, meId);
     dispatch({ type: "SET_PLAYERS_ME_FIRST", payload });
+    dispatch(updateGame(table, payload));
   });
 }
 
@@ -91,7 +95,7 @@ function createPlayer(tableId, playerId) {
   };
 
   return runTransaction(
-    getTableRef(tableId, `/player/${playerId}`),
+    getTableRef(tableId, `player/${playerId}`),
     (value) => value || initialPlayer
   );
 }
@@ -110,6 +114,29 @@ function initializePlayer(id) {
   );
 }
 
+function initializeHost(tableId, playerId) {
+  return runTransaction(
+    getTableRef(tableId, "host"),
+    (value) => value || playerId
+  );
+}
+
+function watchHost(id, playerId, dispatcher) {
+  const { dispatch } = dispatcher;
+  const hostRef = getTableRef(id, "host");
+
+  onValue(hostRef, (snapshot) => {
+    const host = snapshot.val();
+    const isCurrentPlayerHost = host === playerId;
+
+    if (!isCurrentPlayerHost) {
+      return;
+    }
+
+    dispatch(setPlayerHost());
+  });
+}
+
 export function watchTable(id = "default") {
   return async (dispatch, getState) => {
     const dispatcher = { dispatch, getState };
@@ -118,6 +145,8 @@ export function watchTable(id = "default") {
     watchPot(id, dispatcher);
     watchTurn(id, dispatcher);
     const playerId = await initializePlayer(id);
+    initializeHost(id, playerId);
+    watchHost(id, playerId, dispatcher);
     watchPlayers(id, playerId, dispatcher);
   };
 }

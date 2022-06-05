@@ -41,7 +41,7 @@ class ActionBar extends Component {
 
 function mapStateToProps(state) {
   return {
-    me: selectors.getPlayers(state)[0],
+    me: selectors.getPlayers(state)[0] || {},
     players: selectors.getPlayers(state),
   };
 }
