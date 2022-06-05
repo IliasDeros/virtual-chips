@@ -2,7 +2,7 @@ import { getDatabase, onValue, ref, runTransaction } from "firebase/database";
 import Fingerprint from "fingerprintjs2";
 import Turn from "constants/turn";
 import selectors from "reducers/selectors";
-import { updateGame } from "actions/game-action";
+import { updateGame } from "actions/host-action";
 import { setPlayerHost } from "actions/player-action";
 
 const fingerprintMockParam = "player";
