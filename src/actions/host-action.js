@@ -18,6 +18,39 @@ function getTableRef(id) {
   return ref(getDatabase(), `table/${id}`);
 }
 
+// TODO: Go to next turn
+// function nextTurnUpdates(table){
+//   const updates = makePlayerUpdatesHash(table)
+//   updates.turn = (table.turn || 0) + 1
+//   updates.pot = makePotUpdate(table)
+//   return updates
+
+//   function makePotUpdate(table){
+//     const player = table.player,
+//           bets = Object.keys(player).reduce((sum, id) =>
+//             sum + player[id].chips.bet
+//           , 0)
+
+//     return bets + (table.pot || 0)
+//   }
+
+//   function makePlayerUpdatesHash(table){
+//     return Object.keys(table.player)
+//       .reduce((hash, id) => {
+//         const player = table.player[id]
+
+//         hash[`player/${id}/chips/bet`] = 0
+//         hash[`player/${id}/chips/totalBet`] =
+//           (player.chips.totalBet || 0) + player.chips.bet
+
+//         if (player.state !== 'folded'){
+//           hash[`player/${id}/state`] = 'idle'
+//         }
+//       return hash
+//     }, {})
+//   }
+// }
+
 function _nextRoundUpdates({ round }) {
   return {
     round: (round || 0) + 1,
