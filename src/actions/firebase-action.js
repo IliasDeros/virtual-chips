@@ -36,9 +36,9 @@ function watchTurn(id, { dispatch }) {
   });
 }
 
-function _sumTotalBets(players) {
+function _sumBets(players) {
   return Object.entries(players).reduce(
-    (sum, [, player]) => sum + (player.totalBet || 0),
+    (sum, [, player]) => sum + (player.roundBet || 0),
     0
   );
 }
@@ -46,7 +46,7 @@ function _sumTotalBets(players) {
 function watchPot(id, { dispatch, getState }) {
   onValue(getTableRef(id), (snapshot) => {
     const players = snapshot.val().player || [];
-    const payload = _sumTotalBets(players);
+    const payload = _sumBets(players);
     const oldPot = selectors.getPot(getState());
     const isSamePot = payload === oldPot;
 
@@ -95,6 +95,7 @@ function watchPlayers(id, meId, { dispatch }) {
 function createPlayer(tableId, playerId) {
   const initialPlayer = {
     name: `Player #${playerId.slice(0, 4)}`,
+    chips: 2500,
   };
 
   return runTransaction(

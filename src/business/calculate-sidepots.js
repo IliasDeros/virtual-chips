@@ -1,7 +1,7 @@
 /*
  * calculate the split pots associated to multiple players going all-in
  *
- * @param players {array} list of players and their total bet [{ chips: { totalBet: 0, total: 0 } }]
+ * @param players {array} list of players and their total bet [{ chips: { roundBet: 0, total: 0 } }]
  * @returns {array} list of sidepots with their players [{ pot: 0, players: [{ chips }] }, { main pot }]
  */
 export function calculateSidePots(players) {
@@ -15,14 +15,14 @@ export function calculateSidePots(players) {
 
   players
     // sort from lowest to highest
-    .sort((a, b) => a.totalBet - b.totalBet)
+    .sort((a, b) => a.roundBet - b.roundBet)
 
     // distribute side pots, from smallest sidepot to main pot
     .forEach((player, i) => {
-      // Distribute totalBet through existing sidepots
+      // Distribute roundBet through existing sidepots
       const remainingBet = sidePots.reduce(
         (bet, sidePot) => bet - sidePot.bet,
-        player.totalBet || 0
+        player.roundBet || 0
       );
 
       // Add to main pot

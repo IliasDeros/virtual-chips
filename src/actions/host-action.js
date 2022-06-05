@@ -10,6 +10,9 @@ import State from "constants/state";
 import Turn from "constants/turn";
 import { calculateSidePots } from "../business/calculate-sidepots";
 import getToken from "../business/get-token";
+import Token from "constants/token";
+
+const defaultBigBlind = 50;
 
 function getTableRef(id) {
   return ref(getDatabase(), `table/${id}`);
@@ -17,18 +20,22 @@ function getTableRef(id) {
 
 function _nextRoundUpdates({ round }) {
   return {
-    pot: 0,
     round: (round || 0) + 1,
     turn: Turn.PRE_FLOP,
   };
 }
 
-function _resetPlayerUpdates({ id, chips }) {
+function _resetPlayerUpdates({ id }) {
   const updates = {};
-  updates[`player/${id}/bet`] = 0;
-  updates[`player/${id}/lastRoundChips`] = chips || 0;
+  updates[`player/${id}/roundBet`] = 0;
   updates[`player/${id}/state`] = State.IDLE;
-  updates[`player/${id}/totalBet`] = 0;
+  updates[`player/${id}/turnBet`] = 0;
+  return updates;
+}
+
+function _lastRoundChipsUpdate({ id, chips }) {
+  const updates = {};
+  updates[`player/${id}/lastRoundChips`] = chips || 0;
   return updates;
 }
 
@@ -71,11 +78,26 @@ export function winRound(table, players) {
     const tableUpdates = Object.assign(
       _nextRoundUpdates(table),
       _winRoundUpdates(players),
+      ...players.map(_lastRoundChipsUpdate),
       ...players.map(_resetPlayerUpdates)
     );
     dispatch({ type: "LOG_WIN_ROUND" });
     update(getTableRef(tableId), tableUpdates);
   };
+}
+
+function _getBlindBet(table, token) {
+  const { bigBlind = defaultBigBlind } = table;
+
+  switch (token) {
+    case Token.BIG_BLIND:
+      return bigBlind;
+    case Token.DEALER_SMALL:
+    case Token.SMALL_BLIND:
+      return Math.ceil(bigBlind / 2);
+    default:
+      return 0;
+  }
 }
 
 function setTokens(table, players) {
@@ -90,9 +112,16 @@ function setTokens(table, players) {
         return updates;
       }
 
+      const blindBet = _getBlindBet(table, token);
+      const oldPlayerChips = player.chips + (player.roundBet || 0);
+      const newPlayerChips = oldPlayerChips - blindBet;
+
       return {
         ...updates,
         [`player/${player.id}/token`]: token,
+        [`player/${player.id}/chips`]: newPlayerChips,
+        [`player/${player.id}/turnBet`]: blindBet,
+        [`player/${player.id}/roundBet`]: blindBet,
       };
     }, noUpdates);
 
@@ -100,8 +129,14 @@ function setTokens(table, players) {
       return;
     }
 
+    const tableUpdates = Object.assign(
+      {},
+      ...players.map(_resetPlayerUpdates),
+      tokenUpdates
+    );
+
     dispatch({ type: "LOG_SET_TOKENS" });
-    update(getTableRef(tableId), tokenUpdates);
+    update(getTableRef(tableId), tableUpdates);
   };
 }
 
