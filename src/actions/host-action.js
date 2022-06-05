@@ -107,6 +107,12 @@ function setTokens(table, players) {
 
 export function updateGame(table, players) {
   return (dispatch) => {
+    const isHost = table.host === players[0].id;
+
+    if (!isHost) {
+      return;
+    }
+
     switch (table.turn || Turn.PRE_FLOP) {
       case Turn.PRE_FLOP:
         dispatch(setTokens(table, players));

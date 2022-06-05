@@ -16,7 +16,9 @@ const getPlayerBet = (p) => p.bet;
 export default function isTurnFinished(players) {
   const activePlayers = players.filter(isPlayerActive);
   const activeBets = activePlayers.map(getPlayerBet);
-  const allSameBet = !isNaN(activeBets.reduce((a, b) => (a === b ? a : NaN)));
+  const allSameBet = !isNaN(
+    activeBets.reduce((a, b) => (a === b ? a : NaN), activeBets[0])
+  );
   const allChecked = activePlayers.every(isPlayerChecked);
   const allCalled = activePlayers.every(isPlayerCalled);
   const onlyOneBet = activePlayers.filter(hasPlayerBet).length === 1;
