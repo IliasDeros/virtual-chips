@@ -5,8 +5,9 @@ import selectors from "reducers/selectors";
 import State from "constants/state";
 
 const getState = (props) => {
-  const isAlone = props.players.length <= 1;
+  const { isAlone } = props;
   const isFolded = props.me.state === State.FOLDED;
+  const isWaitingTurn = !props.me.isTurn;
 
   if (isAlone) {
     return "WAITING_FOR_PLAYERS";
@@ -14,6 +15,10 @@ const getState = (props) => {
 
   if (isFolded) {
     return "IS_FOLDED";
+  }
+
+  if (isWaitingTurn) {
+    return "WAITING_TURN";
   }
 
   return "FOLD";
@@ -24,7 +29,7 @@ const getState = (props) => {
  */
 class ActionBar extends Component {
   render() {
-    const { fold } = this.props;
+    const { fold, playerTurn } = this.props;
     const state = getState(this.props);
 
     return (
@@ -33,6 +38,9 @@ class ActionBar extends Component {
           <button disabled>Waiting on more players</button>
         )}
         {state === "IS_FOLDED" && <button disabled>Folded</button>}
+        {state === "WAITING_TURN" && (
+          <button disabled>Waiting for {playerTurn.id}</button>
+        )}
         {state === "FOLD" && <button onClick={fold}>Fold</button>}
       </div>
     );
@@ -42,7 +50,8 @@ class ActionBar extends Component {
 function mapStateToProps(state) {
   return {
     me: selectors.getPlayers(state)[0] || {},
-    players: selectors.getPlayers(state),
+    isAlone: selectors.getPlayers(state).length <= 1,
+    playerTurn: selectors.getPlayers(state).find((player) => player.isTurn),
   };
 }
 

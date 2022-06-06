@@ -189,7 +189,6 @@ export function updateGame(table, players) {
       case Turn.RIVER:
         // isTurnFinished(players) && dispatch(setAction(Action.NEXT_TURN));
         console.log("next turn? " + isTurnFinished(players));
-      // eslint-disable-next-line
       default:
         isGameWon(players) && dispatch(winRound(table, players));
     }

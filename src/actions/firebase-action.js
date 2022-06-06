@@ -3,6 +3,7 @@ import Fingerprint from "fingerprintjs2";
 import Turn from "constants/turn";
 import selectors from "reducers/selectors";
 import { updateGame } from "actions/host-action";
+import { getCurrentTurnPlayer } from "../business/get-turn";
 
 const fingerprintMockParam = "player";
 
@@ -58,23 +59,36 @@ function watchPot(id, { dispatch, getState }) {
   });
 }
 
-function _orderMeFirst(indexedPlayers, meId) {
-  const playerEntries = Object.entries(indexedPlayers);
-  const isEntryMe = ([id]) => id === meId;
-  const toValue = ([id, player]) => ({ id, ...player });
+function _orderMeFirst(meId) {
+  return (indexedPlayers) => {
+    const playerEntries = Object.entries(indexedPlayers);
+    const isEntryMe = ([id]) => id === meId;
+    const toValue = ([id, player]) => ({ id, ...player });
 
-  // Order players so that "me" is first
-  const meIndex = playerEntries.findIndex(isEntryMe);
-  const players = playerEntries
-    .slice(meIndex)
-    .concat(playerEntries.slice(0, meIndex))
-    .map(toValue);
+    // Order players so that "me" is first
+    const meIndex = playerEntries.findIndex(isEntryMe);
+    const players = playerEntries
+      .slice(meIndex)
+      .concat(playerEntries.slice(0, meIndex))
+      .map(toValue);
 
-  return players;
+    return players;
+  };
 }
 
 function _setHost(playerId) {
   return (players) => players.map((p) => ({ ...p, isHost: p.id === playerId }));
+}
+
+const compose =
+  (...fns) =>
+  (x) =>
+    fns.reduceRight((y, f) => f(y), x);
+
+function _setPlayerTurn(players) {
+  const turnPlayer = getCurrentTurnPlayer(players);
+  const isTurn = (p) => p === turnPlayer;
+  return players.map((p) => ({ ...p, isTurn: isTurn(p) }));
 }
 
 function watchPlayers(id, meId, { dispatch }) {
@@ -86,9 +100,13 @@ function watchPlayers(id, meId, { dispatch }) {
       return;
     }
 
-    const payload = _setHost(hostId)(_orderMeFirst(player, meId));
-    dispatch({ type: "SET_PLAYERS_ME_FIRST", payload });
-    dispatch(updateGame(table, payload));
+    const players = compose(
+      _setPlayerTurn,
+      _setHost(hostId),
+      _orderMeFirst(meId)
+    )(player);
+    dispatch({ type: "SET_PLAYERS_ME_FIRST", payload: players });
+    dispatch(updateGame(table, players));
   });
 }
 
