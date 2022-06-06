@@ -23,6 +23,7 @@
   },
   "alias": {
     "actions": "./src/actions",
+    "business": "./src/business",
     "constants": "./src/constants",
     "features": "./src/features",
     "reducers": "./src/reducers"

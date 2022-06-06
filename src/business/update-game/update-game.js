@@ -1,27 +1,10 @@
 import Button from "constants/button";
 import State from "constants/state";
-import getButton from "./get-button";
+import getButton from "business/get-button";
+import updateWinRound from "./update-win-round";
+import { compose, _update } from "./utils";
 
 const defaultBigBlind = 50;
-
-const compose =
-  (...fns) =>
-  (x) =>
-    fns.reduceRight((y, f) => f(y), x);
-
-function _update(instance, updates) {
-  if (!updates) {
-    return instance;
-  }
-
-  return {
-    ...instance,
-    gameUpdates: {
-      ...instance.gameUpdates,
-      ...updates,
-    },
-  };
-}
 
 function _getBlindBet(table, button) {
   const { bigBlind = defaultBigBlind } = table;
@@ -41,7 +24,9 @@ function _updateButtons({ players, table }) {
   return {
     table,
     players: players.map((p) => {
-      const button = getButton(table, players, p);
+      // If we won a game, compute button for next round
+      const updatedTable = { ...table, ...table.gameUpdates };
+      const button = getButton(updatedTable, players, p);
       const hasChangedButton = p.button !== button;
       return _update(p, hasChangedButton && { button: button || null });
     }),
@@ -50,8 +35,8 @@ function _updateButtons({ players, table }) {
 
 function _updateBlinds({ players, table }) {
   const getAllChips = (player) => {
-    const { chips = 0, roundBet = 0 } = player;
-    return chips + roundBet;
+    const { chips = 0, roundBet = 0, gameUpdates = {} } = player;
+    return (gameUpdates.lastRoundChips || chips) + roundBet;
   };
 
   return {
@@ -107,36 +92,13 @@ function _updatePlayerStates({ players, table }) {
   };
 }
 
-// return players.reduce((updates, player) => {
-//   const button = getButton(table, players, player);
-//   const alreadyHasCorrectButton = player.button === button;
+function _winRound({ players, table }) {
+  return { players, table };
+}
 
-//   if (alreadyHasCorrectButton) {
-//     return updates;
-//   }
-
-//   const blind = _getBlindBet(table, button);
-//   // const oldPlayerChips = player.chips + (player.roundBet || 0);
-//   // const newPlayerChips = oldPlayerChips - blindBet;
-
-//   return [
-//     ...updates,
-//     {
-//       getButton() {
-//         return { player, blind, button };
-//       },
-//     },
-//   ];
-//   // return {
-//   //   ...updates,
-//   //   [`player/${player.id}/chips`]: newPlayerChips,
-//   //   [`player/${player.id}/roundBet`]: blindBet,
-//   //   [`player/${player.id}/state`]: State.IDLE,
-//   //   [`player/${player.id}/button`]: button,
-//   //   [`player/${player.id}/turnBet`]: blindBet,
-//   // };
-// }, []);
-// }
+function _proceedToNextTurn({ players, table }) {
+  return { players, table };
+}
 
 /**
  * Get the updates required to fix the state of the game:
@@ -152,6 +114,8 @@ export function updateGame(table, players) {
   return compose(
     _updatePlayerStates,
     _updateBlinds,
-    _updateButtons
+    _updateButtons,
+    updateWinRound,
+    _proceedToNextTurn
   )({ players, table });
 }

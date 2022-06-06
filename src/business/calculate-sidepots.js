@@ -13,7 +13,7 @@ export function calculateSidePots(players) {
   const sidePots = [];
   const mainPot = { pot: 0, players: [] };
 
-  players
+  [...players]
     // sort from lowest to highest
     .sort((a, b) => a.roundBet - b.roundBet)
 

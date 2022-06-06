@@ -94,8 +94,8 @@ function _formatGameUpdates({ players, table }) {
   return firebaseUpdates;
 }
 
-function _hostGameUpdates(table, players) {
-  const { id: tableId, host: hostId } = table;
+function _hostGameUpdates(tableId, table, players) {
+  const { host: hostId } = table;
   const meId = players[0]?.id;
   const isHost = hostId === meId;
   if (!isHost) {
@@ -107,6 +107,7 @@ function _hostGameUpdates(table, players) {
   const hasUpdates = Object.keys(firebaseUpdates).length > 0;
 
   if (isHost && hasUpdates) {
+    console.error(firebaseUpdates);
     update(getTableRef(tableId), firebaseUpdates);
   }
 }
@@ -126,7 +127,7 @@ function watchPlayers(tableId, meId, { dispatch }) {
       _orderMeFirst(meId)
     )(player);
     dispatch(setPlayersMeFirst(players));
-    _hostGameUpdates(table, players);
+    _hostGameUpdates(tableId, table, players);
   });
 }
 
