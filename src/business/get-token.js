@@ -15,7 +15,7 @@ import Token from "../constants/token";
  */
 export default function getToken(table, players, player) {
   let token;
-  const dealerIndex = table.round % players.length;
+  const dealerIndex = (table.round || 0) % players.length;
   const playerIndex = players.indexOf(player);
 
   if (isHeadsUp(players)) {
