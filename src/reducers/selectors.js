@@ -5,6 +5,10 @@ export const selectors = {
     const players = this.getPlayers(state);
     return canCheck(players);
   },
+  callBet(state) {
+    const players = this.getPlayers(state);
+    return players.reduce((bet, player) => Math.max(bet, player.turnBet), 0);
+  },
   isMyTurn(state) {
     const me = this.getMe(state);
     return me.isTurn;

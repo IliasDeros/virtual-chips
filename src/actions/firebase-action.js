@@ -107,7 +107,7 @@ function _isHost(table, players) {
   return hostId === meId;
 }
 
-function _hostGameUpdates(tableId, table, players) {
+async function _hostGameUpdates(tableId, table, players) {
   if (!_isHost(table, players)) {
     return;
   }
@@ -120,7 +120,13 @@ function _hostGameUpdates(tableId, table, players) {
     return;
   }
 
-  update(getTableRef(tableId), firebaseUpdates);
+  try {
+    await update(getTableRef(tableId), firebaseUpdates);
+  } catch (e) {
+    // Sometimes the transaction fails... Just ignore it.
+    // I should probably use runTransaction() here...
+    console.error(e);
+  }
 }
 
 function _formatPlayers(firebaseTable, meId) {
@@ -195,7 +201,7 @@ function _callBetFor(playerId) {
   return (remotePlayers) => {
     const remotePlayer = remotePlayers[playerId];
     const highestBet = findHighestBet(Object.values(remotePlayers));
-    const chipsDifference = highestBet - remotePlayer.turnBet;
+    const chipsDifference = highestBet - (remotePlayer.turnBet || 0);
 
     return {
       ...remotePlayers,
@@ -210,13 +216,39 @@ function _callBetFor(playerId) {
 }
 
 export function call() {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState();
     const tableId = selectors.getTableId(state);
     const [me] = selectors.getPlayers(state);
-    const playerRef = getTableRef(tableId, "player");
+    const meRef = getTableRef(tableId, `player`);
 
-    runTransaction(playerRef, _callBetFor(me.id));
+    await runTransaction(meRef, _callBetFor(me.id));
+  };
+}
+
+function _betAmount(amount) {
+  return (remotePlayer) => {
+    const { chips, roundBet = 0, turnBet = 0 } = remotePlayer;
+    const chipsDifference = amount - turnBet;
+
+    return {
+      ...remotePlayer,
+      state: State.BET,
+      turnBet: amount,
+      roundBet: roundBet + chipsDifference,
+      chips: chips - chipsDifference,
+    };
+  };
+}
+
+export function bet(amount) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const tableId = selectors.getTableId(state);
+    const [me] = selectors.getPlayers(state);
+    const meRef = getTableRef(tableId, `player/${me.id}`);
+
+    await runTransaction(meRef, _betAmount(amount));
   };
 }
 

@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { connect } from "react-redux";
-import { call } from "actions/firebase-action";
+import { bet, call } from "actions/firebase-action";
 import { check, fold, tie } from "actions/player-action";
 import selectors from "reducers/selectors";
 import State from "constants/state";
@@ -37,7 +37,7 @@ const getState = (props) => {
     return "CAN_CHECK";
   }
 
-  return "CAN_CALL";
+  return "CAN_BET";
 };
 
 /**
@@ -45,14 +45,29 @@ const getState = (props) => {
  */
 class ActionBar extends Component {
   render() {
-    const { call, check, fold, playerTurn, tie } = this.props;
+    const { bet, call, callBet, check, fold, me, playerTurn, tie } = this.props;
     const state = getState(this.props);
-    const canFold = ["FOLD", "CAN_CALL", "CAN_CHECK", "CAN_TIE"].includes(
-      state
-    );
+    const canFold = ["FOLD", "CAN_BET", "CAN_CHECK", "CAN_TIE"].includes(state);
+    const canBet = ["CAN_BET", "CAN_CHECK"].includes(state);
 
     return (
       <div>
+        <div>
+          Current Bet: <strong>{me.turnBet}</strong>
+        </div>
+        <div>
+          Chips: <strong>{me.chips}</strong>
+        </div>
+        {canBet && (
+          <div>
+            <button onClick={() => bet(me.chips)}>All In</button>
+            <br />
+            <button onClick={() => bet(200)}>Bet 200</button>
+            <br />
+            <button onClick={() => bet(50)}>Bet 50</button>
+          </div>
+        )}
+
         {state === "WAITING_FOR_PLAYERS" && (
           <button disabled>Waiting on more players</button>
         )}
@@ -64,7 +79,7 @@ class ActionBar extends Component {
         {state === "CAN_CHECK" && <button onClick={check}>Check</button>}
         {state === "CAN_TIE" && <button onClick={tie}>Tie</button>}
         {state === "IS_TIED" && <button disabled>Tied</button>}
-        {state === "CAN_CALL" && <button onClick={call}>Call</button>}
+        {state === "CAN_BET" && <button onClick={call}>Call {callBet}</button>}
       </div>
     );
   }
@@ -72,6 +87,7 @@ class ActionBar extends Component {
 
 function mapStateToProps(state) {
   return {
+    callBet: selectors.callBet(state),
     canCheck: selectors.canMeCheck(state),
     isAlone: selectors.getPlayers(state).length <= 1,
     isShowdown: selectors.getTableTurn(state) === Turn.FINISHED,
@@ -82,6 +98,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    bet: (amount) => dispatch(bet(amount)),
     call: () => dispatch(call()),
     check: () => dispatch(check()),
     fold: () => dispatch(fold()),

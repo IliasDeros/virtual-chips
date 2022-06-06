@@ -1,10 +1,11 @@
 import State from "../constants/state";
 
-const isPlayerActive = (p) => ![State.ALL_IN, State.FOLDED].includes(p.state);
-const isPlayerCalled = ({ state }) => state === State.CALLED;
-const isPlayerChecked = ({ state }) => state === State.CHECKED;
-const hasPlayerBet = (p) => [State.BET, State.CHECKED].includes(p.state);
-const getPlayerBet = (p) => p.turnBet;
+const canBet = (p) => p.chips > 0;
+const hasBet = (p) =>
+  [State.ALL_IN, State.BET, State.CALLED, State.CHECKED, State.FOLDED].includes(
+    p.state
+  );
+const getBet = (p) => p.turnBet;
 
 /*
  * check if all players have finished their turn. A player has finished their
@@ -14,20 +15,14 @@ const getPlayerBet = (p) => p.turnBet;
  * - They are folded
  */
 export default function isTurnFinished(players) {
-  const activePlayers = players.filter(isPlayerActive);
-  const activeBets = activePlayers.map(getPlayerBet);
-  const allSameBet =
-    activeBets.reduce((a, b) => (a === b ? a : false), activeBets[0]) !== false;
-  const allChecked = activePlayers.every(isPlayerChecked);
-  const allCalled = activePlayers.every(isPlayerCalled);
-  const onlyOneBet = activePlayers.filter(hasPlayerBet).length === 1;
-  const othersCalled =
-    activePlayers.filter(isPlayerCalled).length === activePlayers.length - 1;
-  const calledHighestBet = onlyOneBet && othersCalled;
+  const everyoneHasBet = players.every(hasBet);
+  if (!everyoneHasBet) {
+    return false;
+  }
 
-  return (
-    activePlayers.length >= 2 &&
-    allSameBet &&
-    (allCalled || allChecked || calledHighestBet)
-  );
+  const everyoneBetMax = players
+    .filter(canBet)
+    .every((p, i, others) => getBet(p) === getBet(others[0]));
+
+  return everyoneBetMax;
 }
