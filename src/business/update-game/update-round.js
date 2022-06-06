@@ -2,7 +2,7 @@ import Turn from "constants/turn";
 import State from "constants/state";
 import { calculateSidePots } from "business/calculate-sidepots";
 import isGameWon from "business/is-game-won";
-import { compose, _update } from "./utils";
+import { compose, increment, _update } from "./utils";
 
 function _initializePlayerBet(player) {
   const state = player.chips > 0 ? State.IDLE : State.FOLDED;
@@ -51,7 +51,6 @@ function _winRoundUpdates(players) {
 }
 
 function _updateRound(table) {
-  const increment = (x) => (x || 0) + 1;
   return _update(table, { round: increment(table.round) });
 }
 
@@ -87,7 +86,7 @@ const _updatePlayerChips = (players) => {
   };
 };
 
-export default function updateWinRound({ players, table }) {
+export default function updateRound({ players, table }) {
   if (!isGameWon(players)) {
     return { players, table };
   }

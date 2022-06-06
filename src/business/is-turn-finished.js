@@ -4,7 +4,7 @@ const isPlayerActive = (p) => ![State.ALL_IN, State.FOLDED].includes(p.state);
 const isPlayerCalled = ({ state }) => state === State.CALLED;
 const isPlayerChecked = ({ state }) => state === State.CHECKED;
 const hasPlayerBet = (p) => [State.BET, State.CHECKED].includes(p.state);
-const getPlayerBet = (p) => p.bet;
+const getPlayerBet = (p) => p.turnBet;
 
 /*
  * check if all players have finished their turn. A player has finished their

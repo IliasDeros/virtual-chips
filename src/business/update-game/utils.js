@@ -16,3 +16,5 @@ export function _update(instance, updates) {
     },
   };
 }
+
+export const increment = (x) => (x || 0) + 1;

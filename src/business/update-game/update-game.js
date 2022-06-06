@@ -1,7 +1,8 @@
 import Button from "constants/button";
 import State from "constants/state";
 import getButton from "business/get-button";
-import updateWinRound from "./update-win-round";
+import updateRound from "./update-round";
+import updateTurn from "./update-turn";
 import { compose, _update } from "./utils";
 
 const defaultBigBlind = 50;
@@ -92,14 +93,9 @@ function _updatePlayerStates({ players, table }) {
   };
 }
 
-function _proceedToNextTurn({ players, table }) {
-  return { players, table };
-}
-
 /**
  * Get the updates required to fix the state of the game:
- * - Set the buttons & bets when players join/leave
- * - Move buttons every round
+ * - Set the buttons & blinds according to player # and round
  * - Proceed to next turn when everyone played
  * - Proceed to next round when all losers folded
  *
@@ -111,7 +107,7 @@ export function updateGame(table, players) {
     _updatePlayerStates,
     _updateBlinds,
     _updateButtons,
-    updateWinRound,
-    _proceedToNextTurn
+    updateRound,
+    updateTurn
   )({ players, table });
 }
