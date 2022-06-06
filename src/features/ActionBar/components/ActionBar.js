@@ -1,13 +1,16 @@
 import { Component } from "react";
 import { connect } from "react-redux";
-import { fold } from "actions/player-action";
+import { check, fold, tie } from "actions/player-action";
 import selectors from "reducers/selectors";
 import State from "constants/state";
+import Turn from "constants/turn";
 
 const getState = (props) => {
-  const { isAlone } = props;
+  const { isAlone, canCheck } = props;
   const isFolded = props.me.state === State.FOLDED;
+  const isTied = props.me.state === State.TIED;
   const isWaitingTurn = !props.me.isTurn;
+  const isShowdown = props.isShowdown;
 
   if (isAlone) {
     return "WAITING_FOR_PLAYERS";
@@ -17,8 +20,20 @@ const getState = (props) => {
     return "IS_FOLDED";
   }
 
+  if (isTied) {
+    return "IS_TIED";
+  }
+
+  if (isShowdown) {
+    return "CAN_TIE";
+  }
+
   if (isWaitingTurn) {
     return "WAITING_TURN";
+  }
+
+  if (canCheck) {
+    return "CAN_CHECK";
   }
 
   return "FOLD";
@@ -29,8 +44,9 @@ const getState = (props) => {
  */
 class ActionBar extends Component {
   render() {
-    const { fold, playerTurn } = this.props;
+    const { check, fold, playerTurn, tie } = this.props;
     const state = getState(this.props);
+    const canFold = ["FOLD", "CAN_CHECK", "CAN_TIE"].includes(state);
 
     return (
       <div>
@@ -41,7 +57,10 @@ class ActionBar extends Component {
         {state === "WAITING_TURN" && (
           <button disabled>Waiting for {playerTurn?.id}</button>
         )}
-        {state === "FOLD" && <button onClick={fold}>Fold</button>}
+        {canFold && <button onClick={fold}>Fold</button>}
+        {state === "CAN_CHECK" && <button onClick={check}>Check</button>}
+        {state === "CAN_TIE" && <button onClick={tie}>Tie</button>}
+        {state === "IS_TIED" && <button disabled>Tied</button>}
       </div>
     );
   }
@@ -49,15 +68,19 @@ class ActionBar extends Component {
 
 function mapStateToProps(state) {
   return {
-    me: selectors.getPlayers(state)[0] || {},
+    canCheck: selectors.canMeCheck(state),
     isAlone: selectors.getPlayers(state).length <= 1,
+    isShowdown: selectors.getTableTurn(state) === Turn.FINISHED,
+    me: selectors.getPlayers(state)[0] || {},
     playerTurn: selectors.getPlayers(state).find((player) => player.isTurn),
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
+    check: () => dispatch(check()),
     fold: () => dispatch(fold()),
+    tie: () => dispatch(tie()),
   };
 }
 

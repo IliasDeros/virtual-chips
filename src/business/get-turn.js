@@ -25,8 +25,13 @@ function findFirstFrom(array, index, predicate) {
       return array[i];
     }
   }
+
+  if (predicate(array[lastIndex])) {
+    return array[lastIndex];
+  }
 }
 
+const isIdle = ({ state }) => !state || state === State.IDLE;
 const canBet = ({ state }) => ![State.FOLDED, State.ALL_IN].includes(state);
 const canCall = (highestBet) => (player) => {
   const { state, button, turnBet } = player;
@@ -51,5 +56,5 @@ export function getCurrentTurnPlayer(players) {
   }
 
   const dealerLeft = left(getDealerIndex(players));
-  return findFirstFrom(players, dealerLeft, canBet);
+  return findFirstFrom(players, dealerLeft, isIdle);
 }

@@ -1,12 +1,24 @@
+import canCheck from "business/can-check";
+
 export const selectors = {
+  canMeCheck(state) {
+    const players = this.getPlayers(state);
+    return canCheck(players);
+  },
   getPot(state) {
-    return state.table.pot;
+    return this.getTable(state).pot;
   },
   getPlayers(state) {
-    return state.table.players;
+    return this.getTable(state).players;
+  },
+  getTable(state) {
+    return state.table;
+  },
+  getTableTurn(state) {
+    return this.getTable(state).turn;
   },
   getTableId(state) {
-    return state.table.id;
+    return this.getTable(state).id;
   },
 };
 

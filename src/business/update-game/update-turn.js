@@ -1,6 +1,9 @@
 import isTurnFinished from "business/is-turn-finished";
 import State from "constants/state";
-import { increment } from "./utils";
+import Turn from "constants/turn";
+import { compose, increment, _update } from "./utils";
+
+const isShowdown = ({ turn }) => turn === Turn.FINISHED;
 
 /**
  * Proceed to next turn when everyone played
@@ -17,7 +20,7 @@ import { increment } from "./utils";
  * ```
  */
 export default function updateTurn({ players, table }) {
-  if (!isTurnFinished(players)) {
+  if (isShowdown(table) || !isTurnFinished(players)) {
     return { players, table };
   }
 
