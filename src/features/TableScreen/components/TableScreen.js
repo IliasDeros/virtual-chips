@@ -2,14 +2,14 @@ import { Component } from "react";
 import { connect } from "react-redux";
 import Table from "features/Table/components/Table";
 import ActionBar from "features/ActionBar/components/ActionBar";
-import { watchTable } from "actions/firebase-action";
+import { connectToTable } from "actions/firebase-action";
 
 /**
  * Play the game (view table or turn)
  */
 class TableScreen extends Component {
   componentDidMount() {
-    this.props.watchTable(this.props.tableId);
+    this.props.connectFirebase(this.props.tableId);
   }
 
   render() {
@@ -30,8 +30,8 @@ function mapStateToProps({ table }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    watchTable(id = "default") {
-      dispatch(watchTable(id));
+    connectFirebase(id = "default") {
+      dispatch(connectToTable(id));
     },
   };
 }

@@ -116,22 +116,30 @@ function _hostGameUpdates(tableId, table, players) {
   update(getTableRef(tableId), firebaseUpdates);
 }
 
-function watchPlayers(tableId, meId, { dispatch }) {
+function _formatPlayers(firebaseTable, meId) {
+  const { host: hostId, player } = firebaseTable;
+
+  if (!player) {
+    return;
+  }
+
+  return compose(
+    _setPlayerTurn,
+    _setPlayerHost(hostId),
+    _orderMeFirst(meId)
+  )(player);
+}
+
+function watchPlayersAndHostTable(tableId, meId, { dispatch }) {
   onValue(getTableRef(tableId), (snapshot) => {
     const table = snapshot.val();
-    const { host: hostId, player } = table;
+    const playersMeFirst = _formatPlayers(table, meId);
 
-    if (!player) {
-      return;
-    }
+    // Update local state
+    dispatch(setPlayersMeFirst(playersMeFirst));
 
-    const players = compose(
-      _setPlayerTurn,
-      _setPlayerHost(hostId),
-      _orderMeFirst(meId)
-    )(player);
-    dispatch(setPlayersMeFirst(players));
-    _hostGameUpdates(tableId, table, players);
+    // Update remote state (database)
+    _hostGameUpdates(tableId, table, playersMeFirst);
   });
 }
 
@@ -176,14 +184,14 @@ async function initializeHost(tableId, playerId) {
   }
 }
 
-export function watchTable(id) {
+export function connectToTable(id) {
   return async (dispatch, getState) => {
     const dispatcher = { dispatch, getState };
 
-    watchPot(id, dispatcher);
-    watchTurn(id, dispatcher);
     const playerId = await initializePlayer(id);
     initializeHost(id, playerId);
-    watchPlayers(id, playerId, dispatcher);
+    watchPot(id, dispatcher);
+    watchTurn(id, dispatcher);
+    watchPlayersAndHostTable(id, playerId, dispatcher);
   };
 }
