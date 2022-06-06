@@ -136,7 +136,7 @@ function setTokens(table, players) {
   return (dispatch, getState) => {
     const noUpdates = {};
     const tableId = selectors.getTableId(getState());
-    const tokenUpdates = players.reduce((updates, player) => {
+    const blindUpdates = players.reduce((updates, player) => {
       const token = getToken(table, players, player);
       const alreadyHasCorrectToken = player.token === token;
 
@@ -150,22 +150,19 @@ function setTokens(table, players) {
 
       return {
         ...updates,
-        [`player/${player.id}/token`]: token,
         [`player/${player.id}/chips`]: newPlayerChips,
-        [`player/${player.id}/turnBet`]: blindBet,
         [`player/${player.id}/roundBet`]: blindBet,
+        [`player/${player.id}/state`]: State.IDLE,
+        [`player/${player.id}/token`]: token,
+        [`player/${player.id}/turnBet`]: blindBet,
       };
     }, noUpdates);
 
-    if (tokenUpdates === noUpdates) {
+    if (blindUpdates === noUpdates) {
       return;
     }
 
-    const tableUpdates = Object.assign(
-      {},
-      ...players.map(_resetPlayerUpdates),
-      tokenUpdates
-    );
+    const tableUpdates = blindUpdates;
 
     dispatch({ type: "LOG_SET_TOKENS" });
     update(getTableRef(tableId), tableUpdates);
