@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { connect } from "react-redux";
+import { call } from "actions/firebase-action";
 import { check, fold, tie } from "actions/player-action";
 import selectors from "reducers/selectors";
 import State from "constants/state";
@@ -36,7 +37,7 @@ const getState = (props) => {
     return "CAN_CHECK";
   }
 
-  return "FOLD";
+  return "CAN_CALL";
 };
 
 /**
@@ -44,9 +45,11 @@ const getState = (props) => {
  */
 class ActionBar extends Component {
   render() {
-    const { check, fold, playerTurn, tie } = this.props;
+    const { call, check, fold, playerTurn, tie } = this.props;
     const state = getState(this.props);
-    const canFold = ["FOLD", "CAN_CHECK", "CAN_TIE"].includes(state);
+    const canFold = ["FOLD", "CAN_CALL", "CAN_CHECK", "CAN_TIE"].includes(
+      state
+    );
 
     return (
       <div>
@@ -61,6 +64,7 @@ class ActionBar extends Component {
         {state === "CAN_CHECK" && <button onClick={check}>Check</button>}
         {state === "CAN_TIE" && <button onClick={tie}>Tie</button>}
         {state === "IS_TIED" && <button disabled>Tied</button>}
+        {state === "CAN_CALL" && <button onClick={call}>Call</button>}
       </div>
     );
   }
@@ -78,6 +82,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    call: () => dispatch(call()),
     check: () => dispatch(check()),
     fold: () => dispatch(fold()),
     tie: () => dispatch(tie()),

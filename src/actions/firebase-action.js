@@ -12,8 +12,10 @@ import {
   setTableId,
   setTurn,
 } from "../actions/table-action";
-import { getCurrentTurnPlayer } from "../business/get-turn";
+import { findHighestBet, getCurrentTurnPlayer } from "../business/get-turn";
 import { updateGame } from "../business/update-game";
+import selectors from "reducers/selectors";
+import State from "constants/state";
 
 const uidParam = "player";
 
@@ -187,6 +189,35 @@ async function initializeHost(tableId, playerId) {
   } catch (e) {
     // Do nothing, you can't update host if it's already set
   }
+}
+
+function _callBetFor(playerId) {
+  return (remotePlayers) => {
+    const remotePlayer = remotePlayers[playerId];
+    const highestBet = findHighestBet(Object.values(remotePlayers));
+    const chipsDifference = highestBet - remotePlayer.turnBet;
+
+    return {
+      ...remotePlayers,
+      [playerId]: {
+        ...remotePlayer,
+        state: State.CALLED,
+        turnBet: highestBet,
+        chips: remotePlayer.chips - chipsDifference,
+      },
+    };
+  };
+}
+
+export function call() {
+  return (dispatch, getState) => {
+    const state = getState();
+    const tableId = selectors.getTableId(state);
+    const [me] = selectors.getPlayers(state);
+    const playerRef = getTableRef(tableId, "player");
+
+    runTransaction(playerRef, _callBetFor(me.id));
+  };
 }
 
 export function connectToTable(id) {

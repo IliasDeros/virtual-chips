@@ -4,7 +4,7 @@ import State from "constants/state";
 const isDealer = (p) => [Button.DEALER, Button.DEALER_SMALL].includes(p.button);
 const incrementWrapper = (array) => (i) => (i + 1) % array.length;
 const getDealerIndex = (players) => players.findIndex(isDealer);
-const findHighestBet = (players) =>
+export const findHighestBet = (players) =>
   players.reduce((highest, { turnBet }) => Math.max(highest, turnBet), 0);
 
 /**
