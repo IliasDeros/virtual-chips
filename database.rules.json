@@ -1,6 +1,10 @@
 {
   "rules": {
     ".read": true,
-    ".write": true
+    "table": {
+      "$table_id": {
+        ".write": "data.child('host').val() === $uid"
+      }
+    }
   }
 }

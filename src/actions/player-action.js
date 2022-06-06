@@ -1,4 +1,3 @@
-import Fingerprint from "fingerprintjs2";
 import { get, getDatabase, onValue, ref, set } from "firebase/database";
 import State from "../constants/state";
 import getToken from "../business/get-token";

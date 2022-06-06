@@ -1,11 +1,11 @@
+import { getAuth, signInAnonymously } from "firebase/auth";
 import { getDatabase, onValue, ref, runTransaction } from "firebase/database";
-import Fingerprint from "fingerprintjs2";
 import Turn from "constants/turn";
 import selectors from "reducers/selectors";
 import { updateGame } from "actions/host-action";
 import { getCurrentTurnPlayer } from "../business/get-turn";
 
-const fingerprintMockParam = "player";
+const uidParam = "player";
 
 function getUrlParam(paramName) {
   const params = new URLSearchParams(
@@ -122,16 +122,20 @@ function createPlayer(tableId, playerId) {
   );
 }
 
-function initializePlayer(id) {
-  const fingerprintMock = getUrlParam(fingerprintMockParam);
+async function initializePlayer(id) {
+  const fakeUid = getUrlParam(uidParam);
+
+  if (fakeUid) {
+    await createPlayer(id, fakeUid);
+    return fakeUid;
+  }
 
   return new Promise((res) =>
-    new Fingerprint().get(async (fingerprint) => {
-      const playerId = fingerprintMock || fingerprint;
-
+    signInAnonymously(getAuth()).then(async (u) => {
+      const uid = u.user.uid;
       // Create player if he doesnt exist
-      await createPlayer(id, playerId);
-      res(playerId);
+      await createPlayer(id, uid);
+      res(uid);
     })
   );
 }
