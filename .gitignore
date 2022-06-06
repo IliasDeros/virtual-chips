@@ -20,3 +20,4 @@ yarn-error.log*
 # Parcel files
 .parcel-cache/
 dist/
+public/

@@ -1,6 +1,5 @@
 import { get, getDatabase, onValue, ref, update } from "firebase/database";
 import { setAction } from "./table-action";
-import { setPlayerHost } from "./player-action";
 import Action from "../constants/action";
 import Turn from "../constants/turn";
 import isTurnFinished from "../business/is-turn-finished";
@@ -238,7 +237,6 @@ export function controlGameIfFirst() {
 
     if (playerIsFirst(getState, players)) {
       dispatch(controlGame());
-      dispatch(setPlayerHost());
     }
   };
 }
