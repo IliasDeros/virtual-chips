@@ -1,135 +1,149 @@
-import { getDatabase, runTransaction, onValue, ref, set } from "firebase/database";
-import Token from '../constants/token'
-import Turn from '../constants/turn'
-import { allIn, call } from './player-action'
+import {
+  getDatabase,
+  runTransaction,
+  onValue,
+  ref,
+  set,
+} from "firebase/database";
+import Button from "../constants/button";
+import Turn from "../constants/turn";
+import { allIn, call } from "./player-action";
 
-function getFireRef(endpoint, { player, table }){
-  let url = `table/${table.id}/player/${player.id}/${endpoint}`
-  return ref(getDatabase(), url)
+function getFireRef(endpoint, { player, table }) {
+  let url = `table/${table.id}/player/${player.id}/${endpoint}`;
+  return ref(getDatabase(), url);
 }
 
-export function watchChips(){
+export function watchChips() {
   return (dispatch, getState) => {
-    onValue(getFireRef('chips', getState()), snapshot => {
+    onValue(getFireRef("chips", getState()), (snapshot) => {
       const chips = snapshot.val(),
-            state = getState()
+        state = getState();
 
-      if (chips){
+      if (chips) {
         // update chips
         dispatch({
-          type: 'SET_CHIPS',
-          payload: chips
-        })
+          type: "SET_CHIPS",
+          payload: chips,
+        });
       } else {
         // initialize chips
-        set(getFireRef('chips', state), {
+        set(getFireRef("chips", state), {
           bet: 0,
-          total: 2500
-        })
+          total: 2500,
+        });
       }
-    })
-  }
+    });
+  };
 }
 
-export function watchToken(){
+export function watchButton() {
   return (dispatch, getState) => {
-    onValue(getFireRef('token', getState()), snapshot => {
+    onValue(getFireRef("button", getState()), (snapshot) => {
       const state = getState(),
-            currentBet = state.chips.bet || 0
+        currentBet = state.chips.bet || 0;
 
-      if (state.table.turn !== Turn.PRE_FLOP){ return }
-
-      let bet
-
-      switch (snapshot.val()){
-        case Token.DEALER_SMALL:
-        case Token.SMALL_BLIND:
-          bet = 100
-          break
-        case Token.BIG_BLIND:
-          bet = 200
-          break
-        default:
-          bet = 0
+      if (state.table.turn !== Turn.PRE_FLOP) {
+        return;
       }
 
-      addToBet(bet - currentBet)(dispatch, getState)
-    })
-  }
+      let bet;
+
+      switch (snapshot.val()) {
+        case Button.DEALER_SMALL:
+        case Button.SMALL_BLIND:
+          bet = 100;
+          break;
+        case Button.BIG_BLIND:
+          bet = 200;
+          break;
+        default:
+          bet = 0;
+      }
+
+      addToBet(bet - currentBet)(dispatch, getState);
+    });
+  };
 }
 
-export function addToBet(value){
+export function addToBet(value) {
   return (_, getState) => {
     const state = getState(),
-          chips = state.chips
+      chips = state.chips;
 
-    runTransaction(getFireRef('chips', state), (currentValue = chips) => ({
-        ...currentValue,
-        bet: currentValue.bet + value,
-        total: currentValue.total - value
-      })
-    )
-  }
+    runTransaction(getFireRef("chips", state), (currentValue = chips) => ({
+      ...currentValue,
+      bet: currentValue.bet + value,
+      total: currentValue.total - value,
+    }));
+  };
 }
 
-export function addToRaise(value){
+export function addToRaise(value) {
   return (dispatch, getState) => {
-    const state = getState()
-    const { chips } = state
+    const state = getState();
+    const { chips } = state;
 
-    const raise = (chips.raise || 0) + value
+    const raise = (chips.raise || 0) + value;
 
     dispatch({
-      type: 'SET_CHIPS',
+      type: "SET_CHIPS",
       payload: {
         ...chips,
-        raise
-      }
-    })
-  }
+        raise,
+      },
+    });
+  };
 }
 
-export function callBet(){
+export function callBet() {
   return (dispatch, getState) => {
     const state = getState(),
-          { chips, opponents } = state
+      { chips, opponents } = state;
 
-    const betToCall = Math.max(...opponents.map(p => p.chips.bet))
+    const betToCall = Math.max(...opponents.map((p) => p.chips.bet));
 
-    runTransaction(getFireRef('chips', state), (currentValue = chips) => {
-      const { bet, total } = currentValue,
-            amountMissingForCall = betToCall - bet,
-            betAmount = Math.min(total, amountMissingForCall)
+    runTransaction(
+      getFireRef("chips", state),
+      (currentValue = chips) => {
+        const { bet, total } = currentValue,
+          amountMissingForCall = betToCall - bet,
+          betAmount = Math.min(total, amountMissingForCall);
 
-      return {
-        ...currentValue,
-        bet: currentValue.bet + betAmount,
-        total: currentValue.total - betAmount
+        return {
+          ...currentValue,
+          bet: currentValue.bet + betAmount,
+          total: currentValue.total - betAmount,
+        };
+      },
+      function onComplete(_, commited, snapshot) {
+        const { bet } = snapshot.val();
+        commited && dispatch(bet < betToCall ? allIn() : call());
       }
-    }, function onComplete(_, commited, snapshot){
-      const { bet } = snapshot.val()
-      commited && dispatch(bet < betToCall ? allIn() : call())
-    })
-  }
+    );
+  };
 }
 
-export function allInBet(){
+export function allInBet() {
   return (dispatch, getState) => {
     const state = getState(),
-          { chips } = state
+      { chips } = state;
 
-    runTransaction(getFireRef('chips', state), (currentValue = chips) => {
-      const { bet, total } = currentValue,
-            totalBet = total + bet
+    runTransaction(
+      getFireRef("chips", state),
+      (currentValue = chips) => {
+        const { bet, total } = currentValue,
+          totalBet = total + bet;
 
-      return {
-        ...currentValue,
-        bet: totalBet,
-        total: 0
+        return {
+          ...currentValue,
+          bet: totalBet,
+          total: 0,
+        };
+      },
+      function onComplete(_, commited, snapshot) {
+        commited && dispatch(allIn());
       }
-    }, function onComplete(_, commited, snapshot){
-      commited && dispatch(allIn())
-    })
-  }
+    );
+  };
 }
-

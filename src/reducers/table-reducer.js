@@ -4,15 +4,6 @@ const initialState = {
   players: [],
 };
 
-function setFirstPlayerHost(state) {
-  if (!state.players.length) {
-    return {
-      ...state,
-      isHost: true,
-    };
-  }
-}
-
 export default function (state = initialState, action) {
   switch (action.type) {
     case "SET_ACTION":

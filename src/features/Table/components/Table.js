@@ -18,12 +18,12 @@ class Table extends Component {
       <div>
         <div>
           You{me.isHost && " (host)"}: {me.name}
-          {me.token && ` - ${me.token}`}
+          {me.button && ` - ${me.button}`}
         </div>
         {otherPlayers.map((player) => (
           <div key={player.id}>
             {player.name}
-            {player.token && ` - ${player.token}`}
+            {player.button && ` - ${player.button}`}
           </div>
         ))}
         Table

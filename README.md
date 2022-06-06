@@ -17,7 +17,6 @@ Always have your poker chips on you. [Installation guide](#installation)
 ### Testing
 
 All actions and reducers are unit-tested. Execute tests by running `yarn test`.
-Cloud functions are also tested, use the same command inside `cd functions`
 
 **Note:** A recent update to firebase has broken all the mocks, so it is not possible to run unit tests at the moment
 

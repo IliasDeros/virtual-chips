@@ -1,7 +1,7 @@
-import Token from "../constants/token";
+import Button from "../constants/button";
 
 /*
- * compute the player's token associated to his position and the table round
+ * compute the player's Button associated to his position and the table round
  * - In heads-up play with two blinds, the small blind is on the dealer
  * - Order is :
  *     1. Dealer
@@ -11,35 +11,36 @@ import Token from "../constants/token";
  * @param table { round: 0, round: 0, playerOrder: "1,2" }
  * @param players [{ id: "1" }]
  * @param player { id: "1" }
- * @returns Token
+ * @returns Button
  */
-export default function getToken(table, players, player) {
-  let token;
+export default function getButton(table, players, player) {
+  let button;
   const dealerIndex = (table.round || 0) % players.length;
   const playerIndex = players.indexOf(player);
 
   if (isHeadsUp(players)) {
-    token = playerIndex === dealerIndex ? Token.DEALER_SMALL : Token.BIG_BLIND;
+    button =
+      playerIndex === dealerIndex ? Button.DEALER_SMALL : Button.BIG_BLIND;
   } else {
     const smallBlindIndex = (dealerIndex + 1) % players.length;
     const bigBlindIndex = (dealerIndex + 2) % players.length;
 
     switch (playerIndex) {
       case dealerIndex:
-        token = Token.DEALER;
+        button = Button.DEALER;
         break;
       case smallBlindIndex:
-        token = Token.SMALL_BLIND;
+        button = Button.SMALL_BLIND;
         break;
       case bigBlindIndex:
-        token = Token.BIG_BLIND;
+        button = Button.BIG_BLIND;
         break;
       default:
-        token = null;
+        button = null;
     }
   }
 
-  return token;
+  return button;
 }
 
 function isHeadsUp(players) {

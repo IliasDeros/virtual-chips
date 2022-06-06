@@ -1,4 +1,4 @@
-// player token
+// player button
 export default {
   DEALER_SMALL: "dealer & small blind",
   DEALER: "dealer",

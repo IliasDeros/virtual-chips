@@ -140,11 +140,15 @@ async function initializePlayer(id) {
   );
 }
 
-function initializeHost(tableId, playerId) {
-  return runTransaction(
-    getTableRef(tableId, "host"),
-    (value) => value || playerId
-  );
+async function initializeHost(tableId, playerId) {
+  try {
+    await runTransaction(
+      getTableRef(tableId, "host"),
+      (value) => value || playerId
+    );
+  } catch (e) {
+    // Do nothing, you can't update host if it's already set
+  }
 }
 
 export function watchTable(id = "default") {

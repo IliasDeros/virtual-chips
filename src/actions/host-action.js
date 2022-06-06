@@ -8,8 +8,8 @@ import selectors from "reducers/selectors";
 import State from "constants/state";
 import Turn from "constants/turn";
 import { calculateSidePots } from "../business/calculate-sidepots";
-import getToken from "../business/get-token";
-import Token from "constants/token";
+import getButton from "../business/get-button";
+import Button from "constants/button";
 
 const defaultBigBlind = 50;
 
@@ -118,33 +118,33 @@ function winRound(table, players) {
   };
 }
 
-function _getBlindBet(table, token) {
+function _getBlindBet(table, button) {
   const { bigBlind = defaultBigBlind } = table;
 
-  switch (token) {
-    case Token.BIG_BLIND:
+  switch (button) {
+    case Button.BIG_BLIND:
       return bigBlind;
-    case Token.DEALER_SMALL:
-    case Token.SMALL_BLIND:
+    case Button.DEALER_SMALL:
+    case Button.SMALL_BLIND:
       return Math.ceil(bigBlind / 2);
     default:
       return 0;
   }
 }
 
-function setTokens(table, players) {
+function setButtons(table, players) {
   return (dispatch, getState) => {
     const noUpdates = {};
     const tableId = selectors.getTableId(getState());
     const blindUpdates = players.reduce((updates, player) => {
-      const token = getToken(table, players, player);
-      const alreadyHasCorrectToken = player.token === token;
+      const button = getButton(table, players, player);
+      const alreadyHasCorrectButton = player.button === button;
 
-      if (alreadyHasCorrectToken) {
+      if (alreadyHasCorrectButton) {
         return updates;
       }
 
-      const blindBet = _getBlindBet(table, token);
+      const blindBet = _getBlindBet(table, button);
       const oldPlayerChips = player.chips + (player.roundBet || 0);
       const newPlayerChips = oldPlayerChips - blindBet;
 
@@ -153,7 +153,7 @@ function setTokens(table, players) {
         [`player/${player.id}/chips`]: newPlayerChips,
         [`player/${player.id}/roundBet`]: blindBet,
         [`player/${player.id}/state`]: State.IDLE,
-        [`player/${player.id}/token`]: token,
+        [`player/${player.id}/button`]: button,
         [`player/${player.id}/turnBet`]: blindBet,
       };
     }, noUpdates);
@@ -164,7 +164,7 @@ function setTokens(table, players) {
 
     const tableUpdates = blindUpdates;
 
-    dispatch({ type: "LOG_SET_TOKENS" });
+    dispatch({ type: "LOG_SET_BUTTONS" });
     update(getTableRef(tableId), tableUpdates);
   };
 }
@@ -179,7 +179,7 @@ export function updateGame(table, players) {
 
     switch (table.turn || Turn.PRE_FLOP) {
       case Turn.PRE_FLOP:
-        dispatch(setTokens(table, players));
+        dispatch(setButtons(table, players));
       case Turn.FLOP:
       case Turn.TURN:
       case Turn.RIVER:

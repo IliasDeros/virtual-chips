@@ -1,6 +1,6 @@
 import { get, getDatabase, onValue, ref, set } from "firebase/database";
 import State from "../constants/state";
-import getToken from "../business/get-token";
+import getButton from "../business/get-button";
 import selectors from "reducers/selectors";
 
 function getFireRef(endpoint, state) {
@@ -74,7 +74,7 @@ export function loadPlayerToken() {
 
     function updateToken(table) {
       const state = getState(),
-        token = getToken(table, state.player);
+        token = getButton(table, state.player);
 
       dispatch({
         type: "SET_PLAYER_TOKEN",

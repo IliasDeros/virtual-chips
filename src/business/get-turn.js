@@ -1,7 +1,7 @@
-import Token from "constants/token";
+import Button from "constants/button";
 import State from "constants/state";
 
-const isDealer = (p) => [Token.DEALER, Token.DEALER_SMALL].includes(p.token);
+const isDealer = (p) => [Button.DEALER, Button.DEALER_SMALL].includes(p.button);
 const incrementWrapper = (array) => (i) => (i + 1) % array.length;
 const getDealerIndex = (players) => players.findIndex(isDealer);
 const findHighestBet = (players) =>
@@ -29,11 +29,11 @@ function findFirstFrom(array, index, predicate) {
 
 const canBet = ({ state }) => ![State.FOLDED, State.ALL_IN].includes(state);
 const canCall = (highestBet) => (player) => {
-  const { state, token, turnBet } = player;
+  const { state, button, turnBet } = player;
   const hasToCall = turnBet < highestBet;
 
   /** If everyone calls the big blind, they can choose to check or raise */
-  const hasBigBlindOption = token === Token.BIG_BLIND && state === State.IDLE;
+  const hasBigBlindOption = button === Button.BIG_BLIND && state === State.IDLE;
 
   return (canBet(player) && hasToCall) || hasBigBlindOption;
 };
