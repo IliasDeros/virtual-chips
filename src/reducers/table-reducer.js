@@ -6,10 +6,10 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case "SET_ACTION":
+    case "SET_TABLE_ID":
       state = {
         ...state,
-        action: action.payload,
+        id: action.payload,
       };
       break;
     case "SET_POT":

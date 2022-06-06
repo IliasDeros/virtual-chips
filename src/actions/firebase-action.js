@@ -6,7 +6,12 @@ import {
   runTransaction,
   update,
 } from "firebase/database";
-import { setPlayersMeFirst, setPot, setTurn } from "../actions/table-action";
+import {
+  setPlayersMeFirst,
+  setPot,
+  setTableId,
+  setTurn,
+} from "../actions/table-action";
 import { getCurrentTurnPlayer } from "../business/get-turn";
 import { updateGame } from "../business/update-game";
 
@@ -37,7 +42,7 @@ function _sumBets(players) {
   );
 }
 
-function watchPot(id, { dispatch, getState }) {
+function watchPot(id, { dispatch }) {
   onValue(getTableRef(id), (snapshot) => {
     const players = snapshot.val()?.player || [];
     const pot = _sumBets(players);
@@ -130,7 +135,7 @@ function _formatPlayers(firebaseTable, meId) {
   )(player);
 }
 
-function watchPlayersAndHostTable(tableId, meId, { dispatch }) {
+function watchTable(tableId, meId, { dispatch }) {
   onValue(getTableRef(tableId), (snapshot) => {
     const table = snapshot.val();
     const playersMeFirst = _formatPlayers(table, meId);
@@ -188,10 +193,11 @@ export function connectToTable(id) {
   return async (dispatch, getState) => {
     const dispatcher = { dispatch, getState };
 
+    dispatch(setTableId(id));
     const playerId = await initializePlayer(id);
     initializeHost(id, playerId);
     watchPot(id, dispatcher);
     watchTurn(id, dispatcher);
-    watchPlayersAndHostTable(id, playerId, dispatcher);
+    watchTable(id, playerId, dispatcher);
   };
 }

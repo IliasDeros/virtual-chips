@@ -4,12 +4,22 @@ import Table from "features/Table/components/Table";
 import ActionBar from "features/ActionBar/components/ActionBar";
 import { connectToTable } from "actions/firebase-action";
 
+function getUrlParam(paramName) {
+  const params = new URLSearchParams(
+    window.location.href.slice(window.location.href.indexOf("?"))
+  );
+  return params.get(paramName);
+}
+
 /**
  * Play the game (view table or turn)
  */
 class TableScreen extends Component {
   componentDidMount() {
-    this.props.connectFirebase(this.props.tableId);
+    const { tableId } = this.props;
+    const urlTable = getUrlParam("table");
+
+    this.props.connectFirebase(urlTable || tableId);
   }
 
   render() {
@@ -30,7 +40,7 @@ function mapStateToProps({ table }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    connectFirebase(id = "default") {
+    connectFirebase(id) {
       dispatch(connectToTable(id));
     },
   };

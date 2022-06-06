@@ -23,3 +23,8 @@ export const setPlayersMeFirst = (payload) => ({
   type: "SET_PLAYERS_ME_FIRST",
   payload,
 });
+
+export const setTableId = (payload) => ({
+  type: "SET_TABLE_ID",
+  payload,
+});
