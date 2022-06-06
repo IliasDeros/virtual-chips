@@ -39,7 +39,7 @@ class ActionBar extends Component {
         )}
         {state === "IS_FOLDED" && <button disabled>Folded</button>}
         {state === "WAITING_TURN" && (
-          <button disabled>Waiting for {playerTurn.id}</button>
+          <button disabled>Waiting for {playerTurn?.id}</button>
         )}
         {state === "FOLD" && <button onClick={fold}>Fold</button>}
       </div>
