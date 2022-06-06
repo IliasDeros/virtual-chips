@@ -104,7 +104,7 @@ function _winRoundUpdates(players) {
   return sidepots.reduce(distributeSidepotToPlayers, {});
 }
 
-export function winRound(table, players) {
+function winRound(table, players) {
   return (dispatch, getState) => {
     const tableId = selectors.getTableId(getState());
     const tableUpdates = Object.assign(
