@@ -1,5 +1,5 @@
 const initialState = {
-  id: "default",
+  id: "alpha",
   pot: 0,
   players: [],
 };

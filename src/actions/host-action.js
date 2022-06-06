@@ -11,8 +11,6 @@ import { calculateSidePots } from "../business/calculate-sidepots";
 import getButton from "../business/get-button";
 import Button from "constants/button";
 
-const defaultBigBlind = 50;
-
 function getTableRef(id) {
   return ref(getDatabase(), `table/${id}`);
 }
@@ -119,7 +117,7 @@ function winRound(table, players) {
 }
 
 function _getBlindBet(table, button) {
-  const { bigBlind = defaultBigBlind } = table;
+  const { bigBlind } = table;
 
   switch (button) {
     case Button.BIG_BLIND:

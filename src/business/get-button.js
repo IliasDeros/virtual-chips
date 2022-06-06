@@ -35,8 +35,6 @@ export default function getButton(table, players, player) {
       case bigBlindIndex:
         button = Button.BIG_BLIND;
         break;
-      default:
-        button = null;
     }
   }
 

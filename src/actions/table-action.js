@@ -1,45 +1,25 @@
-import { getDatabase, onValue, ref, set } from "firebase/database";
-import Turn from '../constants/turn'
+import Turn from "constants/turn";
+import selectors from "reducers/selectors";
 
-function getTableRef(id, path){
-  let url = `table/${id}/${path}`
-  const db = getDatabase();
-  return ref(db, url)
-}
+export const setTurn = (turn) => ({
+  type: "SET_TURN",
+  payload: turn || Turn.PRE_FLOP,
+});
 
-export function watchTable(id = 'default'){
+export const setPot = (payload) => {
   return (dispatch, getState) => {
-    // watch action
-    onValue(getTableRef(id, 'action'), snapshot => {
-      dispatch({
-        type: 'SET_ACTION',
-        payload: snapshot.val()
-      })
-    })
+    const oldPot = selectors.getPot(getState());
+    const isSamePot = payload === oldPot;
 
-    // watch pot
-    onValue(getTableRef(id, 'pot'), snapshot => {
-      dispatch({
-        type: 'SET_POT',
-        payload: snapshot.val() || 0
-      })
-    })
+    if (isSamePot) {
+      return;
+    }
 
-    // watch turn
-    onValue(getTableRef(id, 'turn'), snapshot => {
-      dispatch({
-        type: 'SET_TURN',
-        payload: snapshot.val() || Turn.PRE_FLOP
-      })
-    })
-  }
-}
+    dispatch({ type: "SET_POT", payload });
+  };
+};
 
-export function setAction(action){
-  return (dispatch, getState) => {
-    const table = getState().table
-    const db = getDatabase()
-    const url = `table/${table.id}/action`
-    set(ref(db, url), action)
-  }
-}
+export const setPlayersMeFirst = (payload) => ({
+  type: "SET_PLAYERS_ME_FIRST",
+  payload,
+});

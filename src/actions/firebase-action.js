@@ -1,9 +1,14 @@
 import { getAuth, signInAnonymously } from "firebase/auth";
-import { getDatabase, onValue, ref, runTransaction } from "firebase/database";
-import Turn from "constants/turn";
-import selectors from "reducers/selectors";
-import { updateGame } from "actions/host-action";
+import {
+  getDatabase,
+  onValue,
+  ref,
+  runTransaction,
+  update,
+} from "firebase/database";
+import { setPlayersMeFirst, setPot, setTurn } from "../actions/table-action";
 import { getCurrentTurnPlayer } from "../business/get-turn";
+import { updateGame } from "../business/update-game";
 
 const uidParam = "player";
 
@@ -19,22 +24,10 @@ function getTableRef(id, path) {
   return ref(getDatabase(), url);
 }
 
-function watchAction(id, { dispatch }) {
-  onValue(getTableRef(id, "action"), (snapshot) => {
-    dispatch({
-      type: "SET_ACTION",
-      payload: snapshot.val(),
-    });
-  });
-}
-
 function watchTurn(id, { dispatch }) {
-  onValue(getTableRef(id, "turn"), (snapshot) => {
-    dispatch({
-      type: "SET_TURN",
-      payload: snapshot.val() || Turn.PRE_FLOP,
-    });
-  });
+  onValue(getTableRef(id, "turn"), (snapshot) =>
+    dispatch(setTurn(snapshot.val()))
+  );
 }
 
 function _sumBets(players) {
@@ -46,16 +39,9 @@ function _sumBets(players) {
 
 function watchPot(id, { dispatch, getState }) {
   onValue(getTableRef(id), (snapshot) => {
-    const players = snapshot.val().player || [];
-    const payload = _sumBets(players);
-    const oldPot = selectors.getPot(getState());
-    const isSamePot = payload === oldPot;
-
-    if (isSamePot) {
-      return;
-    }
-
-    dispatch({ type: "SET_POT", payload });
+    const players = snapshot.val()?.player || [];
+    const pot = _sumBets(players);
+    dispatch(setPot(pot));
   });
 }
 
@@ -76,7 +62,7 @@ function _orderMeFirst(meId) {
   };
 }
 
-function _setHost(playerId) {
+function _setPlayerHost(playerId) {
   return (players) => players.map((p) => ({ ...p, isHost: p.id === playerId }));
 }
 
@@ -91,8 +77,42 @@ function _setPlayerTurn(players) {
   return players.map((p) => ({ ...p, isTurn: isTurn(p) }));
 }
 
-function watchPlayers(id, meId, { dispatch }) {
-  onValue(getTableRef(id), (snapshot) => {
+function _formatGameUpdates({ players, table }) {
+  const firebaseUpdates = Object.assign(
+    { ...table.gameUpdates },
+    ...players.map(({ id, gameUpdates = [] }) =>
+      Object.entries(gameUpdates).reduce(
+        (acc, [key, value]) => ({
+          ...acc,
+          [`player/${id}/${key}`]: value,
+        }),
+        {}
+      )
+    )
+  );
+
+  return firebaseUpdates;
+}
+
+function _hostGameUpdates(table, players) {
+  const { id: tableId, host: hostId } = table;
+  const meId = players[0]?.id;
+  const isHost = hostId === meId;
+  if (!isHost) {
+    return;
+  }
+
+  const updates = updateGame(table, players);
+  const firebaseUpdates = _formatGameUpdates(updates);
+  const hasUpdates = Object.keys(firebaseUpdates).length > 0;
+
+  if (isHost && hasUpdates) {
+    update(getTableRef(tableId), firebaseUpdates);
+  }
+}
+
+function watchPlayers(tableId, meId, { dispatch }) {
+  onValue(getTableRef(tableId), (snapshot) => {
     const table = snapshot.val();
     const { host: hostId, player } = table;
 
@@ -102,11 +122,11 @@ function watchPlayers(id, meId, { dispatch }) {
 
     const players = compose(
       _setPlayerTurn,
-      _setHost(hostId),
+      _setPlayerHost(hostId),
       _orderMeFirst(meId)
     )(player);
-    dispatch({ type: "SET_PLAYERS_ME_FIRST", payload: players });
-    dispatch(updateGame(table, players));
+    dispatch(setPlayersMeFirst(players));
+    _hostGameUpdates(table, players);
   });
 }
 
@@ -151,11 +171,10 @@ async function initializeHost(tableId, playerId) {
   }
 }
 
-export function watchTable(id = "default") {
+export function watchTable(id) {
   return async (dispatch, getState) => {
     const dispatcher = { dispatch, getState };
 
-    watchAction(id, dispatcher);
     watchPot(id, dispatcher);
     watchTurn(id, dispatcher);
     const playerId = await initializePlayer(id);
