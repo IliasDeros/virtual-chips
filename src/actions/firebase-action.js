@@ -94,11 +94,14 @@ function _formatGameUpdates({ players, table }) {
   return firebaseUpdates;
 }
 
-function _hostGameUpdates(tableId, table, players) {
+function _isHost(table, players) {
   const { host: hostId } = table;
   const meId = players[0]?.id;
-  const isHost = hostId === meId;
-  if (!isHost) {
+  return hostId === meId;
+}
+
+function _hostGameUpdates(tableId, table, players) {
+  if (!_isHost(table, players)) {
     return;
   }
 
@@ -106,10 +109,11 @@ function _hostGameUpdates(tableId, table, players) {
   const firebaseUpdates = _formatGameUpdates(updates);
   const hasUpdates = Object.keys(firebaseUpdates).length > 0;
 
-  if (isHost && hasUpdates) {
-    console.error(firebaseUpdates);
-    update(getTableRef(tableId), firebaseUpdates);
+  if (!hasUpdates) {
+    return;
   }
+
+  update(getTableRef(tableId), firebaseUpdates);
 }
 
 function watchPlayers(tableId, meId, { dispatch }) {

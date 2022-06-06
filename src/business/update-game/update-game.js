@@ -92,10 +92,6 @@ function _updatePlayerStates({ players, table }) {
   };
 }
 
-function _winRound({ players, table }) {
-  return { players, table };
-}
-
 function _proceedToNextTurn({ players, table }) {
   return { players, table };
 }
