@@ -5,6 +5,13 @@ export const selectors = {
     const players = this.getPlayers(state);
     return canCheck(players);
   },
+  isMyTurn(state) {
+    const me = this.getMe(state);
+    return me.isTurn;
+  },
+  getMe(state) {
+    return this.getPlayers(state)[0];
+  },
   getPot(state) {
     return this.getTable(state).pot;
   },

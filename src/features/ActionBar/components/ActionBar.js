@@ -75,7 +75,7 @@ function mapStateToProps(state) {
     canCheck: selectors.canMeCheck(state),
     isAlone: selectors.getPlayers(state).length <= 1,
     isShowdown: selectors.getTableTurn(state) === Turn.FINISHED,
-    me: selectors.getPlayers(state)[0] || {},
+    me: selectors.getMe(state) || {},
     playerTurn: selectors.getPlayers(state).find((player) => player.isTurn),
   };
 }
