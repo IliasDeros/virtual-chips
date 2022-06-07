@@ -1,8 +1,8 @@
-import AvatarBasicJulie from "./AvatarBasicJulie";
-import AvatarScaredSanta from "./AvatarScaredSanta";
-import AvatarSickAfro from "./AvatarSickAfro";
-import AvatarCoolKurt from "./AvatarCoolKurt";
-import AvatarLoveTurban from "./AvatarLoveTurban";
+import { AvatarBasicJulie } from "./AvatarBasicJulie";
+import { AvatarScaredSanta } from "./AvatarScaredSanta";
+import { AvatarSickAfro } from "./AvatarSickAfro";
+import { AvatarCoolKurt } from "./AvatarCoolKurt";
+import { AvatarLoveTurban } from "./AvatarLoveTurban";
 
 const avatars = {
   0: AvatarBasicJulie,

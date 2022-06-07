@@ -1,7 +1,7 @@
 import Avatar from "avataaars";
 import { commonAvatarProps } from "./styles";
 
-export default AvatarLoveTurban = ({ avatarProps }) => (
+export const AvatarLoveTurban = ({ avatarProps }) => (
   <Avatar
     avatarStyle="Circle"
     topType="Turban"

@@ -1,7 +1,7 @@
 import Avatar from "avataaars";
 import { commonAvatarProps } from "./styles";
 
-export default AvatarSickAfro = ({ avatarProps }) => (
+export const AvatarSickAfro = ({ avatarProps }) => (
   <Avatar
     avatarStyle="Circle"
     topType="LongHairFroBand"
