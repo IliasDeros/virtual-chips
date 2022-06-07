@@ -2,7 +2,7 @@
 
 Always have your poker chips on you. [Installation guide](#installation)
 
-![virtual chips](https://rlv.zcache.com/carbon_fiber_any_color_poker_chips_set-r2b608122bb2846e8a24dfdb0282f97b5_zrag1_8byvr_630.jpg?view_padding=%5B285%2C0%2C285%2C0%5D)
+![virtual chips](https://i.imgur.com/Qjj5Zcw.png)
 
 ### Installation
 
