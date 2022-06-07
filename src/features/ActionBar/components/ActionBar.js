@@ -46,18 +46,8 @@ const getState = (props) => {
  */
 class ActionBar extends Component {
   render() {
-    const {
-      allIn,
-      call,
-      callBet,
-      check,
-      className,
-      fold,
-      me,
-      playerTurn,
-      raiseTo,
-      tie,
-    } = this.props;
+    const { call, callBet, check, className, fold, playerTurn, raiseTo, tie } =
+      this.props;
     const state = getState(this.props);
     const canFold = ["FOLD", "CAN_BET", "CAN_CHECK", "CAN_TIE"].includes(state);
     const canBet = ["CAN_BET", "CAN_CHECK"].includes(state);
