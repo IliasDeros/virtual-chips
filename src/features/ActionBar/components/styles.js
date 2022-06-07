@@ -1,5 +1,9 @@
+import "./styles.css";
+
 export const StyledActionBar = ({ className = "", children }) => (
-  <div className={`w-full bg-gray-600 ${className} flex`}>{children}</div>
+  <div className={`action-bar-shadow w-full bg-gray-600 ${className} flex`}>
+    {children}
+  </div>
 );
 
 const actionClasses = {
@@ -16,7 +20,7 @@ export const StyledAction = ({
   action = "",
   ...htmlProps
 }) => {
-  const commonClass = `w-full flex justify-center items-center ${className} uppercase font-bold tracking-widest text-white`;
+  const commonClass = ` w-full flex justify-center items-center ${className} uppercase font-bold tracking-widest text-white`;
   const actionClass = actionClasses[action];
   const fullClass = [actionClass, className, commonClass].join(" ");
 
