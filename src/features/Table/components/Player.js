@@ -21,6 +21,7 @@ export const Player = ({ avatarProps, orderIndex, player }) => {
   );
   const isChecked = player.state === State.CHECKED;
   const isFolded = player.state === State.FOLDED;
+  const isTied = player.state === State.TIED;
 
   return (
     <StyledPlayer>
@@ -44,6 +45,7 @@ export const Player = ({ avatarProps, orderIndex, player }) => {
           </StyledPlayerBet>
         ) : null}
         {isChecked && <StyledPlayerBet>CHECK</StyledPlayerBet>}
+        {isTied && <StyledPlayerBet>TIED</StyledPlayerBet>}
       </div>
     </StyledPlayer>
   );
