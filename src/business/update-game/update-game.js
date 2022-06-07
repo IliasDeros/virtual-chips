@@ -111,3 +111,8 @@ export function updateGame(table, players) {
     updateTurn
   )({ players, table });
 }
+
+export function hasGameUpdates(updatedGame) {
+  const { players, table } = updatedGame;
+  return table.gameUpdates || players.some((p) => p.gameUpdates);
+}

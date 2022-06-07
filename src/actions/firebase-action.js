@@ -13,7 +13,7 @@ import {
   setTurn,
 } from "../actions/table-action";
 import { findHighestBet, getCurrentTurnPlayer } from "../business/get-turn";
-import { updateGame } from "../business/update-game";
+import { hasGameUpdates, updateGame } from "../business/update-game";
 import selectors from "reducers/selectors";
 import State from "constants/state";
 
@@ -84,21 +84,27 @@ function _setPlayerTurn(players) {
   return players.map((p) => ({ ...p, isTurn: isTurn(p) }));
 }
 
-function _formatGameUpdates({ players, table }) {
-  const firebaseUpdates = Object.assign(
-    { ...table.gameUpdates },
-    ...players.map(({ id, gameUpdates = [] }) =>
-      Object.entries(gameUpdates).reduce(
-        (acc, [key, value]) => ({
-          ...acc,
-          [`player/${id}/${key}`]: value,
-        }),
-        {}
-      )
-    )
-  );
+function _mergeUpdates(existingTable, { players, table }) {
+  const mergeExistingPlayer = ({ id, gameUpdates = {} }) => {
+    const existingPlayer = existingTable.player[id];
 
-  return firebaseUpdates;
+    return {
+      [id]: {
+        ...existingPlayer,
+        ...gameUpdates,
+      },
+    };
+  };
+
+  return {
+    ...existingTable,
+    ...table.gameUpdates,
+    player: Object.assign(
+      {},
+      existingTable.player,
+      ...players.map(mergeExistingPlayer)
+    ),
+  };
 }
 
 function _isHost(table, players) {
@@ -113,20 +119,13 @@ async function _hostGameUpdates(tableId, table, players) {
   }
 
   const updates = updateGame(table, players);
-  const firebaseUpdates = _formatGameUpdates(updates);
-  const hasUpdates = Object.keys(firebaseUpdates).length > 0;
-
-  if (!hasUpdates) {
+  if (!hasGameUpdates(updates)) {
     return;
   }
 
-  try {
-    await update(getTableRef(tableId), firebaseUpdates);
-  } catch (e) {
-    // Sometimes the transaction fails... Just ignore it.
-    // I should probably use runTransaction() here...
-    console.error(e);
-  }
+  runTransaction(getTableRef(tableId), (table) =>
+    _mergeUpdates(table, updates)
+  );
 }
 
 function _formatPlayers(firebaseTable, meId) {
