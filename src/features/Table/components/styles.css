@@ -1,3 +1,7 @@
+/*
+ * Table with rounded edges and players gathered around it
+ * Reference: https://codepen.io/Rovak/pen/ExYeQar
+ */
 :root {
   --table-height: 600px;
   --table-radius: 140px;
@@ -13,15 +17,14 @@
 
 .table {
   @apply bg-primary w-full p-4 left-1/2;
-  height: 600px;
+  height: var(--table-height);
   border-radius: var(--table-radius);
 
   /* Need to fit the player avatar on top/bottom */
-  --margin-v: 60px;
-  margin-top: var(--margin-v);
+  @apply mt-24;
 
   /* Table in middle, with some margin */
-  --margin-h: 50px;
+  --margin-h: 80px;
   position: relative;
   transform: translateX(calc(-50% - var(--margin-h)));
   max-width: min(calc(100% - 2 * var(--margin-h)), 300px);
@@ -33,9 +36,31 @@
   @apply text-center inline-block absolute top-0;
 }
 
+.table__player-name {
+  @apply absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full whitespace-nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table__player-bet {
+  @apply bg-primary-focus p-4 py-1 rounded-full text-xs;
+}
+
+.table__player-button {
+  @apply hidden;
+}
+
 /* 1 Top player */
 .table__player:nth-child(1) {
   @apply top-0 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+.table__player:nth-child(1) .table__player-stack {
+  @apply absolute -top-5 left-1/2 -translate-x-1/2;
+}
+
+.table__player:nth-child(1) .table__player-bet {
+  @apply absolute top-full left-1/2 -translate-x-1/2 mt-8;
 }
 
 /* 3 Right side players */
@@ -44,6 +69,21 @@
 .table__player:nth-child(4) {
   @apply right-0 translate-x-1/2;
 }
+.table__player:nth-child(2) .table__player-stack,
+.table__player:nth-child(3) .table__player-stack,
+.table__player:nth-child(4) .table__player-stack {
+  @apply absolute top-1/2 left-full -translate-y-1/2;
+}
+
+.table__player:nth-child(2) .table__player-bet {
+  @apply absolute -translate-y-1/2 right-full;
+  top: 80%;
+}
+.table__player:nth-child(3) .table__player-bet,
+.table__player:nth-child(4) .table__player-bet {
+  @apply absolute top-1/2 -translate-y-1/2 right-full;
+}
+
 .table__player:nth-child(2),
 .table__player:nth-child(9) {
   top: calc(
@@ -68,15 +108,31 @@
   );
 }
 
-/* 2 Bottom players */
+/* Bottom right player */
 .table__player:nth-child(5) {
   @apply right-0 -translate-y-1/2;
   top: calc(100% - var(--table-radius) / 3);
 }
+.table__player:nth-child(5) .table__player-stack {
+  @apply absolute bottom-3 left-full;
+}
+.table__player:nth-child(5) .table__player-bet {
+  @apply absolute top-0 -translate-y-1/2;
+  right: 80%;
+}
 
+/* Bottom left player */
 .table__player:nth-child(6) {
   @apply left-0 -translate-y-1/2;
   top: calc(100% - var(--table-radius) / 3);
+}
+.table__player:nth-child(6) .table__player-stack {
+  @apply absolute bottom-3 right-full;
+}
+
+.table__player:nth-child(6) .table__player-bet {
+  @apply absolute top-0 -translate-y-1/2;
+  left: 80%;
 }
 
 /* 3 Left players */
@@ -84,4 +140,19 @@
 .table__player:nth-child(8),
 .table__player:nth-child(9) {
   @apply left-0 -translate-x-1/2;
+}
+
+.table__player:nth-child(7) .table__player-stack,
+.table__player:nth-child(8) .table__player-stack,
+.table__player:nth-child(9) .table__player-stack {
+  @apply absolute top-1/2 right-full -translate-y-1/2;
+}
+
+.table__player:nth-child(9) .table__player-bet {
+  @apply absolute -translate-y-1/2 left-full;
+  top: 80%;
+}
+.table__player:nth-child(7) .table__player-bet,
+.table__player:nth-child(8) .table__player-bet {
+  @apply absolute top-1/2 -translate-y-1/2 left-full;
 }
