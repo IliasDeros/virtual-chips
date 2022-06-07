@@ -23,3 +23,7 @@ export const StyledPlayerStack = ({ children }) => (
 export const StyledPlayerBet = ({ children }) => (
   <div className="table__player-bet">{children}</div>
 );
+
+export const Chip = ({ className = "", ...htmlProps }) => (
+  <div className={`chip chip--10 ${className}`} {...htmlProps}></div>
+);

@@ -1,6 +1,7 @@
 import React from "react";
 import { PlayerAvatar } from "./PlayerAvatar";
 import {
+  Chip,
   StyledPlayer,
   StyledPlayerBet,
   StyledPlayerButton,
@@ -18,7 +19,11 @@ export default Player = ({ avatarProps, index, player }) => {
         </StyledPlayerName>
         <StyledPlayerButton>{player.button}</StyledPlayerButton>
         <StyledPlayerStack>{player.chips}</StyledPlayerStack>
-        {player.turnBet && <StyledPlayerBet>{player.turnBet}</StyledPlayerBet>}
+        {player.turnBet && (
+          <StyledPlayerBet>
+            {player.turnBet} <Chip className="ml-1" />
+          </StyledPlayerBet>
+        )}
       </div>
     </StyledPlayer>
   );

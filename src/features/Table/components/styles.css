@@ -1,6 +1,11 @@
 /*
  * Table with rounded edges and players gathered around it
  * Reference: https://codepen.io/Rovak/pen/ExYeQar
+ *
+ * Contents
+ * # Table
+ * # Players
+ * # Chips
  */
 :root {
   --table-height: 600px;
@@ -15,6 +20,9 @@
   --players-per-side: 3;
 }
 
+/************************************************
+ # Table
+ ************************************************/
 .table {
   @apply bg-primary w-full p-4 left-1/2;
   height: var(--table-height);
@@ -32,6 +40,9 @@
   margin-right: var(--margin-h);
 }
 
+/************************************************
+ # Players
+ ************************************************/
 .table__player {
   @apply text-center inline-block absolute top-0;
 }
@@ -44,7 +55,7 @@
 }
 
 .table__player-bet {
-  @apply bg-primary-focus p-4 py-1 rounded-full text-xs;
+  @apply bg-primary-focus pl-4 pr-2 py-1 rounded-full text-xs whitespace-nowrap;
 }
 
 .table__player-button {
@@ -155,4 +166,26 @@
 .table__player:nth-child(7) .table__player-bet,
 .table__player:nth-child(8) .table__player-bet {
   @apply absolute top-1/2 -translate-y-1/2 left-full;
+}
+
+/************************************************
+ # Chips
+ ************************************************/
+.chip {
+  @apply inline-block align-bottom;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 100%;
+  border: 2px white dotted;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.chip--1 {
+  background-color: #444;
+}
+.chip--5 {
+  background-color: goldenrod;
+}
+.chip--10 {
+  background-color: crimson;
 }
