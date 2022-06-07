@@ -24,11 +24,16 @@ export default function (state = initialState, action) {
         turn: action.payload,
       };
       break;
-    // no default
     case "SET_PLAYERS_ME_FIRST":
       state = {
         ...state,
         players: action.payload,
+      };
+      break;
+    case "SET_PLAYER_ORDER":
+      state = {
+        ...state,
+        playerOrder: action.payload,
       };
     // no default
   }

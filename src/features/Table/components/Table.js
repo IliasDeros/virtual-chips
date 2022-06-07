@@ -10,8 +10,9 @@ import { StyledPot, StyledTable } from "./styles";
  */
 class Table extends Component {
   render() {
-    const { players, pot } = this.props;
+    const { players, playerOrder, pot } = this.props;
     const [me, ...otherPlayers] = players;
+    const meIndex = playerOrder?.split(",").indexOf(me?.id) || 0;
 
     if (!players.length) {
       return "Loading Table...";
@@ -19,8 +20,8 @@ class Table extends Component {
 
     return (
       <StyledTable>
-        <MePlayer player={me} />
-        <OtherPlayers players={otherPlayers} />
+        <MePlayer meIndex={meIndex} player={me} />
+        <OtherPlayers meIndex={meIndex} players={otherPlayers} />
         <StyledPot pot={pot} />
       </StyledTable>
     );
@@ -29,8 +30,9 @@ class Table extends Component {
 
 function mapStateToProps(state) {
   return {
-    pot: selectors.getPot(state),
     players: selectors.getPlayers(state),
+    playerOrder: selectors.getPlayerOrder(state),
+    pot: selectors.getPot(state),
   };
 }
 

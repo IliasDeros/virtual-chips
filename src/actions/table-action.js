@@ -1,6 +1,11 @@
 import Turn from "constants/turn";
 import selectors from "reducers/selectors";
 
+export const setPlayerOrder = (order) => ({
+  type: "SET_PLAYER_ORDER",
+  order,
+});
+
 export const setTurn = (turn) => ({
   type: "SET_TURN",
   payload: turn || Turn.PRE_FLOP,
@@ -28,3 +33,14 @@ export const setTableId = (payload) => ({
   type: "SET_TABLE_ID",
   payload,
 });
+
+export const updatePlayerOrder = (payload) => (dispatch, getState) => {
+  if (selectors.getPlayerOrder(getState()) === payload) {
+    return;
+  }
+
+  dispatch({
+    type: "SET_PLAYER_ORDER",
+    payload,
+  });
+};

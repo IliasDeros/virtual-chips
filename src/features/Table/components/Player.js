@@ -13,7 +13,7 @@ import {
 import Button from "constants/button";
 import State from "constants/state";
 
-export const Player = ({ avatarProps, index, player }) => {
+export const Player = ({ avatarProps, orderIndex, player }) => {
   const { button, chips, isHost, name, turnBet } = player;
   const isDealer = [Button.DEALER_SMALL, Button.DEALER].includes(button);
   const isSmallBlind = [Button.DEALER_SMALL, Button.SMALL_BLIND].includes(
@@ -27,7 +27,7 @@ export const Player = ({ avatarProps, index, player }) => {
       <div className="relative">
         <PlayerAvatar
           isFolded={isFolded}
-          index={index}
+          index={orderIndex}
           avatarProps={avatarProps}
         />
         <StyledPlayerName>

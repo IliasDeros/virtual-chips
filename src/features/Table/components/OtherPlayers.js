@@ -1,6 +1,8 @@
 import { Player } from "./Player";
 
-export const OtherPlayers = ({ players = [] }) => {
+export const OtherPlayers = ({ meIndex, players = [] }) => {
+  const allPlayerCount = players.length + 1;
+
   return (
     <>
       {players.map((player, i) => (
@@ -8,7 +10,7 @@ export const OtherPlayers = ({ players = [] }) => {
           avatarProps={{ avatarStyle: "Transparent" }}
           key={player.id}
           player={player}
-          index={i + 1}
+          orderIndex={(meIndex + i + 1) % allPlayerCount}
         />
       ))}
     </>

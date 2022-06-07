@@ -12,9 +12,10 @@ const avatars = {
   3: AvatarCoolKurt,
   4: AvatarLoveTurban,
 };
+const avatarsCount = Object.keys(avatars).length;
 
 export const PlayerAvatar = ({ avatarProps, index, isFolded }) => {
-  const SelectedAvatar = avatars[index] || avatars[0];
+  const SelectedAvatar = avatars[index % avatarsCount] || avatars[0];
   const className = `${commonAvatarProps.className} ${
     isFolded && "grayscale opacity-50"
   }`;

@@ -31,6 +31,9 @@ export const selectors = {
   getTableId(state) {
     return this.getTable(state).id;
   },
+  getPlayerOrder(state) {
+    return this.getTable(state).playerOrder || "";
+  },
 };
 
 export default selectors;

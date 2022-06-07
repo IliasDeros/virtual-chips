@@ -5,6 +5,7 @@ import {
   setPot,
   setTableId,
   setTurn,
+  updatePlayerOrder,
 } from "../actions/table-action";
 import { findHighestBet, getCurrentTurnPlayer } from "../business/get-turn";
 import { hasGameUpdates, updateGame } from "../business/update-game";
@@ -46,11 +47,13 @@ function watchPot(id, { dispatch }) {
   });
 }
 
-function _orderMeFirst(meId) {
+function _orderMeFirst(meId, orderedPlayerIds) {
   return (indexedPlayers) => {
-    const playerEntries = Object.entries(indexedPlayers);
+    const sortPlayers = ([idA], [idB]) =>
+      orderedPlayerIds.indexOf(idA) - orderedPlayerIds.indexOf(idB);
     const isEntryMe = ([id]) => id === meId;
     const toValue = ([id, player]) => ({ id, ...player });
+    const playerEntries = Object.entries(indexedPlayers).sort(sortPlayers);
 
     // Order players so that "me" is first
     const meIndex = playerEntries.findIndex(isEntryMe);
@@ -123,7 +126,7 @@ async function _hostGameUpdates(tableId, table, players) {
 }
 
 function _formatPlayers(firebaseTable, meId) {
-  const { host: hostId, player } = firebaseTable;
+  const { host: hostId, player, playerOrder } = firebaseTable;
 
   if (!player) {
     return;
@@ -132,7 +135,7 @@ function _formatPlayers(firebaseTable, meId) {
   return compose(
     _setPlayerTurn,
     _setPlayerHost(hostId),
-    _orderMeFirst(meId)
+    _orderMeFirst(meId, playerOrder)
   )(player);
 }
 
@@ -143,6 +146,7 @@ function watchTable(tableId, meId, { dispatch }) {
 
     // Update local state
     dispatch(setPlayersMeFirst(playersMeFirst));
+    dispatch(updatePlayerOrder(table.playerOrder));
 
     // Update remote state (database)
     _hostGameUpdates(tableId, table, playersMeFirst);

@@ -1,5 +1,9 @@
 import { Player } from "./Player";
 
-export const MePlayer = ({ player }) => (
-  <Player player={player} index={0} avatarProps={{ avatarStyle: "Circle" }} />
+export const MePlayer = ({ meIndex, player }) => (
+  <Player
+    player={player}
+    orderIndex={meIndex}
+    avatarProps={{ avatarStyle: "Circle" }}
+  />
 );
