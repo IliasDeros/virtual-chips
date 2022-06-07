@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import selectors from "reducers/selectors";
 import OtherPlayers from "./OtherPlayers";
 import MePlayer from "./MePlayer";
-import { StyledTable } from "./Table.styles";
+import { StyledTable } from "./styles";
 
 /**
  * View the table pot, players & bets

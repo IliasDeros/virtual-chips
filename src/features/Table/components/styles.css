@@ -1,0 +1,87 @@
+:root {
+  --table-height: 600px;
+  --table-radius: 140px;
+
+  /*
+   * 2 sides
+   * + 1 player on top
+   * + 2 player on bottom
+   * = Max players: 9
+   */
+  --players-per-side: 3;
+}
+
+.table {
+  @apply bg-primary w-full p-4 left-1/2;
+  height: 600px;
+  border-radius: var(--table-radius);
+
+  /* Need to fit the player avatar on top/bottom */
+  --margin-v: 60px;
+  margin-top: var(--margin-v);
+
+  /* Table in middle, with some margin */
+  --margin-h: 50px;
+  position: relative;
+  transform: translateX(calc(-50% - var(--margin-h)));
+  max-width: min(calc(100% - 2 * var(--margin-h)), 300px);
+  margin-left: var(--margin-h);
+  margin-right: var(--margin-h);
+}
+
+.table__player {
+  @apply text-center inline-block absolute top-0;
+}
+
+/* 1 Top player */
+.table__player:nth-child(1) {
+  @apply top-0 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
+/* 3 Right side players */
+.table__player:nth-child(2),
+.table__player:nth-child(3),
+.table__player:nth-child(4) {
+  @apply right-0 translate-x-1/2;
+}
+.table__player:nth-child(2),
+.table__player:nth-child(9) {
+  top: calc(
+    1 * (var(--table-height) / (var(--players-per-side) + 1)) -
+      var(--table-radius) / 1.4
+  );
+}
+
+.table__player:nth-child(3),
+.table__player:nth-child(8) {
+  top: calc(
+    2 * (var(--table-height) / (var(--players-per-side) + 1)) -
+      var(--table-radius) / 1.4
+  );
+}
+
+.table__player:nth-child(4),
+.table__player:nth-child(7) {
+  top: calc(
+    3 * (var(--table-height) / (var(--players-per-side) + 1)) -
+      var(--table-radius) / 1.4
+  );
+}
+
+/* 2 Bottom players */
+.table__player:nth-child(5) {
+  @apply right-0 -translate-y-1/2;
+  top: calc(100% - var(--table-radius) / 3);
+}
+
+.table__player:nth-child(6) {
+  @apply left-0 -translate-y-1/2;
+  top: calc(100% - var(--table-radius) / 3);
+}
+
+/* 3 Left players */
+.table__player:nth-child(7),
+.table__player:nth-child(8),
+.table__player:nth-child(9) {
+  @apply left-0 -translate-x-1/2;
+}
