@@ -5,7 +5,7 @@ import { check, fold, tie } from "actions/player-action";
 import selectors from "reducers/selectors";
 import State from "constants/state";
 import Turn from "constants/turn";
-import { StyledActionBar } from "./styles";
+import { StyledAction, StyledActionBar } from "./styles";
 
 const getState = (props) => {
   const { isAlone, canCheck } = props;
@@ -64,28 +64,54 @@ class ActionBar extends Component {
 
     return (
       <StyledActionBar className={className}>
-        {canBet && (
-          <div>
-            <button onClick={allIn}>All In</button>
-            <br />
-            <button onClick={() => raiseTo(200)}>Bet 200</button>
-            <br />
-            <button onClick={() => raiseTo(50)}>Bet 50</button>
-          </div>
+        {state === "WAITING_FOR_PLAYERS" && (
+          <StyledAction disabled>Waiting on more players</StyledAction>
+        )}
+        {state === "IS_FOLDED" && (
+          <StyledAction action="fold" disabled>
+            Folded
+          </StyledAction>
+        )}
+        {state === "WAITING_TURN" && (
+          <StyledAction disabled>Waiting for {playerTurn?.id}</StyledAction>
+        )}
+        {canFold && (
+          <StyledAction action="fold" onClick={fold}>
+            Fold
+          </StyledAction>
+        )}
+        {state === "CAN_CHECK" && (
+          <StyledAction action="check" onClick={check}>
+            Check
+          </StyledAction>
+        )}
+        {state === "CAN_TIE" && (
+          <StyledAction action="tie" onClick={tie}>
+            Tie
+          </StyledAction>
+        )}
+        {state === "IS_TIED" && (
+          <StyledAction action="tie" disabled>
+            Tied
+          </StyledAction>
+        )}
+        {state === "CAN_BET" && (
+          <StyledAction action="call" onClick={call}>
+            Call {callBet}
+          </StyledAction>
         )}
 
-        {state === "WAITING_FOR_PLAYERS" && (
-          <button disabled>Waiting on more players</button>
+        {canBet && (
+          <StyledAction action="bet" onClick={() => raiseTo(50)}>
+            Bet 50
+          </StyledAction>
         )}
-        {state === "IS_FOLDED" && <button disabled>Folded</button>}
-        {state === "WAITING_TURN" && (
-          <button disabled>Waiting for {playerTurn?.id}</button>
+
+        {canBet && (
+          <StyledAction action="bet" onClick={() => raiseTo(200)}>
+            Bet 200
+          </StyledAction>
         )}
-        {canFold && <button onClick={fold}>Fold</button>}
-        {state === "CAN_CHECK" && <button onClick={check}>Check</button>}
-        {state === "CAN_TIE" && <button onClick={tie}>Tie</button>}
-        {state === "IS_TIED" && <button disabled>Tied</button>}
-        {state === "CAN_BET" && <button onClick={call}>Call {callBet}</button>}
       </StyledActionBar>
     );
   }

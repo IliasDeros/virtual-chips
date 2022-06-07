@@ -57,7 +57,7 @@
 }
 
 .table__player-bet {
-  @apply bg-primary-focus pl-4 pr-2 py-1 rounded-full text-xs whitespace-nowrap;
+  @apply bg-primary-focus px-3 py-1 rounded-full text-xs whitespace-nowrap;
 }
 
 .table__player-stack {

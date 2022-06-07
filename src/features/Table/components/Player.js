@@ -11,6 +11,7 @@ import {
   StyledSmallBlind,
 } from "./styles";
 import Button from "constants/button";
+import State from "constants/state";
 
 export const Player = ({ avatarProps, index, player }) => {
   const { button, chips, isHost, name, turnBet } = player;
@@ -18,6 +19,7 @@ export const Player = ({ avatarProps, index, player }) => {
   const isSmallBlind = [Button.DEALER_SMALL, Button.SMALL_BLIND].includes(
     button
   );
+  const isChecked = player.state === State.CHECKED;
 
   return (
     <StyledPlayer>
@@ -30,11 +32,13 @@ export const Player = ({ avatarProps, index, player }) => {
         {isDealer && <StyledDealer>D</StyledDealer>}
         {isSmallBlind && <StyledSmallBlind>SB</StyledSmallBlind>}
         <StyledPlayerStack>{chips}</StyledPlayerStack>
+
         {turnBet ? (
           <StyledPlayerBet>
-            {turnBet} <Chip className="ml-1" />
+            {turnBet} <Chip className="ml-1 -mr-1" />
           </StyledPlayerBet>
         ) : null}
+        {isChecked && <StyledPlayerBet>CHECKED</StyledPlayerBet>}
       </div>
     </StyledPlayer>
   );

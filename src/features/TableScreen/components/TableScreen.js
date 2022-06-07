@@ -24,9 +24,10 @@ class TableScreen extends Component {
 
   render() {
     return (
-      <div className="h-screen pt-24 pb-20">
+      <div className="h-screen pt-24">
         <Table />
         <ActionBar className={"fixed bottom-0 h-20"} />
+        <div className="mt-40">&nbsp;</div>
       </div>
     );
   }

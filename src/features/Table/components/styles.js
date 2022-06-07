@@ -44,7 +44,7 @@ export const Chip = ({
   value = "10",
   ...htmlProps
 }) => {
-  let fullClass = `chip chip--${value}`;
+  let fullClass = `${className} chip chip--${value}`;
 
   if (stackHorizontal) {
     fullClass += " chip--h";
