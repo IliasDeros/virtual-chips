@@ -30,7 +30,8 @@
   border-radius: var(--table-radius);
 
   /* Need to fit the player avatar on top/bottom */
-  @apply mt-24;
+  /* Apply this margin to the screen h-screen instead */
+  /* @apply mt-24; */
 
   /* Table in middle, with some margin */
   --margin-h: 80px;

@@ -5,6 +5,7 @@ import { check, fold, tie } from "actions/player-action";
 import selectors from "reducers/selectors";
 import State from "constants/state";
 import Turn from "constants/turn";
+import { StyledActionBar } from "./styles";
 
 const getState = (props) => {
   const { isAlone, canCheck } = props;
@@ -45,20 +46,24 @@ const getState = (props) => {
  */
 class ActionBar extends Component {
   render() {
-    const { allIn, call, callBet, check, fold, me, playerTurn, raiseTo, tie } =
-      this.props;
+    const {
+      allIn,
+      call,
+      callBet,
+      check,
+      className,
+      fold,
+      me,
+      playerTurn,
+      raiseTo,
+      tie,
+    } = this.props;
     const state = getState(this.props);
     const canFold = ["FOLD", "CAN_BET", "CAN_CHECK", "CAN_TIE"].includes(state);
     const canBet = ["CAN_BET", "CAN_CHECK"].includes(state);
 
     return (
-      <div>
-        <div>
-          Current Bet: <strong>{me.turnBet}</strong>
-        </div>
-        <div>
-          Chips: <strong>{me.chips}</strong>
-        </div>
+      <StyledActionBar className={className}>
         {canBet && (
           <div>
             <button onClick={allIn}>All In</button>
@@ -81,7 +86,7 @@ class ActionBar extends Component {
         {state === "CAN_TIE" && <button onClick={tie}>Tie</button>}
         {state === "IS_TIED" && <button disabled>Tied</button>}
         {state === "CAN_BET" && <button onClick={call}>Call {callBet}</button>}
-      </div>
+      </StyledActionBar>
     );
   }
 }

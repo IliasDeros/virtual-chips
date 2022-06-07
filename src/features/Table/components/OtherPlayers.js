@@ -1,6 +1,6 @@
-import Player from "./Player";
+import { Player } from "./Player";
 
-export default OtherPlayers = ({ players = [] }) => {
+export const OtherPlayers = ({ players = [] }) => {
   return (
     <>
       {players.map((player, i) => (

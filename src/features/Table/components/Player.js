@@ -12,7 +12,7 @@ import {
 } from "./styles";
 import Button from "constants/button";
 
-export default Player = ({ avatarProps, index, player }) => {
+export const Player = ({ avatarProps, index, player }) => {
   const { button, chips, isHost, name, turnBet } = player;
   const isDealer = [Button.DEALER_SMALL, Button.DEALER].includes(button);
   const isSmallBlind = [Button.DEALER_SMALL, Button.SMALL_BLIND].includes(

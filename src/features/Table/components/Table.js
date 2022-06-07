@@ -1,8 +1,8 @@
 import { Component } from "react";
 import { connect } from "react-redux";
 import selectors from "reducers/selectors";
-import OtherPlayers from "./OtherPlayers";
-import MePlayer from "./MePlayer";
+import { OtherPlayers } from "./OtherPlayers";
+import { MePlayer } from "./MePlayer";
 import { StyledPot, StyledTable } from "./styles";
 
 /**
