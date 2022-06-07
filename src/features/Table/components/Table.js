@@ -1,6 +1,9 @@
 import { Component } from "react";
 import { connect } from "react-redux";
 import selectors from "reducers/selectors";
+import OtherPlayers from "./OtherPlayers";
+import MePlayer from "./MePlayer";
+import { StyledTable } from "./Table.styles";
 
 /**
  * View the table pot, players & bets
@@ -15,20 +18,11 @@ class Table extends Component {
     }
 
     return (
-      <div>
-        <div>
-          You{me.isHost && " (host)"}: {me.name}
-          {me.button && ` - ${me.button}`}
-        </div>
-        {otherPlayers.map((player) => (
-          <div key={player.id}>
-            {player.name}
-            {player.button && ` - ${player.button}`}
-          </div>
-        ))}
-        Table
+      <StyledTable>
+        <MePlayer player={me} />
+        <OtherPlayers players={otherPlayers} />
         <div>Pot: {pot}</div>
-      </div>
+      </StyledTable>
     );
   }
 }
