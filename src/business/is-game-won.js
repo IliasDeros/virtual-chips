@@ -10,7 +10,8 @@ const isTied = ({ state }) => state === State.TIED;
  * - All remaining players are tied
  */
 export default function isGameWon(players) {
-  const isAlone = players.length <= 1;
+  const playersWithChips = players.filter((p) => p.chips + p.roundBet > 0);
+  const isAlone = playersWithChips.length <= 1;
 
   if (isAlone) {
     return false;
