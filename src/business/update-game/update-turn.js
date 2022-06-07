@@ -4,9 +4,28 @@ import Turn from "constants/turn";
 import { compose, increment, _get, _update } from "./utils";
 
 const canBet = (p) => ![State.ALL_IN, State.FOLDED].includes(_get(p, "state"));
+const calledEveryoneAllIn = (players) => {
+  const isAlone = players.length === 1;
+  const bettingPlayers = players.filter(canBet);
+  const notEveryoneElseIsAllIn = bettingPlayers.length !== 1;
+  const isEveryoneAllIn = bettingPlayers.length === 0;
 
+  if (isEveryoneAllIn) {
+    return true;
+  }
+
+  if (isAlone || notEveryoneElseIsAllIn) {
+    return false;
+  }
+  const highestBet = players
+    .filter((p) => _get(p, "state") !== State.FOLDED)
+    .reduce((bet, p) => Math.max(bet, _get(p, "turnBet", 0)), 0);
+  const hasCalledHighestBet = _get(bettingPlayers[0], "turnBet") >= highestBet;
+
+  return hasCalledHighestBet;
+};
 const isShowdown = (players, table) =>
-  _get(table, "turn") === Turn.FINISHED || players.filter(canBet).length <= 1;
+  _get(table, "turn") === Turn.FINISHED || calledEveryoneAllIn(players);
 
 /**
  * Proceed to next turn when everyone played

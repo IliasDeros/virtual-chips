@@ -255,7 +255,7 @@ function _raiseToAmount(totalBet) {
   };
 }
 
-export function allIn(amount) {
+export function allIn() {
   return async (dispatch, getState) => {
     const state = getState();
     const tableId = selectors.getTableId(state);

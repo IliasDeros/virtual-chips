@@ -1,6 +1,6 @@
 import State from "../constants/state";
 
-const canBet = (p) => p.chips > 0;
+const canBet = (p) => p.chips + p.turnBet > 0;
 const hasBet = (p) =>
   [State.ALL_IN, State.BET, State.CALLED, State.CHECKED, State.FOLDED].includes(
     p.state
