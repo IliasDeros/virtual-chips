@@ -40,6 +40,10 @@ const _updatePlayerChips = (players) => {
       const noWinners = !winners.some((w) => sidepot.players.includes(w));
       let share = 0;
 
+      if (!sidepot.pot || sidepot.players.length === 0) {
+        return sum;
+      }
+
       // I'm a winner: get my share
       if (isWinner) {
         share = sidepot.pot / winners.length;
@@ -53,7 +57,7 @@ const _updatePlayerChips = (players) => {
       return sum + share;
     }, 0);
 
-    const existingChips = player.chips || 0 + player.roundBet || 0;
+    const existingChips = player.chips || 0;
     return _update(
       player,
       earnings && {
