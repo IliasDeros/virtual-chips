@@ -48,6 +48,7 @@ const _updatePlayerChips = (players) => {
 
       // I'm a winner: get my share
       if (isWinner) {
+        // Problem: even winners, uneven pot: Winners will get 0.5
         share = sidepot.pot / winners.length;
       }
 
