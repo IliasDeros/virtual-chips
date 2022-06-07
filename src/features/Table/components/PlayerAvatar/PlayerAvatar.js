@@ -1,3 +1,4 @@
+import { commonAvatarProps } from "./styles";
 import { AvatarBasicJulie } from "./AvatarBasicJulie";
 import { AvatarScaredSanta } from "./AvatarScaredSanta";
 import { AvatarSickAfro } from "./AvatarSickAfro";
@@ -12,7 +13,10 @@ const avatars = {
   4: AvatarLoveTurban,
 };
 
-export const PlayerAvatar = ({ avatarProps, index }) => {
+export const PlayerAvatar = ({ avatarProps, index, isFolded }) => {
   const SelectedAvatar = avatars[index] || avatars[0];
-  return <SelectedAvatar avatarProps={avatarProps} />;
+  const className = `${commonAvatarProps.className} ${
+    isFolded && "grayscale opacity-50"
+  }`;
+  return <SelectedAvatar avatarProps={{ ...avatarProps, className }} />;
 };

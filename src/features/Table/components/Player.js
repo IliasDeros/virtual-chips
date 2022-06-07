@@ -20,11 +20,16 @@ export const Player = ({ avatarProps, index, player }) => {
     button
   );
   const isChecked = player.state === State.CHECKED;
+  const isFolded = player.state === State.FOLDED;
 
   return (
     <StyledPlayer>
       <div className="relative">
-        <PlayerAvatar index={index} avatarProps={avatarProps} />
+        <PlayerAvatar
+          isFolded={isFolded}
+          index={index}
+          avatarProps={avatarProps}
+        />
         <StyledPlayerName>
           {name} {isHost && "(host)"}
         </StyledPlayerName>
