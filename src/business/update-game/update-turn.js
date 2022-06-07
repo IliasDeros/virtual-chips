@@ -1,9 +1,12 @@
 import isTurnFinished from "business/is-turn-finished";
 import State from "constants/state";
 import Turn from "constants/turn";
-import { compose, increment, _update } from "./utils";
+import { compose, increment, _get, _update } from "./utils";
 
-const isShowdown = ({ turn }) => turn === Turn.FINISHED;
+const canBet = (p) => ![State.ALL_IN, State.FOLDED].includes(_get(p, "state"));
+
+const isShowdown = (players, table) =>
+  _get(table, "turn") === Turn.FINISHED || players.filter(canBet).length <= 1;
 
 /**
  * Proceed to next turn when everyone played
@@ -20,14 +23,21 @@ const isShowdown = ({ turn }) => turn === Turn.FINISHED;
  * ```
  */
 export default function updateTurn({ players, table }) {
-  if (isShowdown(table) || !isTurnFinished(players)) {
+  if (isShowdown(players, table)) {
+    return {
+      players,
+      table: _update(table, { turn: Turn.FINISHED }),
+    };
+  }
+
+  if (!isTurnFinished(players)) {
     return { players, table };
   }
 
   const clearBet = (p) => _update(p, { turnBet: 0 });
   const resetState = (p) => {
-    const isFolded = p.state === State.FOLDED;
-    if (isFolded) {
+    const cannotBet = [State.ALL_IN, State.FOLDED].includes(_get(p, "state"));
+    if (cannotBet) {
       return p;
     }
 

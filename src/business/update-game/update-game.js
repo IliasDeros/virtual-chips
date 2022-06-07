@@ -3,7 +3,7 @@ import State from "constants/state";
 import getButton from "business/get-button";
 import updateRound from "./update-round";
 import updateTurn from "./update-turn";
-import { compose, _update } from "./utils";
+import { compose, _get, _update } from "./utils";
 
 const defaultBigBlind = 50;
 
@@ -35,15 +35,8 @@ function _updateButtons({ players, table }) {
 }
 
 function _updateBlinds({ players, table }) {
-  const _get = (instance, key) => {
-    if (instance.gameUpdates[key] !== undefined) {
-      return instance.gameUpdates[key];
-    }
-
-    return instance[key];
-  };
   const getAllChips = (player) => {
-    return _get(player, "chips") + _get(player, "roundBet");
+    return _get(player, "chips", 0) + _get(player, "roundBet", 0);
   };
 
   return {
@@ -89,7 +82,7 @@ function _updatePlayerStates({ players, table }) {
       }
 
       const isAllIn = chips === 0 && turnBet > 0;
-      const isFolded = chips === 0 && turnBet === 0;
+      const isFolded = chips === 0 && !turnBet;
 
       let state = isAllIn && State.ALL_IN;
       state = state || (isFolded && State.FOLDED);
@@ -113,8 +106,8 @@ export function updateGame(table, players) {
     _updatePlayerStates,
     _updateBlinds,
     _updateButtons,
-    updateRound,
-    updateTurn
+    updateTurn,
+    updateRound
   )({ players, table });
 }
 

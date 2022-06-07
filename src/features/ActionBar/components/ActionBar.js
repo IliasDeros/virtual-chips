@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { connect } from "react-redux";
-import { bet, call } from "actions/firebase-action";
+import { allIn, call, raiseTo } from "actions/firebase-action";
 import { check, fold, tie } from "actions/player-action";
 import selectors from "reducers/selectors";
 import State from "constants/state";
@@ -45,7 +45,8 @@ const getState = (props) => {
  */
 class ActionBar extends Component {
   render() {
-    const { bet, call, callBet, check, fold, me, playerTurn, tie } = this.props;
+    const { allIn, call, callBet, check, fold, me, playerTurn, raiseTo, tie } =
+      this.props;
     const state = getState(this.props);
     const canFold = ["FOLD", "CAN_BET", "CAN_CHECK", "CAN_TIE"].includes(state);
     const canBet = ["CAN_BET", "CAN_CHECK"].includes(state);
@@ -60,11 +61,11 @@ class ActionBar extends Component {
         </div>
         {canBet && (
           <div>
-            <button onClick={() => bet(me.chips)}>All In</button>
+            <button onClick={allIn}>All In</button>
             <br />
-            <button onClick={() => bet(200)}>Bet 200</button>
+            <button onClick={() => raiseTo(200)}>Bet 200</button>
             <br />
-            <button onClick={() => bet(50)}>Bet 50</button>
+            <button onClick={() => raiseTo(50)}>Bet 50</button>
           </div>
         )}
 
@@ -98,10 +99,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    bet: (amount) => dispatch(bet(amount)),
+    allIn: () => dispatch(allIn()),
     call: () => dispatch(call()),
     check: () => dispatch(check()),
     fold: () => dispatch(fold()),
+    raiseTo: (amount) => dispatch(raiseTo(amount)),
     tie: () => dispatch(tie()),
   };
 }

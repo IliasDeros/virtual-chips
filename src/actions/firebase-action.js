@@ -219,29 +219,61 @@ export function call() {
   };
 }
 
-function _betAmount(amount) {
+function _raiseToAllIn(remotePlayer) {
+  const { chips, roundBet = 0, turnBet = 0 } = remotePlayer;
+
+  return {
+    ...remotePlayer,
+    state: State.ALL_IN,
+    turnBet: turnBet + chips,
+    roundBet: roundBet + chips,
+    chips: 0,
+  };
+}
+
+function _raiseToAmount(totalBet) {
   return (remotePlayer) => {
     const { chips, roundBet = 0, turnBet = 0 } = remotePlayer;
-    const chipsDifference = amount - turnBet;
+    // Eg: turnBet is 50
+    //   + totalBet is 200
+    //   = betDifference is 150
+    const betDifference = totalBet - turnBet;
+    const remainingChips = chips - betDifference;
+
+    // All-in
+    if (remainingChips <= 0) {
+      return _raiseToAllIn(remotePlayer);
+    }
 
     return {
       ...remotePlayer,
       state: State.BET,
-      turnBet: amount,
-      roundBet: roundBet + chipsDifference,
-      chips: chips - chipsDifference,
+      turnBet: turnBet + betDifference,
+      roundBet: roundBet + betDifference,
+      chips: remainingChips,
     };
   };
 }
 
-export function bet(amount) {
+export function allIn(amount) {
   return async (dispatch, getState) => {
     const state = getState();
     const tableId = selectors.getTableId(state);
     const [me] = selectors.getPlayers(state);
     const meRef = getTableRef(tableId, `player/${me.id}`);
 
-    await runTransaction(meRef, _betAmount(amount));
+    await runTransaction(meRef, _raiseToAllIn);
+  };
+}
+
+export function raiseTo(amount) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const tableId = selectors.getTableId(state);
+    const [me] = selectors.getPlayers(state);
+    const meRef = getTableRef(tableId, `player/${me.id}`);
+
+    await runTransaction(meRef, _raiseToAmount(amount));
   };
 }
 
