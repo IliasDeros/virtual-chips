@@ -43,7 +43,7 @@ export const Player = ({ avatarProps, orderIndex, player }) => {
             {turnBet} <Chip className="ml-1 -mr-1" />
           </StyledPlayerBet>
         ) : null}
-        {isChecked && <StyledPlayerBet>CHECKED</StyledPlayerBet>}
+        {isChecked && <StyledPlayerBet>CHECK</StyledPlayerBet>}
       </div>
     </StyledPlayer>
   );
