@@ -5,7 +5,12 @@ import isGameWon from "business/is-game-won";
 import { compose, increment, _update } from "./utils";
 
 function _initializePlayerBet(player) {
-  const state = player.chips > 0 ? State.IDLE : State.FOLDED;
+  const chips =
+    player.gameUpdates?.chips !== undefined
+      ? player.gameUpdates.chips
+      : player.chips;
+  const state = chips > 0 ? State.IDLE : State.FOLDED;
+
   return _update(player, {
     state,
     roundBet: 0,
@@ -15,39 +20,6 @@ function _initializePlayerBet(player) {
 
 function _updateLastRoundChips(player) {
   return _update(player, { lastRoundChips: player.chips || 0 });
-}
-
-function _winRoundUpdates(players) {
-  const sidepots = calculateSidePots(players);
-  const winners = players.filter(({ state }) => state !== State.FOLDED);
-  const isWinner = (player) => winners.includes(player);
-  const addToTotal = (updates, gains) => (player) => {
-    const key = `player/${player.id}/chips`;
-    const playerTotal = updates[key] || player.chips;
-    updates[key] = playerTotal + gains;
-  };
-
-  const distributeSidepotToPlayers = (updates, sidepot) => {
-    const winningPlayers = sidepot.players.filter(isWinner);
-
-    // Distribute pot between winners
-    if (winningPlayers.length) {
-      winningPlayers.forEach(
-        addToTotal(updates, sidepot.pot / winningPlayers.length)
-      );
-    }
-
-    // Distribute pot between non-winners
-    else {
-      sidepot.players.forEach(
-        addToTotal(updates, sidepot.pot / sidepot.players.length)
-      );
-    }
-
-    return updates;
-  };
-
-  return sidepots.reduce(distributeSidepotToPlayers, {});
 }
 
 function _updateRound(table) {
@@ -82,7 +54,12 @@ const _updatePlayerChips = (players) => {
     }, 0);
 
     const existingChips = player.chips || 0 + player.roundBet || 0;
-    return _update(player, earnings && { chips: existingChips + earnings });
+    return _update(
+      player,
+      earnings && {
+        chips: existingChips + earnings,
+      }
+    );
   };
 };
 

@@ -35,9 +35,15 @@ function _updateButtons({ players, table }) {
 }
 
 function _updateBlinds({ players, table }) {
+  const _get = (instance, key) => {
+    if (instance.gameUpdates[key] !== undefined) {
+      return instance.gameUpdates[key];
+    }
+
+    return instance[key];
+  };
   const getAllChips = (player) => {
-    const { chips = 0, roundBet = 0, gameUpdates = {} } = player;
-    return (gameUpdates.lastRoundChips || chips) + roundBet;
+    return _get(player, "chips") + _get(player, "roundBet");
   };
 
   return {

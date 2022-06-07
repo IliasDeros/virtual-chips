@@ -1,11 +1,5 @@
 import { getAuth, signInAnonymously } from "firebase/auth";
-import {
-  getDatabase,
-  onValue,
-  ref,
-  runTransaction,
-  update,
-} from "firebase/database";
+import { getDatabase, onValue, ref, runTransaction } from "firebase/database";
 import {
   setPlayersMeFirst,
   setPot,
@@ -85,7 +79,7 @@ function _setPlayerTurn(players) {
 }
 
 function _mergeUpdates(existingTable, { players, table }) {
-  const mergeExistingPlayer = ({ id, gameUpdates = {} }) => {
+  const mergeWithExistingPlayer = ({ id, gameUpdates = {} }) => {
     const existingPlayer = existingTable.player[id];
 
     return {
@@ -102,7 +96,7 @@ function _mergeUpdates(existingTable, { players, table }) {
     player: Object.assign(
       {},
       existingTable.player,
-      ...players.map(mergeExistingPlayer)
+      ...players.map(mergeWithExistingPlayer)
     ),
   };
 }
