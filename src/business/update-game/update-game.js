@@ -92,17 +92,35 @@ function _updatePlayerStates({ players, table }) {
   };
 }
 
+function _initializePlayerOrder({ players, table }) {
+  const playerOrderSeparator = ",";
+  const missingIds = players
+    .filter(({ id }) => !table.playerOrder?.includes(id))
+    .map(({ id }) => id)
+    .join(playerOrderSeparator);
+
+  const newOrder =
+    missingIds && [table.playerOrder, missingIds].filter((x) => x).join(",");
+
+  return {
+    players,
+    table: _update(table, newOrder && { playerOrder: newOrder }),
+  };
+}
+
 /**
  * Get the updates required to fix the state of the game:
  * - Set the buttons & blinds according to player # and round
  * - Proceed to next turn when everyone played
  * - Proceed to next round when all losers folded
+ * - Add or remove players to the order of play
  *
  * @param table
  * @param players
  */
 export function updateGame(table, players) {
   return compose(
+    _initializePlayerOrder,
     _updatePlayerStates,
     _updateBlinds,
     _updateButtons,
