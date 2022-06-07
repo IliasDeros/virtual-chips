@@ -19,7 +19,9 @@ function _initializePlayerBet(player) {
 }
 
 function _updateLastRoundChips(player) {
-  return _update(player, { lastRoundChips: player.chips || 0 });
+  return _update(player, {
+    lastRoundChips: player.chips + player.roundBet || 0,
+  });
 }
 
 function _updateRound(table) {

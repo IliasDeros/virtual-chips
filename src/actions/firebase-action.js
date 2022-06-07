@@ -202,6 +202,7 @@ function _callBetFor(playerId) {
         ...remotePlayer,
         state: State.CALLED,
         turnBet: highestBet,
+        roundBet: (remotePlayer.roundBet || 0) + chipsDifference,
         chips: remotePlayer.chips - chipsDifference,
       },
     };
