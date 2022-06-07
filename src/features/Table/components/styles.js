@@ -12,8 +12,22 @@ export const StyledPlayerName = ({ children }) => (
   <div className="table__player-name">{children}</div>
 );
 
-export const StyledPlayerButton = ({ children }) => (
-  <div className="table__player-button">{children}</div>
+export const StyledDealer = ({ children }) => (
+  <div className="table__player-button table__player-button--dealer">
+    {children}
+  </div>
+);
+
+export const StyledBigBlind = ({ children }) => (
+  <div className="table__player-button table__player-button--bb">
+    {children}
+  </div>
+);
+
+export const StyledSmallBlind = ({ children }) => (
+  <div className="table__player-button table__player-button--sb">
+    {children}
+  </div>
 );
 
 export const StyledPlayerStack = ({ children }) => (

@@ -6,6 +6,7 @@
  * # Table
  * # Players
  * # Chips
+ * # Button
  */
 :root {
   --table-height: 600px;
@@ -56,10 +57,6 @@
 
 .table__player-bet {
   @apply bg-primary-focus pl-4 pr-2 py-1 rounded-full text-xs whitespace-nowrap;
-}
-
-.table__player-button {
-  @apply hidden;
 }
 
 .table__player-stack {
@@ -201,4 +198,39 @@
 .chip--h + .chip--h {
   left: -10px;
   margin-right: -10px;
+}
+
+/************************************************
+ # Button
+ ************************************************/
+.table__player-button {
+  @apply absolute bottom-0 right-0;
+  --border-size: 2px;
+  margin-top: -var(--border-size);
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 100%;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+  font-size: 0.8rem;
+  font-weight: bold;
+  line-height: 1.5rem;
+}
+
+.table__player-button + .table__player-button {
+  @apply -right-4;
+}
+
+.table__player-button--bb {
+  background-color: #e3c000;
+  color: black;
+}
+
+.table__player-button--sb {
+  background-color: #36245f;
+  color: white;
+}
+
+.table__player-button--dealer {
+  background-color: #fff;
+  color: black;
 }
