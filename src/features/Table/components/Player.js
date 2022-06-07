@@ -19,11 +19,11 @@ export default Player = ({ avatarProps, index, player }) => {
         </StyledPlayerName>
         <StyledPlayerButton>{player.button}</StyledPlayerButton>
         <StyledPlayerStack>{player.chips}</StyledPlayerStack>
-        {player.turnBet && (
+        {player.turnBet ? (
           <StyledPlayerBet>
             {player.turnBet} <Chip className="ml-1" />
           </StyledPlayerBet>
-        )}
+        ) : null}
       </div>
     </StyledPlayer>
   );

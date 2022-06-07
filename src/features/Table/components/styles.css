@@ -177,6 +177,7 @@
  ************************************************/
 .chip {
   @apply inline-block align-middle;
+  position: relative;
   --border-size: 2px;
   margin-top: -var(--border-size);
   width: 1rem;
@@ -186,12 +187,18 @@
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
 }
 
+.chip,
+.chip--10 {
+  background-color: crimson;
+}
 .chip--1 {
   background-color: #444;
 }
 .chip--5 {
   background-color: goldenrod;
 }
-.chip--10 {
-  background-color: crimson;
+
+.chip--h + .chip--h {
+  left: -10px;
+  margin-right: -10px;
 }

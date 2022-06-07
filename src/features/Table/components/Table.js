@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import selectors from "reducers/selectors";
 import OtherPlayers from "./OtherPlayers";
 import MePlayer from "./MePlayer";
-import { StyledTable } from "./styles";
+import { StyledPot, StyledTable } from "./styles";
 
 /**
  * View the table pot, players & bets
@@ -21,7 +21,7 @@ class Table extends Component {
       <StyledTable>
         <MePlayer player={me} />
         <OtherPlayers players={otherPlayers} />
-        <div>Pot: {pot}</div>
+        <StyledPot pot={pot} />
       </StyledTable>
     );
   }
