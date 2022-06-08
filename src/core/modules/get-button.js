@@ -1,4 +1,4 @@
-import Button from "../constants/button";
+import Button from "constants/button";
 
 /*
  * compute the player's Button associated to his position and the table round

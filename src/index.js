@@ -1,15 +1,15 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
-import { Provider } from 'react-redux'
-import { initializeFirebase } from "./fire"
-import App from './containers/App'
-import store from './store'
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import { initializeFirebase } from "./fire";
+import App from "./core/components/App";
+import store from "./store";
 
-initializeFirebase()
+initializeFirebase();
 
-const root = createRoot(document.getElementById('root'))
+const root = createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <App />
   </Provider>
-)
+);

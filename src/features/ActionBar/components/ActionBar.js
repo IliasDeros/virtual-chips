@@ -1,7 +1,13 @@
 import { Component } from "react";
 import { connect } from "react-redux";
-import { allIn, call, raiseTo } from "actions/firebase-action";
-import { check, fold, tie } from "actions/player-action";
+import {
+  allIn,
+  call,
+  check,
+  fold,
+  raiseTo,
+  tie,
+} from "actions/firebase-action";
 import selectors from "reducers/selectors";
 import State from "constants/state";
 import Turn from "constants/turn";

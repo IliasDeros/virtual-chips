@@ -26,7 +26,7 @@
   },
   "alias": {
     "actions": "./src/actions",
-    "business": "./src/business",
+    "business": "./src/core/modules",
     "constants": "./src/constants",
     "features": "./src/features",
     "reducers": "./src/reducers"
