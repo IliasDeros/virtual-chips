@@ -1,4 +1,5 @@
 import "./styles.css";
+import Turn from "constants/turn"
 
 export const StyledTable = ({ children }) => (
   <div className="table">{children}</div>
@@ -82,12 +83,12 @@ const getChipsForValue = (value) => {
 };
 
 const StyledPotcontainer = ({ children }) => (
-  <div className="absolute bg-primary-focus rounded-lg top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 text-center">
+  <div className="bg-primary-focus rounded-lg p-4 text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
     {children}
   </div>
 );
 
-export const StyledPot = ({ pot }) => {
+export const StyledPot = ({ children, pot }) => {
   const maxChipsPerLine = 4;
   const maxChips = 50;
 
@@ -103,15 +104,61 @@ export const StyledPot = ({ pot }) => {
   }, []);
 
   return (
-    <StyledPotcontainer>
-      {chipLines.map((chips, index) => (
-        <div key={`chips-line--${index}`}>
-          {chips.map((Chip, chipIndex) => (
-            <Chip key={`chip--${index}-${chipIndex}`} />
-          ))}
-        </div>
-      ))}
-      <div className="mt-6 font-bold">{pot}</div>
-    </StyledPotcontainer>
+    <>
+      <StyledPotcontainer>
+        {chipLines.map((chips, index) => (
+          <div key={`chips-line--${index}`}>
+            {chips.map((Chip, chipIndex) => (
+              <Chip key={`chip--${index}-${chipIndex}`} />
+            ))}
+          </div>
+        ))}
+        <div className="mt-2 font-bold">{pot}</div>
+      </StyledPotcontainer>
+    </>
   );
+};
+
+const Card = () => (
+  <div className="rounded bg-white relative w-4 h-6 before:content-[' '] mr-1 last:mr-0">
+    <div className="absolute top-0 bottom-0 left-0 right-0 m-0.5 bg-red-300  before:content-[' ']"></div>
+  </div>
+);
+
+const CardsContainer = ({ children }) => (
+  <div className="flex flex-row absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2">{children}</div>
+)
+
+export const StyledCards = ({ turn }) => {
+  switch (turn) {
+    case Turn.FLOP:
+      return (
+        <CardsContainer>
+          <Card />
+          <Card />
+          <Card />
+        </CardsContainer>
+      )
+    case Turn.TURN:
+      return (
+        <CardsContainer>
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+        </CardsContainer>
+      )
+    case Turn.RIVER:
+    case Turn.FINISHED:
+      return (
+        <CardsContainer>
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+        </CardsContainer>
+      )
+    default:
+      return null
 };

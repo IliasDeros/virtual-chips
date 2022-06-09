@@ -20,21 +20,28 @@ import State from "constants/state";
 
 const uidParam = "player";
 
+function getPlayerRef(endpoint, state) {
+  const [me] = selectors.getPlayers(state);
+  let url = `table/${state.table.id}/player/${me.id}/${endpoint}`;
+  const db = getDatabase();
+  return ref(db, url);
+}
+
 export function check() {
   return (_, getState) => {
-    set(getFireRef("state", getState()), State.CHECKED);
+    set(getPlayerRef("state", getState()), State.CHECKED);
   };
 }
 
 export function fold() {
   return (_, getState) => {
-    set(getFireRef("state", getState()), State.FOLDED);
+    set(getPlayerRef("state", getState()), State.FOLDED);
   };
 }
 
 export function tie() {
   return (_, getState) => {
-    set(getFireRef("state", getState()), State.TIED);
+    set(getPlayerRef("state", getState()), State.TIED);
   };
 }
 
