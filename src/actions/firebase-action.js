@@ -1,5 +1,11 @@
 import { getAuth, signInAnonymously } from "firebase/auth";
-import { getDatabase, onValue, ref, runTransaction } from "firebase/database";
+import {
+  getDatabase,
+  onValue,
+  ref,
+  runTransaction,
+  set,
+} from "firebase/database";
 import {
   setPlayersMeFirst,
   setPot,
