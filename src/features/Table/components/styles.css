@@ -7,6 +7,7 @@
  * # Players
  * # Chips
  * # Button
+ * # Cards
  */
 :root {
   --table-height: 600px;
@@ -234,4 +235,36 @@
 .table__player-button--dealer {
   background-color: #fff;
   color: black;
+}
+
+/************************************************
+ # Cards
+ ************************************************/
+@keyframes flip-card {
+  0% {
+    opacity: 0;
+    transform: translateY(-180px) rotate(80deg);
+  }
+  1% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rotate-in {
+  animation: flip-card 0.5s forwards;
+  -webkit-animation: flip-card 0.5s forwards;
+}
+.rotate-in--delay-1 {
+  opacity: 0;
+  animation-delay: 0.1s;
+  -webkit-animation-delay: 0.1s;
+}
+.rotate-in--delay-2 {
+  opacity: 0;
+  animation-delay: 0.15s;
+  -webkit-animation-delay: 0.15s;
 }

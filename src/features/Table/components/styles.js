@@ -119,8 +119,8 @@ export const StyledPot = ({ children, pot }) => {
   );
 };
 
-const Card = () => (
-  <div className="rounded bg-white relative w-4 h-6 before:content-[' '] mr-1 last:mr-0">
+const Card = ({ className }) => (
+  <div className={`rounded bg-white relative w-4 h-6 before:content-[' '] mr-1 last:mr-0 animate-card-appear ${className}`}>
     <div className="absolute top-0 bottom-0 left-0 right-0 m-0.5 bg-red-300  before:content-[' ']"></div>
   </div>
 );
@@ -134,9 +134,11 @@ export const StyledCards = ({ turn }) => {
     case Turn.FLOP:
       return (
         <CardsContainer>
-          <Card />
-          <Card />
-          <Card />
+          <Card className="rotate-in" />
+          <Card className="rotate-in rotate-in--delay-1" />
+          <Card className="rotate-in rotate-in--delay-2" />
+          <Card className="invisible" />
+          <Card className="invisible" />
         </CardsContainer>
       )
     case Turn.TURN:
@@ -145,7 +147,8 @@ export const StyledCards = ({ turn }) => {
           <Card />
           <Card />
           <Card />
-          <Card />
+          <Card className="rotate-in"/>
+          <Card className="invisible" />
         </CardsContainer>
       )
     case Turn.RIVER:
@@ -156,7 +159,7 @@ export const StyledCards = ({ turn }) => {
           <Card />
           <Card />
           <Card />
-          <Card />
+          <Card className="rotate-in"/>
         </CardsContainer>
       )
     default:
