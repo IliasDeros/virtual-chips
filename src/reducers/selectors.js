@@ -36,6 +36,9 @@ export const selectors = {
   getPot(state) {
     return this.getTable(state).pot;
   },
+  getCurrentTurnPlayer(state) {
+    return this.getPlayers(state).find((player) => player.isTurn);
+  },
   getPlayers(state) {
     return this.getTable(state).players;
   },
