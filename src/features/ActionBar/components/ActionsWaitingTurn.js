@@ -2,10 +2,9 @@ import { connect } from "react-redux";
 import { StyledAction } from "./styles";
 import selectors from "reducers/selectors";
 
-const ActionsWaitingTurnComponent = ({ state }) =>
-  state === "WAITING_TURN" ? (
-    <StyledAction disabled>Waiting for {playerTurn?.id}</StyledAction>
-  ) : null;
+const ActionsWaitingTurnComponent = ({ playerTurn }) => (
+  <StyledAction disabled>Waiting for {playerTurn?.id}</StyledAction>
+);
 
 function mapStateToProps(state) {
   return {

@@ -302,7 +302,7 @@ export function allIn() {
   };
 }
 
-export function raiseTo(amount) {
+function raiseTo(amount) {
   return async (dispatch, getState) => {
     const state = getState();
     const tableId = selectors.getTableId(state);
@@ -310,6 +310,13 @@ export function raiseTo(amount) {
     const meRef = getTableRef(tableId, `player/${me.id}`);
 
     await runTransaction(meRef, _raiseToAmount(amount));
+  };
+}
+
+export function confirmPlayerBet() {
+  return (dispatch, getState) => {
+    const bet = selectors.getPlayerBet(getState());
+    raiseTo(bet)(dispatch, getState);
   };
 }
 
