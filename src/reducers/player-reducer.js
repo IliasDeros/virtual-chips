@@ -4,6 +4,12 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case "RESET_BET":
+      state = {
+        ...state,
+        selectedBet: 0,
+      };
+      break;
     case "SELECT_BET":
       state = {
         ...state,

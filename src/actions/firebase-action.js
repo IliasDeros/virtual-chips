@@ -6,6 +6,7 @@ import {
   runTransaction,
   set,
 } from "firebase/database";
+import { resetBet } from "actions/player-action";
 import {
   setPlayersMeFirst,
   setPot,
@@ -58,9 +59,10 @@ function getTableRef(id, path) {
 }
 
 function watchTurn(id, { dispatch }) {
-  onValue(getTableRef(id, "turn"), (snapshot) =>
-    dispatch(setTurn(snapshot.val()))
-  );
+  onValue(getTableRef(id, "turn"), (snapshot) => {
+    dispatch(resetBet);
+    dispatch(setTurn(snapshot.val()));
+  });
 }
 
 function _sumBets(players) {
@@ -317,6 +319,7 @@ export function confirmPlayerBet() {
   return (dispatch, getState) => {
     const bet = selectors.getPlayerBet(getState());
     raiseTo(bet)(dispatch, getState);
+    dispatch(resetBet);
   };
 }
 
