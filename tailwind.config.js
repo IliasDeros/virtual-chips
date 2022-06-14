@@ -21,6 +21,9 @@ module.exports = {
   },
   theme: {
     extend: {
+      colors: {
+        "accent-focus": "#992828",
+      },
       fontFamily: {
         sans: ["Rubik", ...defaultTheme.fontFamily.sans],
       },

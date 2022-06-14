@@ -2,6 +2,7 @@ import { Component } from "react";
 import { connect } from "react-redux";
 import Table from "features/Table/components/Table";
 import ActionBar from "features/ActionBar/components/ActionBar";
+import Bet from "features/Bet/components/Bet";
 import { connectToTable } from "actions/firebase-action";
 
 function getUrlParam(paramName) {
@@ -26,6 +27,7 @@ class TableScreen extends Component {
     return (
       <div className="h-screen pt-24">
         <Table />
+        <Bet />
         <ActionBar className={"fixed bottom-0 h-20"} />
         <div className="mt-40">&nbsp;</div>
       </div>

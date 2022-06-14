@@ -14,10 +14,10 @@ import Turn from "constants/turn";
 import { StyledAction, StyledActionBar } from "./styles";
 
 const getState = (props) => {
-  const { isAlone, canCheck } = props;
+  const { canCheck, isAlone, isMyTurn } = props;
   const isFolded = props.me.state === State.FOLDED;
   const isTied = props.me.state === State.TIED;
-  const isWaitingTurn = !props.me.isTurn;
+  const isWaitingTurn = !isMyTurn;
   const isShowdown = props.isShowdown;
 
   if (isAlone) {
@@ -118,6 +118,7 @@ function mapStateToProps(state) {
     callBet: selectors.callBet(state),
     canCheck: selectors.canMeCheck(state),
     isAlone: selectors.getPlayers(state).length <= 1,
+    isMyTurn: selectors.isMyTurn(state),
     isShowdown: selectors.getTableTurn(state) === Turn.FINISHED,
     me: selectors.getMe(state) || {},
     playerTurn: selectors.getPlayers(state).find((player) => player.isTurn),

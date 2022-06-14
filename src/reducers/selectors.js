@@ -14,10 +14,24 @@ export const selectors = {
   },
   isMyTurn(state) {
     const me = this.getMe(state);
-    return me.isTurn;
+    return me?.isTurn;
+  },
+  getBigBlind() {
+    const defaultBigBlind = 50; // Hardcoded for now.
+    return defaultBigBlind;
   },
   getMe(state) {
     return this.getPlayers(state)[0];
+  },
+  getToCall(state) {
+    const players = this.getPlayers(state) || [];
+    return players.reduce(
+      (bet, player) => Math.max(bet, player.turnBet || 0),
+      0
+    );
+  },
+  getPlayerBet(state) {
+    return state.player.selectedBet;
   },
   getPot(state) {
     return this.getTable(state).pot;

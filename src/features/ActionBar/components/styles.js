@@ -1,9 +1,7 @@
 import "./styles.css";
 
 export const StyledActionBar = ({ className = "", children }) => (
-  <div className={`action-bar-shadow w-full bg-gray-600 ${className} flex`}>
-    {children}
-  </div>
+  <div className={`w-full bg-gray-600 ${className} flex`}>{children}</div>
 );
 
 const actionClasses = {
