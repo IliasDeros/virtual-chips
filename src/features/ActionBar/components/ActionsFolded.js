@@ -1,6 +1,6 @@
 import { StyledAction } from "./styles";
 
-export const ActionsWaitingForPlayers = () => (
+export const ActionsFolded = () => (
   <StyledAction action="fold" disabled>
     Folded
   </StyledAction>
