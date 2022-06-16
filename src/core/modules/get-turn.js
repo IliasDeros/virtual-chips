@@ -44,17 +44,17 @@ const canCall = (highestBet) => (player) => {
 };
 
 export function getCurrentTurnPlayer(players) {
-  const left = incrementWrapper(players);
+  const leftOf = incrementWrapper(players);
   const highestBet = findHighestBet(players);
   const hasHighestBet = ({ turnBet }) => turnBet === highestBet;
   const highestBetter = players.findIndex(hasHighestBet);
-  const highestBetterLeft = left(highestBetter);
+  const highestBetterLeft = leftOf(highestBetter);
   const isBettingStarted = highestBet > 0;
 
   if (isBettingStarted) {
     return findFirstFrom(players, highestBetterLeft, canCall(highestBet));
   }
 
-  const dealerLeft = left(getDealerIndex(players));
+  const dealerLeft = leftOf(getDealerIndex(players));
   return findFirstFrom(players, dealerLeft, isIdle);
 }
