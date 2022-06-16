@@ -6,15 +6,13 @@ No chips? No problem.
 
 ## Getting Started
 
-If you are using [Codespaces], a dev server is automatically started.
-
-See output logs in `./nohup.out`
+If you are using [Codespaces], a dev server is automatically run when a codespace starts.
 
 1. `git clone git@github.com:IliasDeros/virtual-chips.git`
 2. `yarn && yarn start` or `./start.sh`
 3. Visit app at http://localhost:1234/
 
-[Codespaces]: https://github.com/features/codespaces
+[codespaces]: https://github.com/features/codespaces
 
 ## Testing
 
@@ -45,6 +43,28 @@ src/
 ```
 
 [vertical slice architecture]: https://www.youtube.com/watch?v=cVVMbuKmNes
+
+## Tech Stack
+
+Here's a non-exhaustive list of the technologies used in this project:
+
+| Name                           | Use                                    |
+| ------------------------------ | -------------------------------------- |
+| [ReactJS]                      | DOM manipulation                       |
+| [Redux]                        | State Management                       |
+| [Firebase]                     | Sync data accross devices in real-time |
+| [Parcel]                       | Bundling & Dev server                  |
+| [Tailwind], [DaisyUI] & [SCSS] | Styling                                |
+| [Framer Motion]                | Animations                             |
+
+[reactjs]: https://reactjs.org/
+[redux]: https://redux.js.org/
+[firebase]: https://firebase.google.com/products/realtime-database/
+[parcel]: https://parceljs.org/
+[tailwind]: https://tailwindcss.com/
+[daisyui]: https://daisyui.com/
+[scss]: https://sass-lang.com/
+[framer motion]: https://www.framer.com/motion/
 
 ## Deploying
 
