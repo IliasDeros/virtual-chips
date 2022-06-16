@@ -1,0 +1,105 @@
+/*
+ * CSS-rendered chips
+ * Reference: https://codepen.io/Rovak/pen/ExYeQar
+ * Large-Scale Reference: https://codepen.io/yakovd33/pen/jbbbPM
+ * Denominations Reference: https://automaticpoker.com/poker-basics/poker-chip-values-for-home-game/
+ *
+ * Contents
+ * # Chip Values
+ * # Horizontal Stacking
+ * # Vertical Stacking
+ * # General Stacking
+ */
+
+:root {
+  --chip-size: 1rem;
+  --chip-size-neg: calc(var(--chip-size) * -1);
+}
+
+/************************************************
+ # Chip Values
+ ************************************************/
+.chip {
+  @apply relative inline-block align-middle;
+  --border-size: 2px;
+  margin-top: -var(--border-size);
+  width: var(--chip-size);
+  height: var(--chip-size);
+  border-radius: 100%;
+  border: var(--border-size) white dotted;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.chip,
+.chip--10 {
+  background-color: crimson;
+}
+.chip--1 {
+  background-color: #444;
+}
+.chip--5 {
+  background-color: goldenrod;
+}
+
+/************************************************
+ # Horizontal Stacking
+ ************************************************/
+.chip--x + .chip--x {
+  left: -10px;
+  margin-right: -10px;
+}
+
+/************************************************
+ # Vertical Stacking
+ ************************************************/
+$max-vertical-chips: 20;
+
+.chip--y {
+  --index-y: 0;
+}
+
+@for $i from 2 through $max-vertical-chips {
+  .chip--y + .chip--y:nth-child(#{$i}) {
+    --index-y: #{$i - 1};
+  }
+}
+
+/* Do not support vertical stacks of over 20 chips */
+.chip--y + .chip--y:nth-child(#{$max-vertical-chips}) ~ .chip--y {
+  display: none;
+}
+
+.chip--y + .chip--y {
+  left: var(--chip-size-neg);
+  margin-right: var(--chip-size-neg);
+  margin-top: calc(-10px * var(--index-y));
+}
+
+/************************************************
+ # General Stacking
+ ************************************************/
+.chip--stack {
+  $max-vertical-chips: 6;
+  $stack: 0;
+  $max-stacks: 8;
+  $last-child-index: $max-stacks * $max-vertical-chips;
+
+  @for $s from 0 through ($max-stacks - 1) {
+    @for $y from 1 through ($max-vertical-chips - 1) {
+      $child-index: $max-vertical-chips * $s + $y;
+      $next-child-index: $child-index + 1;
+
+      &:nth-child(#{$child-index})
+        + .chip--stack:nth-child(#{$next-child-index}) {
+        left: var(--chip-size-neg);
+        margin-right: var(--chip-size-neg);
+        margin-top: calc(-10px * #{$y});
+      }
+    }
+  }
+
+  // Hide extra chips
+  &:nth-child(#{$last-child-index}) ~ .chip--stack {
+    display: none;
+  }
+}

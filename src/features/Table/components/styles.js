@@ -54,15 +54,15 @@ const getChipsForValue = (value) => {
 
   const chips = [];
   for (let i = 0; i < large; i++) {
-    chips.push((props) => <Chip stackHorizontal value="10" {...props} />);
+    chips.push((props) => <Chip stack value="10" {...props} />);
   }
 
   for (let i = 0; i < medium; i++) {
-    chips.push((props) => <Chip stackHorizontal value="5" {...props} />);
+    chips.push((props) => <Chip stack value="5" {...props} />);
   }
 
   for (let i = 0; i < small; i++) {
-    chips.push((props) => <Chip stackHorizontal value="1" {...props} />);
+    chips.push((props) => <Chip stack value="1" {...props} />);
   }
 
   return chips;
@@ -75,29 +75,14 @@ const StyledPotcontainer = ({ children }) => (
 );
 
 export const StyledPot = ({ children, pot }) => {
-  const maxChipsPerLine = 4;
   const maxChips = 50;
-
-  // Pot is 2540
   const chips = getChipsForValue(pot).slice(0, maxChips);
-  const chipLines = chips.reduce((acc, chip, index) => {
-    if (index % maxChipsPerLine === 0) {
-      acc.push([chip]);
-    } else {
-      acc[acc.length - 1].push(chip);
-    }
-    return acc;
-  }, []);
 
   return (
     <>
       <StyledPotcontainer>
-        {chipLines.map((chips, index) => (
-          <div key={`chips-line--${index}`}>
-            {chips.map((PotChip, chipIndex) => (
-              <PotChip key={`chip--${index}-${chipIndex}`} />
-            ))}
-          </div>
+        {chips.map((PotChip, index) => (
+          <PotChip key={`chip--${index}`} />
         ))}
         <div className="mt-2 font-bold">{pot}</div>
       </StyledPotcontainer>
