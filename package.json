@@ -30,6 +30,7 @@
     "business": "./src/core/modules",
     "constants": "./src/constants",
     "features": "./src/features",
-    "reducers": "./src/reducers"
+    "reducers": "./src/reducers",
+    "shared": "./src/shared"
   }
 }

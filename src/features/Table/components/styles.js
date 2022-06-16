@@ -1,5 +1,6 @@
 import "./styles.css";
 import Turn from "constants/turn"
+import { Chip } from "shared/components/Chip"
 
 export const StyledTable = ({ children }) => (
   <div className="table">{children}</div>
@@ -38,21 +39,6 @@ export const StyledPlayerStack = ({ children }) => (
 export const StyledPlayerBet = ({ children }) => (
   <div className="table__player-bet">{children}</div>
 );
-
-export const Chip = ({
-  className = "",
-  stackHorizontal = false,
-  value = "10",
-  ...htmlProps
-}) => {
-  let fullClass = `${className} chip chip--${value}`;
-
-  if (stackHorizontal) {
-    fullClass += " chip--h";
-  }
-
-  return <div className={fullClass} {...htmlProps}></div>;
-};
 
 const getChipsForValue = (value) => {
   let remainingValue = value;
@@ -108,8 +94,8 @@ export const StyledPot = ({ children, pot }) => {
       <StyledPotcontainer>
         {chipLines.map((chips, index) => (
           <div key={`chips-line--${index}`}>
-            {chips.map((Chip, chipIndex) => (
-              <Chip key={`chip--${index}-${chipIndex}`} />
+            {chips.map((PotChip, chipIndex) => (
+              <PotChip key={`chip--${index}-${chipIndex}`} />
             ))}
           </div>
         ))}

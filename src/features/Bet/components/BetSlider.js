@@ -37,14 +37,14 @@ class BetSlider extends Component {
     };
 
     return (
-      <div className="fixed bottom-20 w-full bg-base-100 p-4 pb-2">
+      <>
         <BetContainer bet={bet}>{bet}</BetContainer>
         <BetRangeInput
           minBet={betOptions.min}
           maxBet={betOptions.max}
           onChange={changeBetPercent}
         />
-      </div>
+      </>
     );
   }
 }

@@ -1,7 +1,6 @@
 import React from "react";
 import { PlayerAvatar } from "./PlayerAvatar";
 import {
-  Chip,
   StyledBigBlind,
   StyledDealer,
   StyledPlayer,
@@ -10,6 +9,7 @@ import {
   StyledPlayerStack,
   StyledSmallBlind,
 } from "./styles";
+import { Chip } from "shared/components/Chip";
 import Button from "constants/button";
 import State from "constants/state";
 
