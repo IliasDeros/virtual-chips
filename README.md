@@ -4,15 +4,17 @@ No chips? No problem.
 
 ![only chips](https://i.imgur.com/Qjj5Zcw.png)
 
-## Installing
+## Getting Started
+
+If you are using [Codespaces], a dev server is automatically started.
+
+See output logs in `./nohup.out`
 
 1. `git clone git@github.com:IliasDeros/virtual-chips.git`
-2. `yarn`
+2. `yarn && yarn start` or `./start.sh`
+3. Visit app at http://localhost:1234/
 
-## Running
-
-1. `yarn start`
-2. visit app at http://localhost:1234/
+[Codespaces]: https://github.com/features/codespaces
 
 ## Testing
 
