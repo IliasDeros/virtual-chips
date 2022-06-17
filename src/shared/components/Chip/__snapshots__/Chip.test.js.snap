@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders chip with custom value 1`] = `
+<div
+  class="chip chip--5"
+/>
+`;
+
+exports[`Renders custom class 1`] = `
+<div
+  class="custom-class chip chip--10"
+/>
+`;
+
+exports[`Renders default chip 1`] = `
+<div
+  class="chip chip--10"
+/>
+`;
+
+exports[`Renders horizontally stacked chip 1`] = `
+<div
+  class="chip chip--10 chip--x"
+/>
+`;
+
+exports[`Renders stacked chip 1`] = `
+<div
+  class="chip chip--10 chip--stack"
+/>
+`;
+
+exports[`Renders vertically stacked chip 1`] = `
+<div
+  class="chip chip--10 chip--y"
+/>
+`;

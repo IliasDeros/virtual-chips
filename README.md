@@ -16,6 +16,11 @@ If you are using [Codespaces], a dev server is automatically run when a codespac
 
 ## Testing
 
+```
+yarn test
+yarn test --watch Chip.test
+```
+
 ### Set Up
 
 To enable `jest` in a parcel project, we need to do the following:
@@ -31,7 +36,7 @@ yarn add -D jest babel-jest @babel/core @babel/preset-env
 ```
 // .babelrc
 {
-  "presets": ["@babel/preset-env"]
+  "presets": ["@babel/preset-env", "@babel/preset-react"]
 }
 ```
 
@@ -52,9 +57,28 @@ yarn add -D jest babel-jest @babel/core @babel/preset-env
 
 4. For absolute imports, see `moduleNameMapper` in [jest.config.js](./jest.config.js)
 
-All actions and reducers are unit-tested. Execute tests by running `yarn test`.
+### Debugging
 
-**Note:** A recent update to firebase has broken all the mocks, so it is not possible to run unit tests at the moment
+In VSCode, add this configuration to your launch.json, and you can run a test file in debug mode
+
+```
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest Test",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      "args": ["--ci", "${file}"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "sourceMaps": true
+    }
+  ]
+}
+
+```
 
 ## Contributing
 
@@ -92,15 +116,19 @@ Here's a non-exhaustive list of the technologies used in this project:
 | [Parcel]                       | Bundling & Dev server                  |
 | [Tailwind], [DaisyUI] & [SCSS] | Styling                                |
 | [Framer Motion]                | Animations                             |
+| [Jest] & [RTL] & [Babel]       | Testing                                |
 
+[babel]: https://babeljs.io/
+[daisyui]: https://daisyui.com/
+[firebase]: https://firebase.google.com/products/realtime-database/
+[framer motion]: https://www.framer.com/motion/
+[jest]: https://jestjs.io/
+[parcel]: https://parceljs.org/
 [reactjs]: https://reactjs.org/
 [redux]: https://redux.js.org/
-[firebase]: https://firebase.google.com/products/realtime-database/
-[parcel]: https://parceljs.org/
-[tailwind]: https://tailwindcss.com/
-[daisyui]: https://daisyui.com/
+[rtl]: https://testing-library.com/docs/react-testing-library/intro
 [scss]: https://sass-lang.com/
-[framer motion]: https://www.framer.com/motion/
+[tailwind]: https://tailwindcss.com/
 
 ## Deploying
 

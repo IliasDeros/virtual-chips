@@ -7,7 +7,9 @@ const config = {
     "features/(.*)": "<rootDir>/src/features/$1",
     "reducers/(.*)": "<rootDir>/src/reducers/$1",
     "shared/(.*)": "<rootDir>/src/shared/$1",
+    "\\.(css|scss)$": "identity-obj-proxy",
   },
+  testEnvironment: "jsdom",
   verbose: true,
 };
 

@@ -22,5 +22,5 @@ export const Chip = ({
     fullClass += " chip--y";
   }
 
-  return <div className={fullClass} {...htmlProps}></div>;
+  return <div className={fullClass.trim()} {...htmlProps}></div>;
 };
