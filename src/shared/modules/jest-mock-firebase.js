@@ -1,6 +1,12 @@
 /**
+ * This mock file only needs to be imported:
+ * ```
+ * import "jest-mock-firebase"
+ * ```
+ *
  * - Mocks firebase imports with an in-memory realtime database
  * - Resets database and subscribers after each test
+ * - Mocks authentication, enabling anonymous sign in
  */
 jest.mock("firebase/database", () => {
   class URLStorage {
@@ -129,6 +135,21 @@ jest.mock("firebase/database", () => {
     ref: refMock,
     runTransaction: runTransactionMock,
     set: setMock,
+  };
+});
+
+jest.mock("firebase/auth", () => {
+  const fakeUser = {
+    user: {
+      uid: "mocked_uid",
+    },
+  };
+  const getAuth = () => "auth";
+  const signInAnonymously = () => Promise.resolve(fakeUser);
+
+  return {
+    getAuth,
+    signInAnonymously,
   };
 });
 
