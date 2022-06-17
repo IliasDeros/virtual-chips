@@ -4,7 +4,7 @@
  * import "jest-mock-firebase"
  * ```
  *
- * - Mocks firebase imports with an in-memory realtime database
+ * - Mocks firebase with an in-memory realtime database
  * - Resets database and subscribers after each test
  * - Mocks authentication, enabling anonymous sign in
  */
@@ -61,42 +61,74 @@ jest.mock("firebase/database", () => {
     }
   }
 
-  class ValueObserver {
-    constructor(callback) {
-      this.callback = callback;
+  class URLSubscribers {
+    constructor(state) {
+      this.state = state;
+      this.subscribers = {};
     }
 
-    notify(value) {
-      this.callback({
-        val() {
-          return value;
-        },
-      });
+    /**
+     * Finds all observer of the value, or any parent value
+     * @param {string} url key to look for
+     */
+    _findUrlSubscribers(url, childSubscribers = {}) {
+      const found = this.subscribers[url] || [];
+      const hasParent = url.includes("/");
+      const parentUrl = url.slice(0, url.lastIndexOf("/"));
+      const parentSubscribers = hasParent
+        ? this._findUrlSubscribers(parentUrl, childSubscribers)
+        : {};
+
+      return {
+        ...childSubscribers,
+        ...parentSubscribers,
+        [url]: found,
+      };
+    }
+
+    _notifySubscriber(url, subscriber) {
+      const value = this.state.getUrl(url);
+      subscriber(value);
+    }
+
+    notify(url) {
+      const subscribers = this._findUrlSubscribers(url);
+      const notifyList = ([url, sub]) => {
+        const notifyOne = (sub) => this._notifySubscriber(url, sub);
+        sub.forEach(notifyOne);
+      };
+      Object.entries(subscribers).forEach(notifyList);
+    }
+
+    reset() {
+      this.subscribers = {};
+    }
+
+    subscribe(url, callback) {
+      const newSubscriber = (value) => callback({ val: () => value });
+      this.subscribers[url] = this.subscribers[url] || [];
+      this.subscribers[url].push(newSubscriber);
+      this._notifySubscriber(url, newSubscriber);
     }
   }
 
   const firebaseDatabase = "mockDB";
   const state = new URLStorage();
-  let urlCallbacks;
+  const subscribers = new URLSubscribers(state);
 
-  const resetObservers = () => {
-    urlCallbacks = {};
-    return urlCallbacks;
+  const mockReset = () => {
+    state.resetData();
+    subscribers.reset();
   };
 
-  const notifyUrl = (url) => {
-    const observers = urlCallbacks[url] || [];
-    const value = state.getUrl(url);
-    observers.forEach((o) => o.notify(value));
+  const mockSetData = (data) => {
+    state.setData(data);
   };
 
-  const observeUrl = (path, callback) => {
-    urlCallbacks[path] = urlCallbacks[path] || [];
-    urlCallbacks[path].push(new ValueObserver(callback));
-  };
+  const onValue = subscribers.subscribe.bind(subscribers);
 
   /** Verify the right db is passed and return the URL */
-  const refMock = (db, url) => {
+  const ref = (db, url) => {
     if (firebaseDatabase !== db) {
       throw `Unexpected first argument for firebase.ref(): ${firebaseDatabase}. Expected: ${db}`;
     }
@@ -104,52 +136,39 @@ jest.mock("firebase/database", () => {
     return url;
   };
 
-  const runTransactionMock = (refUrl, valueCallback) => {
+  const runTransaction = (refUrl, valueCallback) => {
     const value = state.getUrl(refUrl);
     const newValue = valueCallback(value);
     state.setUrl(refUrl, newValue);
-    notifyUrl(refUrl);
+    subscribers.notify(refUrl);
   };
 
-  const setMock = (refUrl, value) => {
+  const set = (refUrl, value) => {
     state.setUrl(refUrl, value);
-    notifyUrl(refUrl);
+    subscribers.notify(refUrl);
   };
-
-  const mockReset = () => {
-    resetObservers();
-    state.resetData();
-  };
-
-  const mockSetData = (data) => {
-    state.setData(data);
-  };
-
-  resetObservers();
 
   return {
     getDatabase: () => firebaseDatabase,
     mockReset,
     mockSetData,
-    onValue: observeUrl,
-    ref: refMock,
-    runTransaction: runTransactionMock,
-    set: setMock,
+    onValue,
+    ref,
+    runTransaction,
+    set,
   };
 });
 
 jest.mock("firebase/auth", () => {
-  const fakeUser = {
-    user: {
-      uid: "mocked_uid",
-    },
-  };
+  const uid = "mocked_uid";
+  const fakeUser = { user: { uid } };
   const getAuth = () => "auth";
   const signInAnonymously = () => Promise.resolve(fakeUser);
 
   return {
     getAuth,
     signInAnonymously,
+    uid,
   };
 });
 

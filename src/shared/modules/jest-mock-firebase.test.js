@@ -15,32 +15,65 @@ describe("firebase/database", () => {
   });
 
   describe("when subscribed to users/123/name", () => {
-    let subscription;
+    let nameRef;
 
     beforeEach(() => {
-      subscription = ref(getDatabase(), "users/123/name");
+      nameRef = ref(getDatabase(), "users/123/name");
     });
 
     it("Trigger onValue callback by calling set()", () => {
       const value = "set value";
       const callback = jest.fn();
 
-      onValue(subscription, callback);
-      set(subscription, value);
+      onValue(nameRef, callback);
+      set(nameRef, value);
 
       const [snapshot] = callback.mock.lastCall;
       expect(snapshot.val()).toBe(value);
     });
 
-    it("Trigger onValue callback by calling runTransaction()", () => {
-      mockSetData({ users: { 123: { name: "Firstname" } } });
-      const callback = jest.fn();
+    describe("When name is already set", () => {
+      beforeEach(() => {
+        mockSetData({ users: { 123: { name: "Firstname" } } });
+      });
 
-      onValue(subscription, callback);
-      runTransaction(subscription, (name) => `${name} Lastname`);
+      it("Trigger onValue callback by calling runTransaction()", () => {
+        const callback = jest.fn();
 
-      const [snapshot] = callback.mock.lastCall;
-      expect(snapshot.val()).toBe("Firstname Lastname");
+        onValue(nameRef, callback);
+        runTransaction(nameRef, (name) => `${name} Lastname`);
+
+        const [snapshot] = callback.mock.lastCall;
+        expect(snapshot.val()).toBe("Firstname Lastname");
+      });
+
+      it("Trigger onValue if a value was already set", () => {
+        const callback = jest.fn();
+
+        onValue(nameRef, callback);
+
+        const [snapshot] = callback.mock.lastCall;
+        expect(snapshot.val()).toBe("Firstname");
+      });
+    });
+
+    describe("When changing a nested property", () => {
+      let userRef;
+
+      beforeEach(() => {
+        userRef = ref(getDatabase(), "users/123");
+      });
+
+      it("Triggers parent onValue", () => {
+        const name = "Name";
+        const callback = jest.fn();
+
+        onValue(userRef, callback);
+        set(nameRef, name);
+
+        const [snapshot] = callback.mock.lastCall;
+        expect(snapshot.val()).toEqual({ name });
+      });
     });
   });
 });

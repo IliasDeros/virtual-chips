@@ -148,7 +148,7 @@ async function _hostGameUpdates(tableId, table, players) {
 }
 
 function _formatPlayers(firebaseTable, meId) {
-  const { host: hostId, player, playerOrder } = firebaseTable;
+  const { host: hostId, player, playerOrder = "" } = firebaseTable;
 
   if (!player) {
     return;
