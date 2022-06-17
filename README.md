@@ -23,7 +23,7 @@ yarn test --watch Chip.test
 
 ### Mocking
 
-For unit tests, firebase is mocked with an in-memory realtime database. See `jest-mock-firebase.js`
+For unit tests, firebase is mocked with an in-memory realtime database. See [jest-mock-firebase.js](./src/shared/modules/jest-mock-firebase.js)
 
 ### Set Up
 
