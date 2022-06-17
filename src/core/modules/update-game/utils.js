@@ -1,8 +1,3 @@
-export const compose =
-  (...fns) =>
-  (x) =>
-    fns.reduceRight((y, f) => f(y), x);
-
 export const _get = (instance, key, defaultValue) => {
   if (instance.gameUpdates?.[key] !== undefined) {
     return instance.gameUpdates[key];

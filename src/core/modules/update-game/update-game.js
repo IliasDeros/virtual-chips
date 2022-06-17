@@ -3,7 +3,8 @@ import State from "constants/state";
 import getButton from "business/get-button";
 import updateRound from "./update-round";
 import updateTurn from "./update-turn";
-import { compose, _get, _update } from "./utils";
+import { compose } from "shared/modules/utils";
+import { _get, _update } from "./utils";
 
 const defaultBigBlind = 50;
 

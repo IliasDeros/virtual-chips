@@ -18,8 +18,14 @@ import { findHighestBet, getCurrentTurnPlayer } from "business/get-turn";
 import { hasGameUpdates, updateGame } from "business/update-game";
 import selectors from "reducers/selectors";
 import State from "constants/state";
+import { compose, getUrlParam } from "shared/modules/utils";
 
 const uidParam = "player";
+
+function getTableRef(id, path) {
+  const url = `table/${id}${path ? `/${path}` : ""}`;
+  return ref(getDatabase(), url);
+}
 
 function getPlayerRef(endpoint, state) {
   const [me] = selectors.getPlayers(state);
@@ -44,18 +50,6 @@ export function tie() {
   return (_, getState) => {
     set(getPlayerRef("state", getState()), State.TIED);
   };
-}
-
-function getUrlParam(paramName) {
-  const params = new URLSearchParams(
-    window.location.href.slice(window.location.href.indexOf("?"))
-  );
-  return params.get(paramName);
-}
-
-function getTableRef(id, path) {
-  const url = `table/${id}${path ? `/${path}` : ""}`;
-  return ref(getDatabase(), url);
 }
 
 function watchTurn(id, { dispatch }) {
@@ -102,11 +96,6 @@ function _orderMeFirst(meId, orderedPlayerIds) {
 function _setPlayerHost(playerId) {
   return (players) => players.map((p) => ({ ...p, isHost: p.id === playerId }));
 }
-
-const compose =
-  (...fns) =>
-  (x) =>
-    fns.reduceRight((y, f) => f(y), x);
 
 function _setPlayerTurn(players) {
   const turnPlayer = getCurrentTurnPlayer(players);

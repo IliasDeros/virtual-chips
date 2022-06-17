@@ -1,6 +1,7 @@
 import State from "constants/state";
 import Turn from "constants/turn";
-import { compose, increment, _get, _update } from "./utils";
+import { compose } from "shared/modules/utils";
+import { increment, _get, _update } from "./utils";
 
 /**
  * Can't proceed to next turn if we are at the last turn

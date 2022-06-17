@@ -2,7 +2,8 @@ import Turn from "constants/turn";
 import State from "constants/state";
 import { calculateSidePots } from "business/calculate-sidepots";
 import isGameWon from "business/is-game-won";
-import { compose, increment, _update } from "./utils";
+import { increment, _update } from "./utils";
+import { compose } from "shared/modules/utils";
 
 function _initializePlayerBet(player) {
   const chips =

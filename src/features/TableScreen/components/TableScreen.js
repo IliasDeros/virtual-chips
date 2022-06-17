@@ -4,13 +4,7 @@ import Table from "features/Table/components/Table";
 import ActionBar from "features/ActionBar/components/ActionBar";
 import Bet from "features/Bet/components/Bet";
 import { connectToTable } from "actions/firebase-action";
-
-function getUrlParam(paramName) {
-  const params = new URLSearchParams(
-    window.location.href.slice(window.location.href.indexOf("?"))
-  );
-  return params.get(paramName);
-}
+import { getUrlParam } from "shared/modules/utils";
 
 /**
  * Play the game (view table or turn)
