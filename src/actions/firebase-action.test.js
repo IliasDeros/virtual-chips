@@ -21,8 +21,10 @@ const logCalls = (spy) => {
 };
 
 describe("Hosting a table", () => {
-  const player1 = { name: "Player 1 (Me)" };
-  const player2 = { name: "Player 2" };
+  const player1 = { chips: 2500, name: "Player 1 (Me)" };
+  const player2 = { chips: 2500, name: "Player 2" };
+  const bigBlind = 50;
+  const smallBlind = 25;
   let dispatch;
   let initialData;
 
@@ -67,19 +69,23 @@ describe("Hosting a table", () => {
     it("I play first", () =>
       expectSetPlayer({
         name: player1.name,
-        isTurn: false,
+        isTurn: true,
       }));
 
     it("I am the dealer & small blind", () =>
       expectSetPlayer({
         name: player1.name,
         button: Button.DEALER_SMALL,
+        turnBet: smallBlind,
+        roundBet: smallBlind,
       }));
 
     it("D+1 is big blind", () =>
       expectSetPlayer({
         name: player2.name,
         button: Button.BIG_BLIND,
+        turnBet: bigBlind,
+        roundBet: bigBlind,
       }));
 
     describe("When it is the second round", () => {
@@ -92,26 +98,30 @@ describe("Hosting a table", () => {
       it("D+1 plays first", () =>
         expectSetPlayer({
           name: player2.name,
-          isTurn: false,
+          isTurn: true,
         }));
 
       it("I am the big blind", () =>
         expectSetPlayer({
           name: player1.name,
           button: Button.BIG_BLIND,
+          turnBet: bigBlind,
+          roundBet: bigBlind,
         }));
 
       it("D+1 is the dealer & small blind", () =>
         expectSetPlayer({
           name: player2.name,
           button: Button.DEALER_SMALL,
+          turnBet: smallBlind,
+          roundBet: smallBlind,
         }));
     });
   });
 
   describe("When there are 4 players", () => {
-    const player3 = { name: "Player 3" };
-    const player4 = { name: "Player 4" };
+    const player3 = { chips: 2500, name: "Player 3" };
+    const player4 = { chips: 2500, name: "Player 4" };
 
     beforeEach(async () => {
       initialData.table[tableId].player = {
@@ -133,12 +143,16 @@ describe("Hosting a table", () => {
       expectSetPlayer({
         name: player2.name,
         button: Button.SMALL_BLIND,
+        turnBet: smallBlind,
+        roundBet: smallBlind,
       }));
 
     it("D+2 is big blind", () =>
       expectSetPlayer({
         name: player3.name,
         button: Button.BIG_BLIND,
+        turnBet: bigBlind,
+        roundBet: bigBlind,
       }));
   });
 });
