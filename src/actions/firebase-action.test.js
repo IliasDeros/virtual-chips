@@ -161,6 +161,78 @@ describe("Hosting a table", () => {
           chips: player2Folded.chips - smallBlind,
         }));
     });
+
+    describe("When we tie in a round", () => {
+      const pot = 1600;
+      const player1Tied = {
+        ...player1,
+        state: State.TIED,
+        roundBet: pot / 2,
+        chips: 1000,
+      };
+      const player2Tied = {
+        ...player2,
+        state: State.TIED,
+        roundBet: pot / 2,
+        chips: 200,
+      };
+      const setupPlayers = () => {
+        initialData.table[tableId].player = {
+          [uid]: player1Tied,
+          player_2: player2Tied,
+        };
+      };
+      const setupTable = () => {
+        initialData.table.round = 1;
+        initialData.table.turn = Turn.FINISHED;
+      };
+
+      beforeEach(async () => {
+        setupPlayers();
+        setupTable();
+        await connectToTable();
+      });
+
+      it("Distributes pot to tied players", () =>
+        expectSetPlayer({
+          name: player1.name,
+          chips: player1Tied.chips + player1Tied.roundBet - bigBlind,
+        }));
+
+      it("Distributes pot to tied players", () =>
+        expectSetPlayer({
+          name: player2.name,
+          chips: player2Tied.chips + player2Tied.roundBet - smallBlind,
+        }));
+
+      describe("When one player was all-in with less chips", () => {
+        const player2AllIn = {
+          ...player2Tied,
+          roundBet: player1Tied.roundBet - 200,
+          chips: 0,
+        };
+
+        beforeEach(async () => {
+          initialData.table[tableId].player = {
+            ...initialData.table[tableId].player,
+            player_2: player2AllIn,
+          };
+          await connectToTable();
+        });
+
+        it("Returns player2's bet", () =>
+          expectSetPlayer({
+            name: player2.name,
+            chips: player2AllIn.roundBet - smallBlind,
+          }));
+
+        it("Returns player1's bet", () =>
+          expectSetPlayer({
+            name: player1.name,
+            chips: player1Tied.chips + player1Tied.roundBet - bigBlind,
+          }));
+      });
+    });
   });
 
   describe("When there are 4 players", () => {
