@@ -4,8 +4,10 @@ import "shared/modules/jest-mock-firebase";
 import { uid } from "firebase/auth";
 import { mockSetData } from "firebase/database";
 import Button from "constants/button";
+import State from "constants/state";
+import Turn from "constants/turn";
 import * as unit from "actions/firebase-action";
-import { setPlayersMeFirst } from "actions/table-action";
+import { setPlayersMeFirst, setTurn } from "actions/table-action";
 
 const tableId = "table_id";
 
@@ -88,20 +90,45 @@ describe("Hosting a table", () => {
         roundBet: bigBlind,
       }));
 
-    describe("When it is the second round", () => {
+    describe("When I win the round", () => {
+      const player1Winner = {
+        ...player1,
+        chips: 100,
+        turnBet: bigBlind,
+        roundBet: bigBlind * 2,
+        state: State.CALLED,
+      };
+
+      const player2Folded = {
+        ...player2,
+        turnBet: bigBlind,
+        roundBet: bigBlind,
+        state: State.FOLDED,
+      };
+
+      const setupPlayers = () => {
+        initialData.table[tableId].player = {
+          [uid]: player1Winner,
+          player_2: player2Folded,
+        };
+      };
+
+      const setupTable = () => {
+        initialData.table.round = 1;
+        initialData.table.turn = Turn.TURN;
+      };
+
       beforeEach(async () => {
-        // First round is "0"
-        initialData.table[tableId].round = 1;
+        setupPlayers();
+        setupTable();
         await connectToTable();
       });
 
-      it("D+1 plays first", () =>
-        expectSetPlayer({
-          name: player2.name,
-          isTurn: true,
-        }));
+      it("Resets turn to pre flop", () => {
+        expect(dispatch).toHaveBeenCalledWith(setTurn(Turn.PRE_FLOP));
+      });
 
-      it("I am the big blind", () =>
+      it("I am now the big blind", () =>
         expectSetPlayer({
           name: player1.name,
           button: Button.BIG_BLIND,
@@ -109,12 +136,29 @@ describe("Hosting a table", () => {
           roundBet: bigBlind,
         }));
 
-      it("D+1 is the dealer & small blind", () =>
+      it("D+1 is now dealer and small blind", () =>
+        expectSetPlayer({
+          button: Button.DEALER_SMALL,
+          isTurn: true,
+          name: player2.name,
+          roundBet: smallBlind,
+          turnBet: smallBlind,
+        }));
+
+      it("Distributes the pot to me", () =>
+        expectSetPlayer({
+          name: player1.name,
+          chips:
+            player1Winner.chips +
+            player1Winner.roundBet +
+            player2Folded.roundBet -
+            bigBlind,
+        }));
+
+      it("Resets player 2's round bet", () =>
         expectSetPlayer({
           name: player2.name,
-          button: Button.DEALER_SMALL,
-          turnBet: smallBlind,
-          roundBet: smallBlind,
+          chips: player2Folded.chips - smallBlind,
         }));
     });
   });
