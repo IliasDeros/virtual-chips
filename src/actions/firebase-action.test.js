@@ -1,4 +1,5 @@
 import { waitFor } from "@testing-library/react";
+import { printReceived } from "jest-matcher-utils";
 import "shared/modules/jest-mock-firebase";
 import { uid } from "firebase/auth";
 import { mockSetData } from "firebase/database";
@@ -7,6 +8,17 @@ import * as unit from "actions/firebase-action";
 import { setPlayersMeFirst } from "actions/table-action";
 
 const tableId = "table_id";
+
+/**
+ * Jest only shows the first 3 calls to a spy.
+ * This logs the entire call history
+ */
+const logCalls = (spy) => {
+  const receivedCalls = spy.mock.calls.map(
+    (call, i) => `${i}: ${printReceived(call)}`
+  );
+  console.error(`All Received:\n${receivedCalls.join("\n")}`);
+};
 
 describe("Hosting a table", () => {
   const player1 = { name: "Player 1 (Me)" };
@@ -20,14 +32,19 @@ describe("Hosting a table", () => {
     return unit.connectToTable(tableId)(dispatch, getState);
   };
 
-  const expectSetPlayer = (playerData) => {
+  const expectSetPlayer = async (playerData) => {
     const action = setPlayersMeFirst(
       expect.arrayContaining([expect.objectContaining(playerData)])
     );
 
-    return waitFor(() =>
-      expect(dispatch).toHaveBeenCalledWith(expect.objectContaining(action))
-    );
+    try {
+      await waitFor(() =>
+        expect(dispatch).toHaveBeenCalledWith(expect.objectContaining(action))
+      );
+    } catch (e) {
+      logCalls(dispatch);
+      throw e;
+    }
   };
 
   beforeEach(() => {
