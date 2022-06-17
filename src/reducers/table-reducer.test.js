@@ -1,41 +1,57 @@
-import reducer from './table-reducer'
+import { selectors } from "reducers/selectors";
+import reducer from "./table-reducer";
+import Turn from "constants/turn";
 
-it('should return initial state', () => {
+const reduce = (action) => reducer({}, action);
+
+it("Returns initial state", () => {
   expect(reducer(undefined, {})).toMatchObject({
-    id: 'default',
-    pot: 0
-  })
-})
+    id: "alpha",
+    pot: 0,
+    players: [],
+  });
+});
 
-describe('SET_ACTION', () => {
-  it('should update action', () => {
-    expect(reducer({}, {
-      type: 'SET_ACTION',
-      payload: 'action'
-    })).toEqual({
-      action: 'action'
-    })
-  })
-})
+describe("SET_POT", () => {
+  it("Updates pot", () => {
+    const payload = 1000;
+    const table = reduce({ type: "SET_POT", payload });
 
-describe('SET_POT', () => {
-  it('should update pot', () => {
-    expect(reducer({}, {
-      type: 'SET_POT',
-      payload: 1000
-    })).toEqual({
-      pot: 1000
-    })
-  })
-})
+    const actual = selectors.getPot({ table });
 
-describe('SET_TURN', () => {
-  it('should update turn', () => {
-    expect(reducer({}, {
-      type: 'SET_TURN',
-      payload: 2
-    })).toEqual({
-      turn: 2
-    })
-  })
-})
+    expect(actual).toEqual(payload);
+  });
+});
+
+describe("SET_TURN", () => {
+  it("Updates turn", () => {
+    const payload = Turn.PRE_FLOP;
+    const table = reduce({ type: "SET_TURN", payload });
+
+    const actual = selectors.getTableTurn({ table });
+
+    expect(actual).toEqual(payload);
+  });
+});
+
+describe("SET_PLAYERS_ME_FIRST", () => {
+  it("Updates players", () => {
+    const payload = ["player1", "player2"];
+    const table = reduce({ type: "SET_PLAYERS_ME_FIRST", payload });
+
+    const actual = selectors.getPlayers({ table });
+
+    expect(actual).toEqual(payload);
+  });
+});
+
+describe("SET_PLAYER_ORDER", () => {
+  it("Updates player order", () => {
+    const payload = "player1,player2";
+    const table = reduce({ type: "SET_PLAYER_ORDER", payload });
+
+    const actual = selectors.getPlayerOrder({ table });
+
+    expect(actual).toEqual(payload);
+  });
+});

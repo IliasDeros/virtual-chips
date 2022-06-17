@@ -1,31 +1,26 @@
-import Turn from '../constants/turn'
-import Token from '../constants/token'
-import canCheck from './can-check'
+import canCheck from "./can-check";
 
-describe('canCheck', () => {
-  describe('is truthy', () => {
-    it('for big blind when no other player raised', () => {
-      const result = canCheck({
-        chips: { bet: 200 },
-        opponents: [{ chips: { bet: 100 } }],
-        player: { token: Token.BIG_BLIND },
-        table: { turn: Turn.PRE_FLOP }
-      })
+const turnBet = 80;
+const me = { turnBet };
 
-      expect(result).toBeTruthy()
-    })
-  })
+it("Defaults the turnBet", () => {
+  const result = canCheck([me, {}, {}]);
+  expect(result).toBeTruthy();
+});
 
-  describe('is falsy', () => {
-    it('for big blind when another player raised', () => {
-      const result = canCheck({
-        chips: { bet: 200 },
-        opponents: [{ chips: { bet: 500 } }],
-        player: { token: Token.BIG_BLIND },
-        table: { turn: Turn.PRE_FLOP }
-      })
+it("Can check when all bets are equal to me", () => {
+  const result = canCheck([me, { turnBet }, { turnBet }]);
+  expect(result).toBeTruthy();
+});
 
-      expect(result).toBeFalsy()
-    })
-  })
-})
+it("Can check when all bets are equal or lower to be", () => {
+  const lowerBet = turnBet - 20;
+  const result = canCheck([me, { turnBet }, { turnBet: lowerBet }]);
+  expect(result).toBeTruthy();
+});
+
+it("Cannot check if a bet is higher than me", () => {
+  const higherBet = turnBet + 20;
+  const result = canCheck([me, { turnBet }, { turnBet: higherBet }]);
+  expect(result).toBeFalsy();
+});

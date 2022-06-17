@@ -1,9 +1,9 @@
 import Turn from "constants/turn";
 import selectors from "reducers/selectors";
 
-export const setPlayerOrder = (order) => ({
+export const setPlayerOrder = (payload) => ({
   type: "SET_PLAYER_ORDER",
-  order,
+  payload,
 });
 
 export const setTurn = (turn) => ({
@@ -15,7 +15,6 @@ export const setPot = (payload) => {
   return (dispatch, getState) => {
     const oldPot = selectors.getPot(getState());
     const isSamePot = payload === oldPot;
-
     if (isSamePot) {
       return;
     }

@@ -16,6 +16,42 @@ If you are using [Codespaces], a dev server is automatically run when a codespac
 
 ## Testing
 
+### Set Up
+
+To enable `jest` in a parcel project, we need to do the following:
+
+1. Install Babel
+
+```sh
+yarn add -D jest babel-jest @babel/core @babel/preset-env
+```
+
+2. Configure Babel
+
+```
+// .babelrc
+{
+  "presets": ["@babel/preset-env"]
+}
+```
+
+3. Disable babel on runtime
+
+```
+// .parcelrc
+{
+  "extends": "@parcel/config-default",
+  "transformers": {
+    "*.{js,mjs,jsx,cjs,ts,tsx}": [
+      "@parcel/transformer-js",
+      "@parcel/transformer-react-refresh-wrap"
+    ]
+  }
+}
+```
+
+4. For absolute imports, see `moduleNameMapper` in [jest.config.js](./jest.config.js)
+
 All actions and reducers are unit-tested. Execute tests by running `yarn test`.
 
 **Note:** A recent update to firebase has broken all the mocks, so it is not possible to run unit tests at the moment

@@ -17,13 +17,18 @@
     "redux-thunk": "^2.4.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
     "@parcel/transformer-sass": "2.6.0",
+    "babel-jest": "^28.1.1",
+    "jest": "^28.1.1",
     "parcel": "^2.6.0",
     "process": "^0.11.10",
     "tailwindcss": "^3.0.24"
   },
   "scripts": {
     "start": "parcel src/index.html",
+    "test": "jest --passWithNoTests",
     "build": "parcel build src/index.html --dist-dir public"
   },
   "alias": {
