@@ -1,7 +1,11 @@
+/**
+ * - Mocks firebase imports with an in-memory realtime database
+ * - Resets database and subscribers after each test
+ */
 jest.mock("firebase/database", () => {
   class URLStorage {
     constructor() {
-      this.data = {};
+      this.resetData();
     }
 
     _initializeProperty(json, key) {
@@ -19,6 +23,14 @@ jest.mock("firebase/database", () => {
       return segments.reduce(this._initializeProperty, this.data);
     }
 
+    resetData() {
+      this.setData({});
+    }
+
+    setData(data) {
+      this.data = data;
+    }
+
     /**
      *
      * @example
@@ -30,12 +42,14 @@ jest.mock("firebase/database", () => {
     getUrl(url) {
       return url
         .split("/")
-        .reduce((value, segment) => value && value[segment], state);
+        .reduce((value, segment) => value && value[segment], this.data);
     }
 
     setUrl(url, value) {
+      const lastSlashIndex = url.lastIndexOf("/");
       // table/123/key -> /table/123
-      const parentUrl = url.slice(0, url.lastIndexOf("/"));
+      const parentUrl = url.slice(0, lastSlashIndex);
+      const valueKey = url.slice(lastSlashIndex + 1);
       const valueProperty = this._initializeUrl(parentUrl);
       valueProperty[valueKey] = value;
     }
@@ -57,10 +71,15 @@ jest.mock("firebase/database", () => {
 
   const firebaseDatabase = "mockDB";
   const state = new URLStorage();
-  const urlCallbacks = { "table/123": [] };
+  let urlCallbacks;
+
+  const resetObservers = () => {
+    urlCallbacks = {};
+    return urlCallbacks;
+  };
 
   const notifyUrl = (url) => {
-    const observers = urlCallbacks[path] || [];
+    const observers = urlCallbacks[url] || [];
     const value = state.getUrl(url);
     observers.forEach((o) => o.notify(value));
   };
@@ -83,6 +102,7 @@ jest.mock("firebase/database", () => {
     const value = state.getUrl(refUrl);
     const newValue = valueCallback(value);
     state.setUrl(refUrl, newValue);
+    notifyUrl(refUrl);
   };
 
   const setMock = (refUrl, value) => {
@@ -90,11 +110,29 @@ jest.mock("firebase/database", () => {
     notifyUrl(refUrl);
   };
 
+  const mockReset = () => {
+    resetObservers();
+    state.resetData();
+  };
+
+  const mockSetData = (data) => {
+    state.setData(data);
+  };
+
+  resetObservers();
+
   return {
     getDatabase: () => firebaseDatabase,
+    mockReset,
+    mockSetData,
     onValue: observeUrl,
     ref: refMock,
     runTransaction: runTransactionMock,
     set: setMock,
   };
+});
+
+import { mockReset } from "firebase/database";
+afterEach(() => {
+  mockReset();
 });
