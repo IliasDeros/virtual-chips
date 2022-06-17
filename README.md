@@ -1,6 +1,8 @@
 # Only Chips [![CircleCI](https://circleci.com/gh/IliasDeros/virtual-chips.svg?style=svg)](https://circleci.com/gh/IliasDeros/virtual-chips)
 
-No chips? No problem.
+*No chips? No problem.*
+
+This web application connects you and your friends through a realtime firebase database so you can play poker, in real life, when you only have a pack of cards.
 
 ![only chips](https://i.imgur.com/Qjj5Zcw.png)
 
