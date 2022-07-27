@@ -23,6 +23,10 @@ This web application connects you and your friends through a realtime firebase d
 
 ## Contributing
 
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for documentation on architecture, testing & deploying. 
+
+**TLDR:** Here's how to run the app locally, using [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable):
+
 ```
 git clone git@github.com:IliasDeros/virtual-chips.git
 yarn && yarn start # or ./start.sh
