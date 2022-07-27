@@ -37,6 +37,32 @@ src/
 
 [vertical slice architecture]: https://www.youtube.com/watch?v=cVVMbuKmNes
 
+### Tech Stack
+
+Here's a non-exhaustive list of the technologies used in this project:
+
+| Name                           | Use                                    |
+| ------------------------------ | -------------------------------------- |
+| [ReactJS]                      | DOM manipulation                       |
+| [Redux]                        | State Management                       |
+| [Firebase]                     | Sync data accross devices in real-time |
+| [Parcel]                       | Bundling & Dev server                  |
+| [Tailwind], [DaisyUI] & [SCSS] | Styling                                |
+| [Framer Motion]                | Animations                             |
+| [Jest] & [RTL] & [Babel]       | Testing                                |
+
+[babel]: https://babeljs.io/
+[daisyui]: https://daisyui.com/
+[firebase]: https://firebase.google.com/products/realtime-database/
+[framer motion]: https://www.framer.com/motion/
+[jest]: https://jestjs.io/
+[parcel]: https://parceljs.org/
+[reactjs]: https://reactjs.org/
+[redux]: https://redux.js.org/
+[rtl]: https://testing-library.com/docs/react-testing-library/intro
+[scss]: https://sass-lang.com/
+[tailwind]: https://tailwindcss.com/
+
 ## Testing
 
 ```
@@ -44,11 +70,11 @@ yarn test
 yarn test --watch Chip.test
 ```
 
-## Mocking
+### Mocking
 
 For unit tests, firebase is mocked with an in-memory realtime database. See [jest-mock-firebase.js](./src/shared/modules/jest-mock-firebase.js)
 
-## Set Up
+### Set Up
 
 To enable `jest` in a parcel project, we need to do the following:
 
@@ -106,33 +132,6 @@ In VSCode, add this configuration to your launch.json, and you can run a test fi
 }
 
 ```
-
-
-### Tech Stack
-
-Here's a non-exhaustive list of the technologies used in this project:
-
-| Name                           | Use                                    |
-| ------------------------------ | -------------------------------------- |
-| [ReactJS]                      | DOM manipulation                       |
-| [Redux]                        | State Management                       |
-| [Firebase]                     | Sync data accross devices in real-time |
-| [Parcel]                       | Bundling & Dev server                  |
-| [Tailwind], [DaisyUI] & [SCSS] | Styling                                |
-| [Framer Motion]                | Animations                             |
-| [Jest] & [RTL] & [Babel]       | Testing                                |
-
-[babel]: https://babeljs.io/
-[daisyui]: https://daisyui.com/
-[firebase]: https://firebase.google.com/products/realtime-database/
-[framer motion]: https://www.framer.com/motion/
-[jest]: https://jestjs.io/
-[parcel]: https://parceljs.org/
-[reactjs]: https://reactjs.org/
-[redux]: https://redux.js.org/
-[rtl]: https://testing-library.com/docs/react-testing-library/intro
-[scss]: https://sass-lang.com/
-[tailwind]: https://tailwindcss.com/
 
 ## Deploying
 
